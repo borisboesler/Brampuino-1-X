@@ -1,0 +1,939 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+the usersmanual
+Copyright (C) 2012 Boris Boesler
+
+This program is free software; you can redistribute it and/or
+modify it under the terms of the GNU General Public License
+as published by the Free Software Foundation; either version 2
+of the License, or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program; if not sse <http://www.gnu.org/licenses/>.
+-->
+
+<!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
+                         "http://www.docbook.org/xml/4.5/docbookx.dtd" [
+<!--ENTITY % local.common.attrib "xml:base CDATA #IMPLIED" -->
+<!ENTITY % entities PUBLIC "global entities" "global.xml" >
+%entities;
+]>
+
+<book id="book:brampuino-usersmanual"
+      lang="en"
+      xmlns:xi="http://www.w3.org/2001/XInclude">
+
+
+  <bookinfo>
+
+    <!--
+	**********
+	** title, subtitle and date
+	**********
+    -->
+    <title>&BRAMPUINO1X;</title>
+    <subtitle>User's Manual</subtitle>
+    <date>$Date: 2012-08-08 18:12:11 +0200 (Mi, 08 Aug 2012) $</date>
+
+
+    <!--
+	images
+	appears on FO titlepage
+    -->
+    <!--
+	My Kyocera FS-1030D cant print the SVG logo
+    -->
+    <!-- -->
+    <mediaobject>
+      <imageobject>
+	<imagedata fileref="local-images/logo.svg" format="SVG"
+		   align="center" valign="top"
+		   width="15cm" scalefit="1"/>
+      </imageobject>
+    </mediaobject>
+    <!-- -->
+
+    <!--
+	**********
+	** ALL authors
+	**********
+    -->
+    <authorgroup>
+      <author>
+	<!-- <honorific>Dr</honorific> -->
+	<firstname>Boris</firstname>
+	<surname>Boesler</surname>
+      </author>
+    </authorgroup>
+
+
+    <!--
+	**********
+	** an abstract of this document
+	**********
+    -->
+    <abstract>
+      <para>
+	This document describes the camera controller &BRAMPUINO1X;.
+      </para>
+    </abstract>
+
+
+    <!--
+	**********
+	** copyright status of this document
+	**********
+    -->
+    <!-- removed, see licence -->
+
+    <!--
+	**********
+	** publication date
+	**********
+    -->
+    <pubdate role="svn">$Date: 2012-08-08 18:12:11 +0200 (Mi, 08 Aug 2012) $</pubdate>
+
+
+    <!--
+	**********
+	** revision history, set by svn/cvs
+	**********
+    -->
+    <revhistory>
+      <revision>
+	<revnumber>$Rev: 23 $</revnumber>
+	<date>$Date: 2012-08-08 18:12:11 +0200 (Mi, 08 Aug 2012) $</date>
+      </revision>
+    </revhistory>
+
+
+    <!--
+	**********
+	** ALL legal notices
+	**********
+    -->
+    <legalnotice>
+      <title>Licence</title>
+      <!-- creative commons ? -->
+      <para>
+	GPLv2
+      </para>
+    </legalnotice>
+    
+    <legalnotice>
+      <title>Disclaimer</title>
+      <para>
+	No liability for the contents of this document can be
+	accepted. Use the concepts, examples and information at your
+	own risk. There may be errors and inaccuracies, that could be
+	damaging to your system. Proceed with caution, and although it
+	is highly unlikely that accidents will happen because of
+	following advice or procedures described in this document, the
+	author(s) do not take any responsibility for any damage
+	claimed to be caused by doing so.
+      </para>
+      <para>
+	All copyrights are held by their by their respective owners,
+	unless specifically noted otherwise. Use of a term in this
+	document should not be regarded as affecting the validity of
+	any trademark or service mark. Naming of particular products
+	or brands should not be seen as endorsements.
+      </para>
+    </legalnotice>
+
+
+    <!--
+	**********
+	** releaseinfo
+	**********
+    -->
+    <releaseinfo>
+      <emphasis>
+	Status of this document: <emphasis>work in progress</emphasis>
+      </emphasis>
+    </releaseinfo>
+
+  </bookinfo>
+
+
+  <!-- ************************************************** -->
+
+  <!--
+      **********
+      ** table of contents
+      **********
+  -->
+  <toc/>
+
+
+  <!-- ************************************************** -->
+
+  <!--
+      **********
+      ** the chapters
+      **********
+  -->
+
+  <!-- ************************************************** -->
+  <!-- ************************************************** -->
+
+  <chapter id="chapter:introduction-chapter">
+    <title>The &BRAMPUINO1X;</title>
+
+    <para>
+      The &BRAMPUINO1X; is a small device based on the <ulink
+      url="http://www.arduino.cc">open Arduino hardware
+      platform</ulink> to make series of shots automatically. In its
+      simpliest setting it acts as a normal intervalometer.
+
+      It can be configured to be used as an HDRI intervalometer as well.
+
+      Additionally it can be used as a Bulb Ramper like the <ulink
+      url="http://www.thewhippersnapper.com/LittleBramper/Site/Home.html">Little
+      Bramper</ulink>.
+
+      The &BRAMPUINO1X; is one of the few devices that can bulb
+      ramping and ISO ramping!
+    </para>
+
+    <para>
+      We give a short introduction in the required pieces of hardware
+      to build &BRAMPUINO1X; in <xref
+      linkend="section:hardware"/>. These are all off-the-shelf
+      components.
+    </para>
+
+    <para>
+      In <xref linkend="section:software"/> we list the software that
+      is needed if the source code will be altered and re-compiled.
+    </para>
+
+
+    <!-- ************************************************** -->
+    <section id="section:hardware">
+      <title>Hardware</title>
+      
+      <para>
+	The following hardware is required:
+	<variablelist>
+	  <varlistentry>
+	    <term>Arduino Uno Rev3</term>
+	    <listitem>
+	      <para>
+		The <ulink
+		url="http://arduino.cc/en/Main/ArduinoBoardUno/">Arduino
+		Uno Rev3</ulink> is the basic platform for this
+		prototype.
+	      </para>
+	    </listitem>
+	  </varlistentry>
+
+	  <varlistentry>
+	    <term>USB Host Shield by Circuits@Home</term>
+	    <listitem>
+	      <para>
+		The <ulink
+		url="http://www.circuitsathome.com/usb-host-shield-hardware-manual">USB
+		Host Shield</ulink> talks from the hardware side to
+		the Canon Camera via USB.
+
+		The makers of this shield provide libraries to talk to
+		the camera from a software side.
+	      </para>
+	    </listitem>
+	  </varlistentry>
+
+	  <varlistentry>
+	    <term>RGB LCD Shield</term>
+	    <listitem>
+	      <para>
+		The <ulink
+		url="http://ladyada.net/make/rgblcdshield/">RGB LCD
+		Shield</ulink> by Adafruit with its 5 buttons is
+		interface between &BRAMPUINO1X; and the user.
+
+		This shield was used because it uses the I2C-bus and
+		uses less pins than other shields.
+	      </para>
+	    </listitem>
+	  </varlistentry>
+	</variablelist>
+      </para>
+    
+    </section>
+
+
+    <!-- ************************************************** -->
+    <section id="section:precompiled-software">
+      <title>Precompiled Software</title>
+      
+      <para>
+	Should be available with this manual.
+      </para>
+    </section>
+
+
+    <!-- ************************************************** -->
+    <section id="section:software">
+      <title>Software</title>
+      
+      <para>
+	The following third party software is needed:
+
+	<variablelist>
+
+	  <varlistentry>
+	    <term>USB Host Shield</term>
+	    <listitem>
+	      <para>
+		The software to run the USB Host Shield by
+		Circuits@Home can be downloaded from <ulink
+		url="https://github.com/felis/USB_Host_Shield_2.0"></ulink>
+
+		Follow the instructions to install the libraries.
+	      </para>
+	    </listitem>
+	  </varlistentry>
+
+	  <varlistentry>
+	    <term>Run a Canon camera via USB</term>
+	    <listitem>
+	      <para>
+		The software to run a Canon camera via USB Host Shield
+		can be downloaded from <ulink
+		url="https://github.com/felis/PTP_2.0/"></ulink>
+
+		Follow the instructions to install the libraries.
+	      </para>
+	    </listitem>
+	  </varlistentry>
+
+	  <varlistentry>
+	    <term>RGB LCD Shield</term>
+	    <listitem>
+	      <para>
+		The software to run the RGB LCD Shield can be
+		downloaded from <ulink
+		url="https://github.com/adafruit/Adafruit-RGB-LCD-Shield-Library/"></ulink>
+
+		Follow the instructions to install the libraries.
+	      </para>
+	    </listitem>
+	  </varlistentry>
+
+	  <varlistentry>
+	    <term>MsTimer2</term>
+	    <listitem>
+	      <para>
+		The software to run timed interrupts can be down
+		loaded from <ulink
+		url="http://arduino.cc/playground/Main/MsTimer2/"></ulink>
+	      </para>
+	    </listitem>
+	  </varlistentry>
+
+	  <varlistentry>
+	    <term>&BRAMPUINO1X; Source-Code</term>
+	    <listitem>
+	      <para>
+		The &BRAMPUINO1X; Source-Code is not available yet,
+		but should be soon.
+	      </para>
+	    </listitem>
+	  </varlistentry>
+
+	</variablelist>
+
+      </para>
+
+    </section>
+
+  </chapter>
+
+
+  <!-- ************************************************** -->
+  <!-- ************************************************** -->
+  <chapter id="chapter:interface">
+    <title>Interface</title>
+      
+    <para>
+      The &BRAMPUINO1X; provides a simple text based interface via the
+      16x2 RGB LCD shield. It allows to set parameters and start
+      &BRAMPUINO1X;.
+    </para>
+
+    <para>
+      In <xref linkend="section:menu"/> we give the structure to the
+      menu hierarchy with a short explanation and in <xref
+      linkend="section:buttons"/> we show how to navigate with the
+      buttons through the menu.
+    </para>
+    
+    <section id="section:menu">
+      <title>Menu</title>
+      <!-- menu2svg has to be fixed first -->
+      <!--
+	  <mediaobject>
+	  <imageobject>
+	  <imagedata fileref="menu.svg" format="SVG"
+	  align="center" valign="top"
+	  width="15cm" scalefit="1"/>
+	  </imageobject>
+	  </mediaobject>
+      -->
+      <xi:include parse="xml"
+		  href="menu.db.xml">
+	<xi:fallback>
+	  <warning>
+	    <title>file menu.db.xml is missing</title>
+	  </warning>
+	</xi:fallback>
+      </xi:include>
+      
+      <tip>
+	<title>Exposure Offset</title>
+	<para>
+	  If you use LiveView with a &CANON5DMKII; then you should set
+	  the exposure offset to a value around 200. The camera needs
+	  this time to reset the mirror/shutter.
+	</para>
+      </tip>
+
+      <tip>
+	<title>Minimal Interval</title>
+	<para>
+	  If you use LiveView with a &CANON5DMKII; then you should set
+	  the minimal interval to a value around 2000. The camera needs
+	  this time for an unknown reason.
+	</para>
+      </tip>
+
+      <tip>
+	<title>Move Focus</title>
+	<para>
+	  The move focus option does not work reliably with a
+	  &CANON5DMKII;. If it works with your camera then report the
+	  camera model, the lens and all setting to us, please.
+	</para>
+      </tip>
+
+      <!--
+      <menuchoice>
+	<guimenu>Settings</guimenu>
+	<guisubmenu>Exposure</guisubmenu>
+	<guimenuitem>Exp.Min</guimenuitem>
+      </menuchoice>
+      -->
+
+      <warning>
+	<title>Storing Values</title>
+	<para>
+	  At the current development status parameter values are not
+	  stored in the EEPROM.
+	</para>
+      </warning>
+
+    </section>
+
+
+    <!-- ************************************************** -->
+
+    <section id="section:buttons">
+      <title>Buttons</title>
+      
+      <para>
+	The RGB LCD Shield provides 5 buttons: left, right, up, down
+	and select. To navigate through the menu the buttons have the
+	following meaning:
+      </para>
+
+      <variablelist>
+	<varlistentry>
+	  <term>up</term>
+	  <listitem>
+	    <para>
+	      Scroll in current menu up
+	    </para>
+	  </listitem>
+	</varlistentry>
+	
+	<varlistentry>
+	  <term>down</term>
+	  <listitem>
+	    <para>
+	      Scroll in current menu down
+	    </para>
+	  </listitem>
+	</varlistentry>
+	
+	<varlistentry>
+	  <term>left</term>
+	  <listitem>
+	    <para>
+	      Return from current menu hierarchy to previous menu hierarchy
+	    </para>
+	  </listitem>
+	</varlistentry>
+	
+	<varlistentry>
+	  <term>right</term>
+	  <listitem>
+	    <para>
+	      Enter next menu hierarchy
+	    </para>
+	  </listitem>
+	</varlistentry>
+	
+	<!--
+	    <varlistentry>
+	    <term>select</term>
+	    <listitem>
+	    <para>
+	    </para>
+	    </listitem>
+	    </varlistentry>
+	-->
+      </variablelist>
+
+
+      <para>
+	To change a value selected by navigating through the menu the
+	buttons have the following meaning:
+
+	<variablelist>
+	  <varlistentry>
+	    <term>up</term>
+	    <listitem>
+	      <para>
+		Cancel input. The value is not changed.
+	      </para>
+	    </listitem>
+	  </varlistentry>
+
+	  <varlistentry>
+	    <term>left</term>
+	    <listitem>
+	      <para>
+		Decrement the value.
+	      </para>
+	    </listitem>
+	  </varlistentry>
+
+	  <varlistentry>
+	    <term>right</term>
+	    <listitem>
+	      <para>
+		Increment the value.
+	      </para>
+	    </listitem>
+	  </varlistentry>
+
+	  <varlistentry>
+	    <term>select</term>
+	    <listitem>
+	      <para>
+		Store this value and return to previous menu.
+	      </para>
+	    </listitem>
+	  </varlistentry>
+	</variablelist>
+      </para>
+
+      <para>
+	If you enter a value and keep the increment or decrement
+	button pressed, it increments or decrements more rapidly.
+      </para>
+
+      <warning>
+	<title>The MX2 controller</title>
+	<para>
+	  This navigation is not consistent with the Dynamic Deception
+	  MX2 Motion Controller. It will be changed in the future.
+	</para>
+      </warning>
+      
+    </section>
+    
+    <!-- ************************************************** -->
+
+    <section id="section:running">
+      <title>Running &BRAMPUINO1X;</title>
+      
+      <para>
+	When Start in the menu is selected then the RGB LCD Screen
+	switches its color to <emphasis>red</emphasis> and looks like
+	this:
+	<screen>
+#3<co id="running.screen.current_shot" linkends="co.running.screen.current_shot"/>/5<co id="running.screen.max_shot" linkends="co.running.screen.max_shot"/> ISO50<co id="running.screen.iso" linkends="co.running.screen.iso"/>
+B:1057<co id="running.screen.bulb" linkends="co.running.screen.bulb"/>/EV:1.00<co id="running.screen.ev" linkends="co.running.screen.iso"/>
+	</screen>
+      </para>
+
+      <calloutlist>
+	<callout id="co.running.screen.current_shot"
+		 arearefs="running.screen.current_shot">
+	  <para>
+	    The current shot (shot number 3)
+	  </para>
+	</callout>
+	<callout id="co.running.screen.max_shot"
+		 arearefs="running.screen.max_shot">
+	  <para>
+	    The maximum number of shots
+	  </para>
+	</callout>
+	<callout id="co.running.screen.iso" arearefs="running.screen.iso">
+	  <para>
+	    The current ISO setting.
+	  </para>
+	</callout>
+	<callout id="co.running.screen.bulb" arearefs="running.screen.bulb">
+	  <para>
+	    The current bulb time (1057 milliseconds)
+	  </para>
+	</callout>
+	<callout id="co.running.screen.ev" arearefs="running.screen.ev">
+	  <para>
+	    The current exposure value change (+1.0EV after some shots)
+	  </para>
+	</callout>
+      </calloutlist>
+
+      <para>
+	In <xref linkend="figure:in-action"/> &BRAMPUINO1X; is shown
+	in action.
+
+	The video can be viewed on <ulink
+	url="http://vimeo.com/46414677/">vimeo</ulink>.
+
+	<figure id="figure:in-action">
+	  <title>&BRAMPUINO1X; in action</title>
+	  <mediaobject>
+	    <imageobject>
+	      <imagedata fileref="local-images/brampuino-in-action.jpg"
+			 format="JPG"
+			 align="center" valign="top"
+			 width="15cm" scalefit="1"/>
+	    </imageobject>
+	  </mediaobject>
+	</figure>
+      </para>
+
+      <para>
+	While &BRAMPUINO1X; is running and taking shots some settings
+	can be changed. The buttons have the following meaning:
+      </para>
+
+      <variablelist>
+	<varlistentry>
+	  <term>up</term>
+	  <listitem>
+	    <para>
+	      Stop shooting. This takes a while till the menu appears.
+	    </para>
+	  </listitem>
+	</varlistentry>
+	
+	<varlistentry>
+	  <term>down</term>
+	  <listitem>
+	    <para>
+	      ISO Ramp by +1EV.
+	    </para>
+	  </listitem>
+	</varlistentry>
+	
+	<varlistentry>
+	  <term>left</term>
+	  <listitem>
+	    <para>
+	      Decrement the Exposure Value Change by 0.1.
+	    </para>
+	  </listitem>
+	</varlistentry>
+	
+	<varlistentry>
+	  <term>right</term>
+	  <listitem>
+	    <para>
+	      Increment the Exposure Value Change by 0.1.
+	    </para>
+	  </listitem>
+	</varlistentry>
+	
+	<varlistentry>
+	  <term>select</term>
+	  <listitem>
+	    <para>
+	      Enter the menu while &BRAMPUINO1X; is still
+	      shooting. All parameters can be changed but not all show
+	      an effect. Select Start to return to the running screen.
+	    </para>
+	  </listitem>
+	</varlistentry>
+
+      </variablelist>
+
+      <para>
+	When shooting is finished &BRAMPUINO1X; switches the RGB LCD
+	color to <emphasis>green</emphasis>.
+      </para>
+
+    </section>
+    
+  </chapter>
+
+
+  <!-- ************************************************** -->
+  <!-- ************************************************** -->
+
+  <chapter id="chapter:use-of-brampuino">
+    <title>Uses of &BRAMPUINO1X;</title>
+
+    <para>
+      The &BRAMPUINO1X; can be used in different contexts if the
+      parameters are set properly.
+
+      In any case the &BRAMPUINO1X; must be connected to the camera
+      via an USB-cable.
+    </para>
+
+
+    <!-- ************************************************** -->
+    <section id="section:intervalometer">
+      <title>&BRAMPUINO1X; as an Intervalometer</title>
+      
+      <para>
+	The &BRAMPUINO1X; can be used a simple intervalometer.  Set
+	the Interval parameters as needed.
+      </para>
+
+      <para>
+	Set the Exposure time to the correct value X:
+	<menuchoice>
+	  <guimenu>Settings</guimenu>
+	  <guisubmenu>Exposure</guisubmenu>
+	  <guimenuitem>Exp.Time</guimenuitem>
+	  <guimenuitem>X</guimenuitem>
+	</menuchoice>.
+	Make sure that the minimum and maximum exposure time do not
+	cut the exposure time X.
+
+	Set the ISO Min to the correct value I:
+	<menuchoice>
+	  <guimenu>Settings</guimenu>
+	  <guisubmenu>ISO</guisubmenu>
+	  <guimenuitem>ISO Min</guimenuitem>
+	  <guimenuitem>I</guimenuitem>
+	</menuchoice>.
+
+	Alternatively you ca set the Exposure Time to zero. Then the
+	cameras current settings will be used.
+      </para>
+
+      <para>
+	Set the Exposure Value Change to 0:
+	<menuchoice>
+	  <guimenu>Settings</guimenu>
+	  <guisubmenu>Exposure</guisubmenu>
+	  <guimenuitem>Exp.EV.Change</guimenuitem>
+	  <guimenuitem>0</guimenuitem>
+	</menuchoice>.
+      </para>
+    
+    </section>
+
+
+    <!-- ************************************************** -->
+    <section id="section:focus-stacking">
+      <title>&BRAMPUINO1X; as a Focus Stacker</title>
+      
+      <para>
+	Set parameters as in <xref linkend="section:intervalometer"/>.
+      </para>
+
+      <para>
+	Set the Move Focus to X as needed:
+	<menuchoice>
+	  <guimenu>Settings</guimenu>
+	  <guisubmenu>Move Focus Steps</guisubmenu>
+	  <guimenuitem>X</guimenuitem>
+	</menuchoice>.
+
+	Please report camera, lens and all settings if this works.
+      </para>
+    
+    </section>
+
+    
+    <!-- ************************************************** -->
+    <section id="section:hdri">
+      <title>&BRAMPUINO1X; in HDRI</title>
+      
+      <para>
+	Set parameters as in <xref linkend="section:intervalometer"/>.
+      </para>
+
+      <para>
+	Set the number of shots X as the maximum number of shots:
+	<menuchoice>
+	  <guimenu>Settings</guimenu>
+	  <guisubmenu>Max.Exp</guisubmenu>
+	  <guimenuitem>X</guimenuitem>
+	</menuchoice>
+      </para>
+
+      <para>
+	Set the Exp.FPS to 1:
+	<menuchoice>
+	  <guimenu>Settings</guimenu>
+	  <guisubmenu>Exposure</guisubmenu>
+	  <guisubmenu>Exp.FPS</guisubmenu>
+	  <guimenuitem>1</guimenuitem>
+	</menuchoice>.
+      </para>
+
+      <para>
+	Set the exposure value increment X per shot in Exposure Value
+	Change:
+	<menuchoice>
+	  <guimenu>Settings</guimenu>
+	  <guisubmenu>Exposure</guisubmenu>
+	  <guimenuitem>Exp.EV.Change</guimenuitem>
+	  <guimenuitem>X</guimenuitem>
+	</menuchoice>.
+      </para>
+    
+    </section>
+
+    <!-- ************************************************** -->
+    <section id="section:bulbramping">
+      <title>&BRAMPUINO1X; as an Bulb Ramper</title>
+
+      <para>
+	Set parameters as in <xref
+	linkend="section:intervalometer"/> and <xref
+	linkend="section:focus-stacking"/>.
+      </para>
+
+      <para>
+	Set the Exposure Value Change X to the exposure value that
+	should be reached after some shots.
+	<menuchoice>
+	  <guimenu>Settings</guimenu>
+	  <guisubmenu>Exposure</guisubmenu>
+	  <guimenuitem>Exp.EV.Change</guimenuitem>
+	  <guimenuitem>X</guimenuitem>
+	</menuchoice>.
+      </para>
+    
+      <para>
+	Set the Exposure FPS to the number of shots after which the
+	exposure will be changed by Exposure Value Change exposure values.
+	<menuchoice>
+	  <guimenu>Settings</guimenu>
+	  <guisubmenu>Exposure</guisubmenu>
+	  <guimenuitem>Exp.FPS</guimenuitem>
+	  <guimenuitem>X</guimenuitem>
+	</menuchoice>.
+      </para>
+    
+      <example id="example:exposure-value-fps">
+	<title>Exposure Change Value and FPS</title>
+	<para>
+	  If you set the Exposure Time to 1000, the Exposure FPS to
+	  150 and the Exposure Change Value to 4.0 then the exposure
+	  will change by 4 Exposure Values and the 151-th shot
+	  <!--
+	      -2 250
+	      -1 500
+	      0 1000
+	      1 2000
+	      2 4000
+	      3 8000
+	      4 16000
+	      5 32000
+	      6 64000
+	  -->
+	  will have a 16000 milliseconds exposure time.
+
+	  The Exposure time for the first then shots are: 1000, 1019,
+	  1038, 1057, 1077, 1097, 1117, 1138, 1159 and 1181.
+	</para>
+      </example>
+
+    </section>
+
+  </chapter>
+
+
+  <!-- ************************************************** -->
+  <!-- ************************************************** -->
+
+  <chapter id="chapter:future-improvements">
+    <title>Future Improvements of &BRAMPUINO1X;</title>
+
+    <itemizedlist>
+      <listitem>
+	<para>
+	  External trigger, eg MX2
+	</para>
+      </listitem>
+
+      <listitem>
+	<para>
+	  combination of modes, eg bulb ramping + HDRI
+	</para>
+      </listitem>
+
+      <listitem>
+	<para>
+	  data-logging
+	</para>
+      </listitem>
+
+      <listitem>
+	<para>
+	  light sensor
+	</para>
+      </listitem>
+
+    </itemizedlist>
+    <para>
+    </para>
+  </chapter>
+
+  <!-- ************************************************** -->
+  <!-- ************************************************** -->
+
+
+  <!--
+      **********
+      ** appendices
+      **********
+  -->
+  <!--
+  <appendix id="appendix:examples">
+    <title>Examples</title>
+
+    <para>
+      More bla bla
+    </para>
+
+  </appendix>
+  -->
+
+</book>
+
+<!-- LocalWords:  Boesler Arduino Uno USB RGB MsTimer Intervalometer HDRI MX
+-->
+<!-- LocalWords:  NonCommercial ShareAlike intervalometer Bramper Adafruit
+-->
+<!-- LocalWords:  LiveView EEPROM Unported Precompiled
+-->

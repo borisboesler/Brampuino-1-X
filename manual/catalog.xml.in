@@ -1,0 +1,56 @@
+<?xml version="1.0"?>
+
+<!--
+map general uri to something else
+Copyright (C) 2012 Boris Boesler
+
+This program is free software; you can redistribute it and/or
+modify it under the terms of the GNU General Public License
+as published by the Free Software Foundation; either version 2
+of the License, or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program; if not sse <http://www.gnu.org/licenses/>.
+-->
+
+<!DOCTYPE catalog
+PUBLIC "-//OASIS/DTD Entity Resolution XML Catalog V1.0//EN"
+"http://www.oasis-open.org/committees/entity/release/1.0/catalog.dtd">
+
+<catalog  xmlns="urn:oasis:names:tc:entity:xmlns:xml:catalog">
+
+  <group prefer="public"
+	 xml:base="file://@DOCBOOK_XML_DIR@/">
+  
+    <public 
+	publicId="-//OASIS//DTD DocBook XML V4.5//EN"
+	uri="4.5/docbookx.dtd"/>
+    
+    <system
+	systemId="http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd"
+	uri="4.5/docbookx.dtd"/>
+    
+  </group>
+
+  <rewriteURI
+      uriStartString="http://www.docbook.org/xml/"
+      rewritePrefix="file://@DOCBOOK_XML_DIR@/" />
+
+
+  <!--
+  -->
+  <rewriteURI
+      uriStartString="http://docbook.sourceforge.net/release/xsl/current/"
+      rewritePrefix="file://@DOCBOOK_XSL_DIR@/" />
+
+  <!--
+      use DocBook 4.5 catalog
+  -->
+  <nextCatalog catalog="@DOCBOOK_XML_DIR@/4.5/catalog.xml"/>
+
+</catalog>

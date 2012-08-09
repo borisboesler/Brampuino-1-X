@@ -1,0 +1,319 @@
+<!--
+    the menu as a XML file
+    Copyright (C) 2012 Boris Boesler
+
+    This program is free software; you can redistribute it and/or
+    modify it under the terms of the GNU General Public License
+    as published by the Free Software Foundation; either version 2
+    of the License, or (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program; if not sse <http://www.gnu.org/licenses/>.
+-->
+
+<!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
+                         "http://www.docbook.org/xml/4.5/docbookx.dtd" [
+<!--ENTITY % local.common.attrib "xml:base CDATA #IMPLIED" -->
+<!ENTITY % entities PUBLIC "global entities" "../manual/global.xml" >
+%entities;
+]>
+
+<menu id="top">
+
+  <!--
+      ********************
+      Settings menu
+      ********************
+  -->
+  <menu id="settings" label="Settings">
+    <doc>
+      <para>
+	The settings menu allows to set several parameters.
+      </para>
+    </doc>
+    <menu id="startdelay" label="Start Delay" select="menu_select_delay_time">
+      <doc>
+	<para>
+	  The Start Delay sets the time before the first shot in
+	  milliseconds.
+	</para>
+      </doc>
+    </menu>
+
+    <!--
+	exposure times
+    -->
+    <menu id="exposure" label="Exposure">
+      <doc>
+	<para>
+	  Exposure related parameters
+	</para>
+      </doc>
+      <menu id="exptime" label="Exp.Time" select="menu_select_exp_time">
+	<doc>
+	  <para>
+	    The Exposure Time to start with. If Exposure Time is 0
+	    then &BRAMPUINO1X; does not change any setting or does do
+	    any bulb ramping but uses the camera's current setting to
+	    take a shot.
+	  </para>
+	</doc>
+      </menu>
+      <menu id="expmin" label="Exp.Min" select="menu_select_exp_min">
+	<doc>
+	  <para>
+	    The minimum exposure time. &BRAMPUINO1X; does not use any
+	    exposure time less than this time.
+	  </para>
+	</doc>
+      </menu>
+      <menu id="expmax" label="Exp.Max" select="menu_select_exp_max">
+	<doc>
+	  <para>
+	    The maximum exposure time. &BRAMPUINO1X; does not use any
+	    exposure time greater than this time. If ISO ramping is
+	    activated &BRAMPUINO1X; increases ISO by a full step and
+	    computes the exposure time accordingly.
+	  </para>
+	</doc>
+      </menu>
+      <!-- exp. offset -->
+      <menu id="expoffset" label="Exp.Offset" select="menu_select_exp_offset">
+	<doc>
+	  <para>
+	    The Exposure Offset that is always added to the exposure
+	    time. It represents the time the camera needs to perform
+	    tasks like mirror up and down that are not part of the
+	    real exposure.
+
+	    See <xref linkend="example:exposure-value-fps"/>
+	  </para>
+	</doc>
+      </menu>
+      <!-- linear increment -->
+      <!-- disabled
+	   <menu id="expinc" label="Exp.Increment"
+	   select="menu_select_exp_increment">      <doc>
+	   <para>
+	   </para>
+	   </doc>
+	   </menu>
+      -->
+      <!--
+	  exponential
+	  FPS
+	  EV Change after FPS change
+      -->
+      <menu id="expfps" label="Exp.FPS" select="menu_select_exp_fps">
+	<doc>
+	  <para>
+	    The number of shots after which the exposure time is such
+	    increased that an exposure value has changed.
+	  </para>
+	</doc>
+      </menu>
+      <menu id="expev" label="Exp.EV.Change" select="menu_select_exp_ev_change">
+	<doc>
+	  <para>
+	    The Exposure Value Change after a specified number of
+	    shots.
+
+	    See <xref linkend="example:exposure-value-fps"/>
+	  </para>
+	</doc>
+      </menu>
+    </menu>
+
+    <!--
+	interval
+    -->
+    <menu id="interval" label="Interval">
+      <doc>
+	<para>
+	  Interval related parameters
+	</para>
+      </doc>
+      <menu id="intervaltime" label="Interval Time"
+	    select="menu_select_interval_time">      <doc>
+	<para>
+	  The Start Interval Time in milliseconds.
+
+	  This is the initial interval time and will be recomputed as
+	  the exposure times increases.
+	</para>
+      </doc>
+      </menu>
+      <menu id="intervalmin" label="Intv.Min" select="menu_select_interval_min">
+	<doc>
+	  <para>
+	    The minimum interval between two shots.
+	  </para>
+	</doc>
+      </menu>
+      <menu id="intervalmax" label="Intv.Max" select="menu_select_interval_max">
+	<doc>
+	<para>
+	  The maximum interval between two shots.
+	</para>
+	</doc>
+      </menu>
+    </menu>
+    
+    <!--
+	iso
+    -->
+    <menu id="iso" label="ISO">
+      <doc>
+	<para>
+	  ISO related parameters
+	</para>
+      </doc>
+      <menu id="isomin" label="ISO Min" select="menu_select_iso_min">
+	<doc>
+	  <para>
+	    The minimum ISO to be used
+	  </para>
+	</doc>
+      </menu>
+      <menu id="isomax" label="ISO Max" select="menu_select_iso_max">
+	<doc>
+	  <para>
+	    The maximum ISO to be used
+	  </para>
+	</doc>
+      </menu>
+      <menu id="isoauto" label="ISO Ramp" select="menu_select_iso_ramp">
+	<doc>
+	  <para>
+	    Turn ISO Ramp on/off
+	  </para>
+	</doc>
+      </menu>      
+    </menu>
+    
+    <!--
+	number of exposures
+    -->
+    <menu id="maxexp" label="Max. Exp." select="menu_select_max_exposures">
+      <doc>
+	<para>
+	  The number of shots after which &BRAMPUINO1X; stops shooting.
+	</para>
+      </doc>
+    </menu>
+    
+    <!--
+	number of move focus steps
+    -->
+    <menu id="movefocus" label="Move Focus Steps"
+	  select="menu_select_move_focus_step">
+      <doc>
+	<para>
+	  Number of steps to move focus (does not work)
+	</para>
+      </doc>
+    </menu>
+    
+    <!--
+	clock
+    -->
+    <!-- - ->
+    <menu id="clock" label="Clock">
+      <doc>
+	<para>
+	  To set the Real Time Clock.
+	</para>
+      </doc>
+      <menu id="hour" label="Hour" select="menu_select_clock_entry">
+	<doc>
+	  <para>
+	    The hour of the real time clock
+	  </para>
+	</doc>
+      </menu>
+      <menu id="minute" label="Minute" select="menu_select_clock_entry">
+	<doc>
+	  <para>
+	    The minutes of the real time clock
+	  </para>
+	</doc>
+      </menu>
+      <menu id="year" label="Year" select="menu_select_clock_entry">
+	<doc>
+	  <para>
+	    The year of the real time clock
+	  </para>
+	</doc>
+      </menu>
+      <menu id="month" label="Month" select="menu_select_clock_entry">
+	<doc>
+	  <para>
+	    The month of the real time clock
+	  </para>
+	</doc>
+      </menu>
+      <menu id="day" label="Day" select="menu_select_clock_entry">
+	<doc>
+	  <para>
+	    The day of the real time clock
+	  </para>
+	</doc>
+      </menu>
+    </menu>
+    <!- - -->
+    
+    <!--
+	LCD menu
+    -->
+    <!--
+    <menu id="lcd" label="LCD">
+    <menu id="lcd_color" label="Color">
+	<menu id="red" label="Red" select="menu_lcd_select_color"/>
+	<menu id="green" label="Green" select="menu_lcd_select_color"/>
+	<menu id="yellow" label="Yellow" select="menu_lcd_select_color"/>
+	<menu id="blue" label="Blue" select="menu_lcd_select_color"/>
+	<menu id="violet" label="Violet" select="menu_lcd_select_color"/>
+	<menu id="teal" label="Teal" select="menu_lcd_select_color"/>
+	<menu id="white" label="White" select="menu_lcd_select_color"/>
+      </menu>
+    </menu>
+    -->
+  </menu>
+
+
+  <!--
+      ********************
+      start
+      ********************
+  -->
+  <menu id="start" label="Start" select="menu_select_start">
+    <doc>
+      <para>
+	Start interval shooting with the configured settings.
+      </para>
+    </doc>
+  </menu>
+  
+
+  <!--
+      ********************
+      version
+      ********************
+  -->
+  <menu id="version" label="Version" select="menu_select_version">
+    <doc>
+      <para>
+	Show the Brampuino 1-X software version on the Arduino.
+      </para>
+    </doc>
+  </menu>
+
+</menu>
+
+<!-- LocalWords:  Brampuino Arduino
+-->
