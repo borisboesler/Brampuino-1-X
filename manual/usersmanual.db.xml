@@ -817,6 +817,11 @@ B:1057<co id="running.screen.bulb" linkends="co.running.screen.bulb"/>/EV:1.00<c
       <title>&BRAMPUINO1X; as an Bulb Ramper</title>
 
       <para>
+	&BRAMPUINO1X; can be used as an Bulb Ramper in day to night
+	and night to day transitions.
+      </para>
+
+      <para>
 	Set parameters as in <xref
 	linkend="section:intervalometer"/> and <xref
 	linkend="section:focus-stacking"/>.
@@ -867,6 +872,12 @@ B:1057<co id="running.screen.bulb" linkends="co.running.screen.bulb"/>/EV:1.00<c
 	  1038, 1057, 1077, 1097, 1117, 1138, 1159 and 1181.
 	</para>
       </example>
+
+      <para>
+	If the Exposure Change Value is negative then &BRAMPUINO1X;
+	starts with the configured maximum ISO value, else it starts
+	with the configured minimum ISO value.
+      </para>
 
     </section>
 

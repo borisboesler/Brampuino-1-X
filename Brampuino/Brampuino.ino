@@ -261,7 +261,6 @@ unsigned long new_bulb_time(unsigned long shot,
       if(bulb_time > settings.exposure.max) {
 	DEBUG_PRINTLN_PSTR("Auto check max");
 	// inc ISO
-	//inc_iso();
 	if(current_settings.iso.iso_index + 1 <= settings.iso.max_index) {
 	  unsigned long new_time = bulb_time / 2;
 	  if(new_time >= settings.exposure.min) {
@@ -292,7 +291,8 @@ unsigned long new_bulb_time(unsigned long shot,
 	if(bulb_time < settings.exposure.min) {
 	  DEBUG_PRINTLN_PSTR("Auto check min");
 	  // dec ISO
-	  if(current_settings.iso.iso_index - 1 >= settings.iso.min_index) {
+	  if((1 <= current_settings.iso.iso_index) // can decrement
+	     && (current_settings.iso.iso_index - 1 >= settings.iso.min_index)) {
 	    unsigned long new_time = bulb_time * 2;
 	    if(new_time <= settings.exposure.max) {
 	      // decrement ISO
@@ -312,6 +312,10 @@ unsigned long new_bulb_time(unsigned long shot,
 		shot = 1;
 	      }
 	    }
+	  }
+	  else {
+	    DEBUG_PRINTLN_PSTR("Auto check out of ISO");
+	    have_new_bulb_time = true;
 	  }
 	}
 	else {
@@ -495,6 +499,11 @@ void start_interval_delay()
   // init count
   adjusted_exposure_count = exposure_count = 0;
 
+  // init ISO with ISO max if we ramp with a negative ev.fps value
+  if(0.0 > current_settings.exposure.u.exponential.ev_change) {
+    current_settings.iso.iso_index = current_settings.iso.max_index;
+  }
+
   // open file for logging
   DEBUG_PRINTLN_PSTR("open file");
   //openfile(year/month/day/time.csv);
@@ -632,7 +641,9 @@ void loop()
     }
 
     // ISO
-    PRINT(" ISO"); PRINT(iso_values[current_settings.iso.iso_index]);
+    PRINT(" ISO");
+    PRINT(iso_values[current_settings.iso.iso_index]);
+    PRINT(" ");
 
     // exposure
     lcd.setCursor(0, 1);
