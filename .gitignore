@@ -1,0 +1,27 @@
+
+#
+# top directory
+#
+.history
+
+#
+# source directory
+#
+Brampuino/.history
+
+#
+# manual directory
+#
+manual/.history
+manual/OEBPS
+manual/META-INF
+
+manual/mimetype
+
+manual/usersmanual.db.epub
+
+manual/usersmanual.db.html
+
+manual/usersmanual.db.pdf
+
+manual/fo/brampuino-titlepage.xsl

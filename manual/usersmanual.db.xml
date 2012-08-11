@@ -39,8 +39,13 @@ along with this program; if not sse <http://www.gnu.org/licenses/>.
     -->
     <title>&BRAMPUINO1X;</title>
     <subtitle>User's Manual</subtitle>
-    <date>$Date: 2012-08-08 18:12:11 +0200 (Mi, 08 Aug 2012) $</date>
-
+    <xi:include parse="xml" href="date.db.xml">
+      <xi:fallback>
+	<warning>
+	  <title>file date.db.xml is missing</title>
+	</warning>
+      </xi:fallback>
+    </xi:include>
 
     <!--
 	images
@@ -97,8 +102,13 @@ along with this program; if not sse <http://www.gnu.org/licenses/>.
 	** publication date
 	**********
     -->
-    <pubdate role="svn">$Date: 2012-08-08 18:12:11 +0200 (Mi, 08 Aug 2012) $</pubdate>
-
+    <xi:include parse="xml" href="pubdate.db.xml">
+      <xi:fallback>
+	<warning>
+	  <title>file pubdate.db.xml is missing</title>
+	</warning>
+      </xi:fallback>
+    </xi:include>
 
     <!--
 	**********
@@ -107,8 +117,14 @@ along with this program; if not sse <http://www.gnu.org/licenses/>.
     -->
     <revhistory>
       <revision>
-	<revnumber>$Rev: 23 $</revnumber>
-	<date>$Date: 2012-08-08 18:12:11 +0200 (Mi, 08 Aug 2012) $</date>
+	<revnumber>No Number</revnumber>
+	<xi:include parse="xml" href="date.db.xml">
+	  <xi:fallback>
+	    <warning>
+	      <title>file date.db.xml is missing</title>
+	    </warning>
+	  </xi:fallback>
+	</xi:include>
       </revision>
     </revhistory>
 

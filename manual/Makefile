@@ -44,6 +44,12 @@ DOCBOOK_FO_STYLESHEET = fo/stylesheet.xsl
 # menu XML as DocBook XML
 MENU_DOCBOOK_FILE = menu.db.xml
 
+# publication date as DocBook XML
+DATE_FILE=date.db.xml
+DATE_FILE_CREATOR=./git-date.xml.sh
+PUBDATE_FILE=pubdate.db.xml
+PUBDATE_FILE_CREATOR=./git-date.xml.sh
+
 # used menufile
 MENU_FILE = $(MENU_DOCBOOK_FILE)
 
@@ -59,7 +65,7 @@ all:	$(CATALOG_FILE) $(PDF_FILES) $(HTML_FILES) $(EPUB_FILES) $(MENU_FILE)
 clean:
 	$(RM) $(CATALOG_FILE) $(PDF_FILES) $(HTML_FILES) $(FO_FILES)
 	$(RM) $(EPUB_FILES) mimetype $(DOCBOOK_FO_TITLEPAGE_TEMPLATE)
-	$(RM)  $(MENU_FILE)
+	$(RM)  $(MENU_FILE) $(PUBDATE_FILE) $(DATE_FILE)
 	$(RM) -r $(DB2EPUB_DIR) META-INF
 
 
@@ -140,7 +146,8 @@ $(DOCBOOK_FO_TITLEPAGE_TEMPLATE):	$(DOCBOOK_FO_TITLEPAGE_TEMPLATE_SPEC)
 	$(XSLTPROC) $(XSLTPROC_FLAGS) --output $@ menu2svg.xsl $<
 
 # xml -> fo
-%.fo:	%.xml $(CATALOG_FILE) $(DOCBOOK_FO_TITLEPAGE_TEMPLATE) $(MENU_FILE)
+%.fo:	%.xml $(CATALOG_FILE) $(DOCBOOK_FO_TITLEPAGE_TEMPLATE) $(MENU_FILE) \
+	$(PUBDATE_FILE) $(DATE_FILE)
 	env XML_CATALOG_FILES=$(CATALOG_FILE) XML_DEBUG_CATALOG=0 \
 	$(XSLTPROC) $(XSLTPROC_FLAGS) \
 	$(DOCBOOK_DEFAULT_PARAMS) $(DOCBOOK_FOP_PARAMS) \
@@ -154,10 +161,22 @@ $(DOCBOOK_FO_TITLEPAGE_TEMPLATE):	$(DOCBOOK_FO_TITLEPAGE_TEMPLATE_SPEC)
 %.db.xml:	../Brampuino/%.xml menu2docbook.xsl
 	$(XSLTPROC) $(XSLTPROC_FLAGS) --output $@ menu2docbook.xsl $<
 
+$(PUBDATE_FILE):	usersmanual.db.xml global.xml $(MENU_DOCBOOK_FILE) \
+			$(PUBDATE_FILE_CREATOR)
+	$(PUBDATE_FILE_CREATOR) --pubdate >$@
+
+$(DATE_FILE):	usersmanual.db.xml global.xml $(MENU_DOCBOOK_FILE) \
+		$(DATE_FILE_CREATOR)
+	$(DATE_FILE_CREATOR) >$@
+
 
 #
 # ebook generation
 #
+
+# create epub dir
+$(DB2EPUB_DIR):
+	mkdir -p $@
 
 # create images dirs
 $(DB2EPUB_IMAGE_DIR):
@@ -167,9 +186,13 @@ $(DB2EPUB_IMAGE_DIR):
 $(DB2EPUB_ICONS_DIR):
 	mkdir -p $@
 
+# copy local images
+copy_local_images:	$(DB2EPUB_DIR)
+	cp -r local-images $(DB2EPUB_DIR)
+
 # copy images
-copy_images:	$(DB2EPUB_ICONS_DIR)
-	cp -r $(DOCBOOK_XSL_DIR)/images $(DB2EPUB_ICONS_DIR)
+copy_images:	$(DB2EPUB_ICONS_DIR) copy_local_images
+	cp -r $(DOCBOOK_XSL_DIR)/images/* $(DB2EPUB_ICONS_DIR)
 
 # mime type
 mimetype:
