@@ -3,6 +3,7 @@
 # top directory
 #
 .history
+.DS_Store
 
 #
 # source directory
@@ -15,13 +16,8 @@ Brampuino/.history
 manual/.history
 manual/OEBPS
 manual/META-INF
-
 manual/mimetype
-
 manual/usersmanual.db.epub
-
 manual/usersmanual.db.html
-
 manual/usersmanual.db.pdf
-
 manual/fo/brampuino-titlepage.xsl
