@@ -24,11 +24,32 @@
 //# include <Wire.h>
 # endif
 
+# include "lcd.h"
+
 # ifdef DEBUG
+#  define DEBUG_STRING_BUFFER_LENGTH 32
+//(LCD_COLUMNS + 1)
+
+/**
+ * copy PROGMEM strigs to this buffer for printing
+ */
+extern char debug_string_buffer[DEBUG_STRING_BUFFER_LENGTH];
+
 #  define DEBUG_GLOBAL_INIT Serial.begin(115200)
 #  define DEBUG_GLOBAL_FINI
-#  define DEBUG_PRINTLN_PSTR(_str) Serial.println(_str)
-#  define DEBUG_PRINT_PSTR(_str) Serial.print(_str)
+
+#  define DEBUG_PRINTLN_PSTR(_str) {			\
+    static prog_char msg[] PROGMEM = _str;		\
+    strcpy_P(debug_string_buffer, msg);			\
+    Serial.println(debug_string_buffer);		\
+  }
+
+#  define DEBUG_PRINT_PSTR(_str) {			\
+    static prog_char msg[] PROGMEM = _str;		\
+    strcpy_P(debug_string_buffer, msg);			\
+    Serial.print(debug_string_buffer);			\
+  }
+
 #  define DEBUG_PRINTLN(...) Serial.println(__VA_ARGS__)
 #  define DEBUG_PRINT(...) Serial.print(__VA_ARGS__)
 # else

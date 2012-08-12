@@ -1,5 +1,5 @@
 /*
- * configuration of hardware and software
+ * debugging
  * Copyright (C) 2012 Boris Boesler
  *
  * This program is free software; you can redistribute it and/or
@@ -16,21 +16,20 @@
  * along with this program; if not sse <http://www.gnu.org/licenses/>.
  */
 
-#ifndef __CONFIG_H__
-# define __CONFIG_H__
 
-//# define DEBUG
-//# define VERIFY_EXPOSURE_TIME
+# ifdef ARDUINO
+#  include <Arduino.h>
+//# include <Wire.h>
+# endif
 
-# define BRAMPUINO_PRINT_INTERVAL_IN_MENU
+#include "config.h"
+#include "debug.h"
 
-//# define HAVE_RTC
-# define HAVE_CAMERA
-# define HAVE_ADAFRUIT_RGB_SHIELD
+#ifdef DEBUG
 
-/*
- * use left key in menus with explicit value, else use a stack
+/**
+ * copy PROGMEM strigs to this buffer for printing
  */
-//#define MENU_USE_LEFT_KEY
+char debug_string_buffer[DEBUG_STRING_BUFFER_LENGTH];
 
 #endif

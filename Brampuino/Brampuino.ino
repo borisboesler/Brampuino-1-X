@@ -25,8 +25,10 @@
 
 #ifdef HAVE_CAMERA
 # define BRAMPUINO_VERSION_MINOR "2"
+# define BRAMPUINO_VERSION_PATCHLEVEL "1"
 #else
-# define BRAMPUINO_VERSION_MINOR "NoCamera"
+# define BRAMPUINO_VERSION_MINOR "No"
+# define BRAMPUINO_VERSION_PATCHLEVEL "Camera"
 #endif
 
 #define BRAMPUINO_LINEAR_INCREMENT 0
@@ -43,19 +45,19 @@
 #if 0
 // arduino SDK needs this to add include paths, no spaces allowed
 #include <Wire.h>
-//#include <SoftwareSerial.h>
-#include <Adafruit_MCP23017.h>
 #include <Adafruit_RGBLCDShield.h>
-#include <avrpins.h>
-#include <max3421e.h>
-#include <usbhost.h>
-#include <usb_ch9.h>
 #include <Usb.h>
-#include <usbhub.h>
-#include <address.h>
-#include <message.h>
-#include <ptp.h>
 #include <canoneos.h>
+//#include <SoftwareSerial.h>
+//#include <Adafruit_MCP23017.h>
+//#include <avrpins.h>
+//#include <max3421e.h>
+//#include <usbhost.h>
+//#include <usb_ch9.h>
+//#include <usbhub.h>
+//#include <address.h>
+//#include <message.h>
+//#include <ptp.h>
 #endif
 
 #include "brampuino.h"
@@ -181,7 +183,9 @@ void print_version()
   lcd.setCursor(0, 0);
   PRINT(BRAMPUINO_NAME);
   lcd.setCursor(0, 1);
-  PRINT("v" BRAMPUINO_VERSION_MAJOR "." BRAMPUINO_VERSION_MINOR);
+  PRINT("v" BRAMPUINO_VERSION_MAJOR
+	"." BRAMPUINO_VERSION_MINOR
+	"." BRAMPUINO_VERSION_PATCHLEVEL);
 }
 
 
@@ -217,16 +221,19 @@ static void logging()
   else {
     DEBUG_PRINTLN(settings.exposure.u.exponential.ev_change);
   }
-  DEBUG_PRINTLN(settings.interval.time);
-
   // exposure times set by user
   DEBUG_PRINTLN(settings.exposure.start_time);
   DEBUG_PRINTLN(settings.exposure.min);
   DEBUG_PRINTLN(settings.exposure.max);
+
   // interval times set by user
   DEBUG_PRINTLN(settings.interval.time);
   DEBUG_PRINTLN(settings.interval.min);
   DEBUG_PRINTLN(settings.interval.max);
+
+  // ISO
+  DEBUG_PRINTLN(iso_values[current_settings.iso.iso_index]);
+
   // max exposure
   DEBUG_PRINTLN(settings.max_exposures);
   //write(file, current_settings.exposure);
@@ -256,6 +263,8 @@ unsigned long new_bulb_time(unsigned long shot,
       // round
       bulb_time = bulb_time_d + 0.5;
     }
+    DEBUG_PRINT_PSTR("new bulb time:");
+    DEBUG_PRINTLN(bulb_time);
 
     if(BRAMPUINO_AUTO_ISO_CHANGE) {
       if(bulb_time > settings.exposure.max) {
@@ -277,7 +286,7 @@ unsigned long new_bulb_time(unsigned long shot,
 	      current_settings.exposure.start_time = new_time;
 	      bulb_time = new_time;
 	      start_time = new_time;
-	      adjusted_exposure_count = 0;
+	      adjusted_exposure_count = 1;
 	      shot = 1;
 	    }
 	  }
@@ -308,7 +317,7 @@ unsigned long new_bulb_time(unsigned long shot,
 		current_settings.exposure.start_time = new_time;
 		bulb_time = new_time;
 		start_time = new_time;
-		adjusted_exposure_count = 0;
+		adjusted_exposure_count = 1;
 		shot = 1;
 	      }
 	    }
@@ -641,6 +650,7 @@ void loop()
     }
 
     // ISO
+    lcd.setCursor(8, 0);
     PRINT(" ISO");
     PRINT(iso_values[current_settings.iso.iso_index]);
     PRINT(" ");

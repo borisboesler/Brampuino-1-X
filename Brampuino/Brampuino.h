@@ -34,7 +34,7 @@
 /**
  * the default exposure minimum time in milli seconds
  */
-# define BRAMPUINO_DEFAULT_MIN_EXPOSURE_TIME      (10L)
+# define BRAMPUINO_DEFAULT_MIN_EXPOSURE_TIME      (100L)
 /**
  * the default exposure maximum time in milli seconds
  */
@@ -93,7 +93,13 @@
 /**
  * the default exposure value change after FPS shots
  */
-# define BRAMPUINO_DEFAULT_EV_CHANGE      (1.0)
+# define BRAMPUINO_DEFAULT_EV_CHANGE      (0.0)
+/**
+ * default frames per second
+ */
+# define BRAMPUINO_DEFAULT_FPS      (25)
+
+
 
 /**
  * the default interval in milli seconds between two shots
@@ -117,11 +123,6 @@
  * the maximal interval in milli seconds between two shots that we want to have
  */
 # define BRAMPUINO_MAX_INTERVAL      (60L * 1000L)
-
-/**
- * default frames per second
- */
-# define BRAMPUINO_DEFAULT_FPS      (25)
 
 /**
  * the default number of maximal number of exposures

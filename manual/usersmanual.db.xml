@@ -206,12 +206,13 @@ along with this program; if not sse <http://www.gnu.org/licenses/>.
       The &BRAMPUINO1X; is a small device based on the <ulink
       url="http://www.arduino.cc">open Arduino hardware
       platform</ulink> to make series of shots automatically. In its
-      simpliest setting it acts as a normal intervalometer.
+      simpliest setting it acts as a normal intervalometer (this is
+      the default setting).
 
       It can be configured to be used as an HDRI intervalometer as well.
 
       Additionally it can be used as a Bulb Ramper like the <ulink
-      url="http://www.thewhippersnapper.com/LittleBramper/Site/Home.html">Little
+      url="http://www.thewhippersnapper.com/LittleBramper">Little
       Bramper</ulink>.
 
       The &BRAMPUINO1X; is one of the few devices that can bulb
@@ -726,8 +727,9 @@ B:1057<co id="running.screen.bulb" linkends="co.running.screen.bulb"/>/EV:1.00<c
       <title>&BRAMPUINO1X; as an Intervalometer</title>
       
       <para>
-	The &BRAMPUINO1X; can be used a simple intervalometer.  Set
-	the Interval parameters as needed.
+	The &BRAMPUINO1X;'s default configuration is to use
+	&BRAMPUINO1X; as a simple intervalometer. Set the Interval
+	parameters as needed.
       </para>
 
       <para>

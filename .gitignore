@@ -21,3 +21,11 @@ manual/usersmanual.db.epub
 manual/usersmanual.db.html
 manual/usersmanual.db.pdf
 manual/fo/brampuino-titlepage.xsl
+
+manual/catalog.xml
+
+manual/date.db.xml
+
+manual/menu.db.xml
+
+manual/pubdate.db.xml

@@ -1,14 +1,20 @@
-# Hey Emacs, this is a -*- Makefile -*- file
-# Project:     Brampuino 1-X
-# File name:   doc/Makefile
-# Purpose:     documentaion Makefile
-# Author:      Boris Boesler
-# Modified by: 
-# Created:     30.07.2012
-# Copyright:   (c) 2012 Boris Boesler
-# Licence:     
-# CVS-ID:      $Id: Makefile 22 2012-08-08 08:35:41Z boesler $
-#
+ 
+# Create DocBook files from XML specifications
+# Copyright (C) 2012 Boris Boesler
+# 
+# This program is free software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License
+# as published by the Free Software Foundation; either version 2
+# of the License, or (at your option) any later version.
+# 
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+# 
+# You should have received a copy of the GNU General Public License
+# along with this program; if not sse <http://www.gnu.org/licenses/>.
+
 
 # tools
 XSLTPROC=xsltproc
