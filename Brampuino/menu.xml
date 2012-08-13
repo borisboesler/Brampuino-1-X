@@ -96,13 +96,14 @@
 	</doc>
       </menu>
       <!-- linear increment -->
-      <!-- disabled
-	   <menu id="expinc" label="Exp.Increment"
-	   select="menu_select_exp_increment">      <doc>
-	   <para>
-	   </para>
-	   </doc>
-	   </menu>
+      <!-- disabled, for testing purposes only
+      <menu id="expinc" label="Exp.Increment"
+	    select="menu_select_exp_increment">
+	<doc>
+	  <para>
+	  </para>
+	</doc>
+      </menu>
       -->
       <!--
 	  exponential

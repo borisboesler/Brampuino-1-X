@@ -31,7 +31,6 @@
 # define BRAMPUINO_VERSION_PATCHLEVEL "Camera"
 #endif
 
-#define BRAMPUINO_LINEAR_INCREMENT 0
 #define BRAMPUINO_AUTO_ISO_CHANGE settings.iso.auto_ramp
 
 // include the library code:

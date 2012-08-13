@@ -420,6 +420,7 @@ along with this program; if not sse <http://www.gnu.org/licenses/>.
 	  the exposure offset to a value around 200. The camera needs
 	  this time to reset the mirror/shutter.
 	</para>
+	<!-- 2012-aug-13: on my canon 5d mk2 it's 190 ms -->
       </tip>
 
       <tip>
