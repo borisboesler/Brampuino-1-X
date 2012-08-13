@@ -81,6 +81,11 @@ extern int menu_start_line;
 extern int menu_cursor_line;
 
 /**
+ * true iff we changed a value via the menu / did not use CANCEL
+ */
+extern bool menu_changed_settings;
+
+/**
  * \{
  */
 

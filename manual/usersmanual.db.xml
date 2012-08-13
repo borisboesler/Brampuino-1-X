@@ -138,7 +138,7 @@ along with this program; if not sse <http://www.gnu.org/licenses/>.
       <title>Licence</title>
       <!-- creative commons ? -->
       <para>
-	GPLv2
+	GPL v2
       </para>
     </legalnotice>
     
@@ -449,14 +449,6 @@ along with this program; if not sse <http://www.gnu.org/licenses/>.
       </menuchoice>
       -->
 
-      <warning>
-	<title>Storing Values</title>
-	<para>
-	  At the current development status parameter values are not
-	  stored in the EEPROM.
-	</para>
-      </warning>
-
     </section>
 
 
@@ -584,9 +576,12 @@ along with this program; if not sse <http://www.gnu.org/licenses/>.
       <title>Running &BRAMPUINO1X;</title>
       
       <para>
-	When Start in the menu is selected then the RGB LCD Screen
-	switches its color to <emphasis>red</emphasis> and looks like
-	this:
+	When Start in the menu is selected then &BRAMPUINO1X; stores
+	he current setting to the <literal>EEPROM</literal>, if the
+	values have changed from the previous setting, first.
+
+	The it switches the RGB LCD Screen color to
+	<emphasis>red</emphasis> and looks like this:
 	<screen>
 #3<co id="running.screen.current_shot" linkends="co.running.screen.current_shot"/>/5<co id="running.screen.max_shot" linkends="co.running.screen.max_shot"/> ISO50<co id="running.screen.iso" linkends="co.running.screen.iso"/>
 B:1057<co id="running.screen.bulb" linkends="co.running.screen.bulb"/>/EV:1.00<co id="running.screen.ev" linkends="co.running.screen.iso"/>
@@ -603,12 +598,12 @@ B:1057<co id="running.screen.bulb" linkends="co.running.screen.bulb"/>/EV:1.00<c
 	<callout id="co.running.screen.max_shot"
 		 arearefs="running.screen.max_shot">
 	  <para>
-	    The maximum number of shots
+	    The maximum number of shots (5)
 	  </para>
 	</callout>
 	<callout id="co.running.screen.iso" arearefs="running.screen.iso">
 	  <para>
-	    The current ISO setting.
+	    The current ISO setting (ISO 50)
 	  </para>
 	</callout>
 	<callout id="co.running.screen.bulb" arearefs="running.screen.bulb">
@@ -631,7 +626,7 @@ B:1057<co id="running.screen.bulb" linkends="co.running.screen.bulb"/>/EV:1.00<c
 	url="http://vimeo.com/46414677/">vimeo</ulink>.
 
 	<figure id="figure:in-action">
-	  <title>&BRAMPUINO1X; in action</title>
+	  <title>&BRAMPUINO1X; In Action</title>
 	  <mediaobject>
 	    <imageobject>
 	      <imagedata fileref="local-images/brampuino-in-action.jpg"
@@ -963,7 +958,7 @@ B:1057<co id="running.screen.bulb" linkends="co.running.screen.bulb"/>/EV:1.00<c
 
 <!-- LocalWords:  Boesler Arduino Uno USB RGB MsTimer Intervalometer HDRI MX
 -->
-<!-- LocalWords:  NonCommercial ShareAlike intervalometer Bramper Adafruit
+<!-- LocalWords:  NonCommercial ShareAlike intervalometer Bramper Adafruit GPL
 -->
-<!-- LocalWords:  LiveView EEPROM Unported Precompiled
+<!-- LocalWords:  LiveView EEPROM Unported Precompiled vimeo
 -->

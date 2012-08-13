@@ -49,7 +49,6 @@ extern const menu_entry_t menu_interval[];
  */
 static char buffer[LCD_COLUMNS + 1];
 
-
 /* ******************** */
 /* menu data structure */
 
@@ -100,6 +99,12 @@ int menu_start_line = 0;
  * selected menu in LCD with some cursor
  */
 int menu_cursor_line = 0;
+
+
+/**
+ * true iff we changed a value via the menu / did not use CANCEL
+ */
+bool menu_changed_settings = false;
 
 
 /*
@@ -163,6 +168,7 @@ long menu_signed_long(const char* menu, long val, long min_val, long max_val)
     }
   } while(MENU_BUTTON_SELECT != c1);
 
+  menu_changed_settings = true;
   return(val);
 }
 
@@ -227,6 +233,7 @@ unsigned long menu_unsigned_long(const char* menu, unsigned long val,
     }
   } while(MENU_BUTTON_SELECT != c1);
 
+  menu_changed_settings = true;
   return(val);
 }
 
@@ -275,6 +282,7 @@ unsigned menu_index_unsigned_long_array(const char* menu, unsigned long val,
     }
   } while(MENU_BUTTON_SELECT != c1);
 
+  menu_changed_settings = true;
   val = index;
   return(val);
 }
@@ -335,6 +343,7 @@ float menu_float(const char* menu, float val, float step, bool sign)
     }
   } while(MENU_BUTTON_SELECT != c1);
 
+  menu_changed_settings = true;
   return(val);
 }
 
@@ -383,6 +392,7 @@ bool menu_bool(const char* menu, bool val)
     }
   } while(MENU_BUTTON_SELECT != c1);
 
+  menu_changed_settings = true;
   return(val);
 }
 
@@ -482,6 +492,7 @@ void menu_minmax_int(const char *text, long unsigned* val1, long unsigned* val2,
   // store values
   *val1 = values[0];
   *val2 = values[1];
+  menu_changed_settings = true;
 }
 
 /* ************************************************************ */

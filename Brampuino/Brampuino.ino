@@ -25,7 +25,7 @@
 
 #ifdef HAVE_CAMERA
 # define BRAMPUINO_VERSION_MINOR "2"
-# define BRAMPUINO_VERSION_PATCHLEVEL "1"
+# define BRAMPUINO_VERSION_PATCHLEVEL "2"
 #else
 # define BRAMPUINO_VERSION_MINOR "No"
 # define BRAMPUINO_VERSION_PATCHLEVEL "Camera"
@@ -37,6 +37,7 @@
 #include <Arduino.h>
 #include <stdint.h>
 #include <avr/pgmspace.h>
+#include <avr/eeprom.h>
 #include "MsTimer2.h"
 #include <math.h>
 
@@ -119,7 +120,8 @@ settings_t settings = { BRAMPUINO_DEFAULT_START_DELAY,
 			},
 			BRAMPUINO_DEFAULT_MAX_EXPOSURES,
 			BRAMPUINO_DEFAULT_FPS,
-			BRAMPUINO_DEFAULT_MOVE_FOCUS_STEP
+			BRAMPUINO_DEFAULT_MOVE_FOCUS_STEP,
+			~BRAMPUINO_EEPROM_MAGIC
 };
 
 /**
@@ -133,7 +135,8 @@ volatile uint16_t adjusted_exposure_count = 0;
 volatile uint16_t exposure_stop = 0;
 
 /**
- * current expsoure time and interval in ms
+ * current expsoure time and interval in ms, entries will be modified
+ * whle Brampuino 1-X is running
  */
 static settings_t current_settings;
 
@@ -482,6 +485,20 @@ void ATTRIBUT_INTERRUPT start_exposure()
  */
 void start_interval_delay()
 {
+  // store setings in EEPROM?
+  if(menu_changed_settings) {
+    DEBUG_PRINTLN_PSTR("write setting to EEPROM");
+    // mark as valid
+    settings.settings_in_eeprom = BRAMPUINO_EEPROM_MAGIC;
+    settings_t *eeprom_settings = (settings_t *)BRAMPUINO_EEPROM_SETTING_ADDRESS;
+    // write &settings -> eeprom_settings
+    eeprom_write_block((const void*)&settings,
+		       (void*)eeprom_settings,
+		       sizeof(settings_t));
+    // clear setting change
+    menu_changed_settings = false;
+  }
+
   if(BRAMPUINO_STATE_EXPOSING == current_state) {
     // continue shooting with new settings
     return;
@@ -566,6 +583,23 @@ void setup(void)
 
   // set up start state
   current_state = BRAMPUINO_STATE_MENU;
+
+  // load setting from EEPROM
+  {
+    settings_t *eeprom_settings = (settings_t *)BRAMPUINO_EEPROM_SETTING_ADDRESS;
+    uint32_t read_magic = eeprom_read_dword(&(eeprom_settings -> settings_in_eeprom));
+    if(BRAMPUINO_EEPROM_MAGIC == read_magic) {
+      DEBUG_PRINTLN_PSTR("load settings from EEPROM");
+      // eeprom_settings -> setting
+      eeprom_read_block((void*)&settings,
+			(const void*)eeprom_settings,
+			sizeof(settings_t));
+    }
+    else {
+      DEBUG_PRINTLN_PSTR("no settings in EEPROM");
+      DEBUG_PRINTLN(read_magic, HEX);
+    }
+  }
 
   // leave message on screen
   delay(1000);
