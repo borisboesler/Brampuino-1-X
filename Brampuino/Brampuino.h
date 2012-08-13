@@ -23,6 +23,10 @@
 # include "debug.h"
 
 /**
+ * \{
+ */
+
+/**
  * the default start delay in milli seconds before the first shot
  */
 # define BRAMPUINO_DEFAULT_START_DELAY   (1L * 1000L)
@@ -134,6 +138,24 @@
  */
 # define BRAMPUINO_DEFAULT_MOVE_FOCUS_STEP (0)
 
+/**
+ * \}
+ */
+
+/**
+ * address in EEPROM to store settings
+ */
+#define BRAMPUINO_EEPROM_SETTING_ADDRESS (0)
+
+/**
+ * magic to mark setting as saved EEPROM 
+ */
+#define BRAMPUINO_EEPROM_MAGIC \
+  (  ((uint32_t)'B' << 24)     \
+   | ((uint32_t)'R' << 16)     \
+   | ((uint32_t)'1' << 8)      \
+   |  (uint32_t)'X')
+
 
 #define MIN(_x, _y) (((_x) < (_y)) ? (_x) : (_y))
 #define MAX(_x, _y) (((_x) >= (_y)) ? (_x) : (_y))
@@ -172,6 +194,8 @@ typedef struct _settings_t {
   unsigned long max_exposures;       /**< number of exposures */
   unsigned fps;
   int move_focus;             /**< number of steps to focus */
+  uint32_t settings_in_eeprom;/**< if == BRAMPUINO_EEPROM_MAGIC
+				   -> settings in EEPROM */
 } settings_t;
 
 /**
