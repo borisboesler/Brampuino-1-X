@@ -7,9 +7,11 @@
     
 extern const menu_entry_t menu_top[3+1];
     
-extern const menu_entry_t menu_settings[6+1];
+extern const menu_entry_t menu_settings[5+1];
     
-extern const menu_entry_t menu_exposure[6+1];
+extern const menu_entry_t menu_exposure[7+1];
+    
+extern const menu_entry_t menu_exposure_num[2+1];
     
 extern const menu_entry_t menu_interval[3+1];
     
@@ -33,6 +35,12 @@ prog_char menu_label_expfps[] PROGMEM = "Exp.FPS";
     
 prog_char menu_label_expev[] PROGMEM = "Exp.EV.Change";
     
+prog_char menu_label_exposure_num[] PROGMEM = "Num. of Exp.";
+    
+prog_char menu_label_maxexp[] PROGMEM = "Max. Exp.";
+    
+prog_char menu_label_leadin[] PROGMEM = "Lead In";
+    
 prog_char menu_label_interval[] PROGMEM = "Interval";
     
 prog_char menu_label_intervaltime[] PROGMEM = "Interval Time";
@@ -48,8 +56,6 @@ prog_char menu_label_isomin[] PROGMEM = "ISO Min";
 prog_char menu_label_isomax[] PROGMEM = "ISO Max";
     
 prog_char menu_label_isoauto[] PROGMEM = "ISO Ramp";
-    
-prog_char menu_label_maxexp[] PROGMEM = "Max. Exp.";
     
 prog_char menu_label_movefocus[] PROGMEM = "Move Focus Steps";
     
@@ -106,7 +112,7 @@ const menu_entry_t menu_top[3+1] = {
 };
 
     
-const menu_entry_t menu_settings[6+1] = {
+const menu_entry_t menu_settings[5+1] = {
     
       { menu_label_startdelay,
 
@@ -169,19 +175,6 @@ const menu_entry_t menu_settings[6+1] = {
 	,
       NO_FUNC },
     
-      { menu_label_maxexp,
-
-      
-#ifdef MENU_USE_LEFT_KEY
-      
-	  menu_top,
-#endif
-
-      NO_MENU,
-
-      menu_select_max_exposures,
-      menu_select_max_exposures },
-    
       { menu_label_movefocus,
 
       
@@ -203,7 +196,7 @@ const menu_entry_t menu_settings[6+1] = {
 };
 
     
-const menu_entry_t menu_exposure[6+1] = {
+const menu_entry_t menu_exposure[7+1] = {
     
       { menu_label_exptime,
 
@@ -282,6 +275,58 @@ const menu_entry_t menu_exposure[6+1] = {
 
       menu_select_exp_ev_change,
       menu_select_exp_ev_change },
+    
+      { menu_label_exposure_num,
+
+      
+#ifdef MENU_USE_LEFT_KEY
+      
+	  menu_settings,
+#endif
+
+      
+	  menu_exposure_num,
+
+      
+	  NO_FUNC
+	,
+      NO_FUNC },
+    
+    { NULL,
+#ifdef MENU_USE_LEFT_KEY
+    NO_MENU,
+#endif
+    NO_MENU, NO_FUNC,NO_FUNC }
+};
+
+    
+const menu_entry_t menu_exposure_num[2+1] = {
+    
+      { menu_label_maxexp,
+
+      
+#ifdef MENU_USE_LEFT_KEY
+      
+	  menu_exposure,
+#endif
+
+      NO_MENU,
+
+      menu_select_max_exposures,
+      menu_select_max_exposures },
+    
+      { menu_label_leadin,
+
+      
+#ifdef MENU_USE_LEFT_KEY
+      
+	  menu_exposure,
+#endif
+
+      NO_MENU,
+
+      menu_select_exp_lead_in,
+      menu_select_exp_lead_in },
     
     { NULL,
 #ifdef MENU_USE_LEFT_KEY

@@ -700,6 +700,50 @@ B:1057<co id="running.screen.bulb" linkends="co.running.screen.bulb"/>/EV:1.00<c
 
     </section>
     
+    <section>
+      <title>The Exposure-Interval Cycle</title>
+
+      <para>
+	In <xref linkend="figure:exposure-interval-cycle"/> the normal
+	exposure-interval cycle is shown: the overall bulb-time is the
+	sum of the exposure offset time and the exposure time. Each
+	exposure starts when then the interval time is over.
+
+	<figure id="figure:exposure-interval-cycle">
+	  <title>Normal Exposure-Interval Cycle</title>
+	  <mediaobject>
+	    <imageobject>
+	      <imagedata fileref="local-images/exposure-interval.svg"
+			 format="SVG"
+			 align="center" valign="top"
+			 width="15cm"/>
+	    </imageobject>
+	  </mediaobject>
+	</figure>
+      </para>
+
+      <para>
+	In <xref linkend="figure:exposure-interval-cycle-cut"/> the
+	adapted exposure-interval cycle is shown: &BRAMPUINO1X; uses
+	the minimal interval time, if the interval time minus the bulb
+	time is less than the configured minimal interval time.
+
+	<figure id="figure:exposure-interval-cycle-cut">
+	  <title>Adapted Exposure-Interval Cycle</title>
+	  <mediaobject>
+	    <imageobject>
+	      <imagedata fileref="local-images/exposure-interval-cut.svg"
+			 format="SVG"
+			 align="center" valign="top"
+			 width="15cm"/>
+	    </imageobject>
+	  </mediaobject>
+	</figure>
+      </para>
+
+
+    </section>
+
   </chapter>
 
 
@@ -798,7 +842,9 @@ B:1057<co id="running.screen.bulb" linkends="co.running.screen.bulb"/>/EV:1.00<c
 	Set the number of shots X as the maximum number of shots:
 	<menuchoice>
 	  <guimenu>Settings</guimenu>
-	  <guisubmenu>Max.Exp</guisubmenu>
+	  <guisubmenu>Exposure</guisubmenu>
+	  <guisubmenu>Num. of Exp.</guisubmenu>
+	  <guisubmenu>Max. Exp.</guisubmenu>
 	  <guimenuitem>X</guimenuitem>
 	</menuchoice>
       </para>
@@ -839,6 +885,18 @@ B:1057<co id="running.screen.bulb" linkends="co.running.screen.bulb"/>/EV:1.00<c
 	Set parameters as in <xref
 	linkend="section:intervalometer"/> and <xref
 	linkend="section:focus-stacking"/>.
+      </para>
+
+      <para>
+	Set the Exposure Lead In to the number of shots for which the
+	initial exposure value should not be ramped.
+	<menuchoice>
+	  <guimenu>Settings</guimenu>
+	  <guisubmenu>Exposure</guisubmenu>
+	  <guisubmenu>Num. of Exp.</guisubmenu>
+	  <guimenuitem>Lead In</guimenuitem>
+	  <guimenuitem>X</guimenuitem>
+	</menuchoice>.
       </para>
 
       <para>

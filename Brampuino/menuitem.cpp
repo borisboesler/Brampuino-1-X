@@ -37,6 +37,7 @@ extern const menu_entry_t menu_settings[];
 extern const menu_entry_t menu_lcd[];
 extern const menu_entry_t menu_clock[];
 extern const menu_entry_t menu_exposure[];
+extern const menu_entry_t menu_exposure_num[];
 extern const menu_entry_t menu_iso[];
 extern const menu_entry_t menu_interval[];
 
@@ -658,7 +659,6 @@ void menu_select_exp_ev_change(int menu_num)
 }
 
 
-
 /*
  * interval
  */
@@ -713,10 +713,22 @@ void menu_select_interval_max(int menu_num)
  */
 void menu_select_max_exposures(int menu_num)
 {
-  strcpy_P(buffer, menu_settings[menu_num].item);
+  strcpy_P(buffer, menu_exposure_num[menu_num].item);
   settings.max_exposures = menu_unsigned_long(buffer, settings.max_exposures);
   DEBUG_PRINT_PSTR("set max # exposures to ");
   DEBUG_PRINTLN(settings.max_exposures);
+}
+
+/*
+ * lead in
+ */
+void menu_select_exp_lead_in(int menu_num)
+{
+  strcpy_P(buffer, menu_exposure_num[menu_num].item);
+  settings.exposure.lead_in = menu_unsigned_long(buffer,
+						 settings.exposure.lead_in);
+  DEBUG_PRINT_PSTR("set exposure lead in to:");
+  DEBUG_PRINTLN(settings.exposure.lead_in);
 }
 
 

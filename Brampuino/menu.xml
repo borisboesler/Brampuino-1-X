@@ -128,6 +128,38 @@
 	  </para>
 	</doc>
       </menu>
+
+      <menu id="exposure_num" label="Num. of Exp.">
+	<doc>
+	  <para>
+	    Number of exposures and lead in
+	  </para>
+	</doc>
+
+	<!--
+	    number of exposures
+	-->
+	<menu id="maxexp" label="Max. Exp." select="menu_select_max_exposures">
+	  <doc>
+	    <para>
+	      The number of shots after which &BRAMPUINO1X; stops shooting.
+	    </para>
+	  </doc>
+	</menu>
+	
+	<!--
+	    exposure lead in: shots without a exposure time change
+	-->
+	<menu id="leadin" label="Lead In" select="menu_select_exp_lead_in">
+	  <doc>
+	    <para>
+	      The Exposure Lead In is a number of shots at the beginning
+	      of a sequence for which the exposure time will not be
+	      adjusted.
+	    </para>
+	  </doc>
+	</menu>
+      </menu>
     </menu>
 
     <!--
@@ -195,17 +227,6 @@
 	  </para>
 	</doc>
       </menu>      
-    </menu>
-    
-    <!--
-	number of exposures
-    -->
-    <menu id="maxexp" label="Max. Exp." select="menu_select_max_exposures">
-      <doc>
-	<para>
-	  The number of shots after which &BRAMPUINO1X; stops shooting.
-	</para>
-      </doc>
     </menu>
     
     <!--

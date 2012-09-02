@@ -53,6 +53,10 @@
  */
 # define BRAMPUINO_MAX_EXPOSURE_TIME      (60L * 1000L)
 
+/**
+ * the default exposure lead in
+ */
+# define BRAMPUINO_DEFAULT_LEAD_IN      (0L)
 
 /**
  * the default exposure offset in milli seconds
@@ -179,6 +183,7 @@ typedef struct _settings_t {
 	double ev_change;     /**< exposure value change after FPS shots */
       } exponential;
     } u;
+    unsigned long lead_in;    /**< lead in */
   } exposure;
   struct _iso {
     unsigned long iso_index;  /**< the used ISO setting */

@@ -210,6 +210,11 @@ void menu_select_exp_fps(int menu_num);
 void menu_select_exp_ev_change(int menu_num);
 
 /**
+ * lead in
+ */
+void menu_select_exp_lead_in(int menu_num);
+
+/**
  * \}
  */
 

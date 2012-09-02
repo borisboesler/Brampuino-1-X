@@ -29,3 +29,7 @@ manual/date.db.xml
 manual/menu.db.xml
 
 manual/pubdate.db.xml
+
+*.epub
+
+*.pdf
