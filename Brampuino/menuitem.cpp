@@ -315,14 +315,14 @@ float menu_float(const char* menu, float val, float step, bool sign)
       ++pressed;
       if((DEBOUNCE_MULTIPLIED > multiplied) && (DEBOUNCE_COUNT < pressed)) {
 	pressed = 1;
-	adding *= 10;
+	adding *= 10.0;
 	++multiplied;
       }
       switch(c1) {
       case MENU_BUTTON_DECREMENT:
 	val -= adding;
-	if((0 > val) && !sign) {
-	  val = 0;
+	if((0.0 > val) && !sign) {
+	  val = 0.0;
 	}
 	break;
       case MENU_BUTTON_INCREMENT:
@@ -341,6 +341,10 @@ float menu_float(const char* menu, float val, float step, bool sign)
       pressed = 0;
       adding = step;
       multiplied = 0;
+    }
+    // without this test we can get a -0.0 !!
+    if((-step < val) && (val < step)) {
+      val = 0.0;
     }
   } while(MENU_BUTTON_SELECT != c1);
 
@@ -587,7 +591,7 @@ void menu_select_iso_min(int menu_num)
   settings.iso.min_index
     = menu_index_unsigned_long_array(buffer,
 				     settings.iso.min_index,
-				     iso_values,
+				     (unsigned long*)iso_values,
 				     sizeof(iso_values) / sizeof(unsigned long));
   DEBUG_PRINT_PSTR("set ISO min index to:");
   DEBUG_PRINTLN(settings.iso.min_index);
@@ -603,7 +607,7 @@ void menu_select_iso_max(int menu_num)
   settings.iso.max_index
     = menu_index_unsigned_long_array(buffer,
 				     settings.iso.max_index,
-				     iso_values,
+				     (unsigned long*)iso_values,
 				     sizeof(iso_values) / sizeof(unsigned long));
   DEBUG_PRINT_PSTR("set ISO max index to:");
   DEBUG_PRINTLN(settings.iso.max_index);

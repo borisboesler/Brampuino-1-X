@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+      this is a generated file, do not edit
+-->
+    
+<!ENTITY MENU_settings "<literal>Settings</literal>">
+    
+<!ENTITY MENU_startdelay "<literal>Start Delay</literal>">
+    
+<!ENTITY MENU_exposure "<literal>Exposure</literal>">
+    
+<!ENTITY MENU_exptime "<literal>Exp.Time</literal>">
+    
+<!ENTITY MENU_expmin "<literal>Exp.Min</literal>">
+    
+<!ENTITY MENU_expmax "<literal>Exp.Max</literal>">
+    
+<!ENTITY MENU_expoffset "<literal>Exp.Offset</literal>">
+    
+<!ENTITY MENU_expfps "<literal>Exp.FPS</literal>">
+    
+<!ENTITY MENU_expev "<literal>Exp.EV.Change</literal>">
+    
+<!ENTITY MENU_exposure_num "<literal>Num. of Exp.</literal>">
+    
+<!ENTITY MENU_maxexp "<literal>Max. Exp.</literal>">
+    
+<!ENTITY MENU_leadin "<literal>Lead In</literal>">
+    
+<!ENTITY MENU_interval "<literal>Interval</literal>">
+    
+<!ENTITY MENU_intervaltime "<literal>Interval Time</literal>">
+    
+<!ENTITY MENU_intervalmin "<literal>Intv.Min</literal>">
+    
+<!ENTITY MENU_intervalmax "<literal>Intv.Max</literal>">
+    
+<!ENTITY MENU_iso "<literal>ISO</literal>">
+    
+<!ENTITY MENU_isomin "<literal>ISO Min</literal>">
+    
+<!ENTITY MENU_isomax "<literal>ISO Max</literal>">
+    
+<!ENTITY MENU_isoauto "<literal>ISO Ramp</literal>">
+    
+<!ENTITY MENU_movefocus "<literal>Move Focus Steps</literal>">
+    
+<!ENTITY MENU_start "<literal>Start</literal>">
+    
+<!ENTITY MENU_version "<literal>Version</literal>">
+    

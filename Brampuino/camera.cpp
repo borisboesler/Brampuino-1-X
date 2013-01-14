@@ -165,9 +165,11 @@ void CanonCamera::stop_bulb()
  */
 uint16_t CanonCamera::switch_liveview(bool on)
 {
+  uint16_t res = PTP_RC_GeneralError;
   if(is_connected()) {
-    Eos.SwitchLiveView(on);
+    res = Eos.SwitchLiveView(on);
   }
+  return(res);
 }
 
 
@@ -176,9 +178,11 @@ uint16_t CanonCamera::switch_liveview(bool on)
  */
 uint16_t CanonCamera::move_focus(uint16_t step)
 {
+  uint16_t res = PTP_RC_GeneralError;
   if(is_connected()) {
-    Eos.MoveFocus(step);
+    res = Eos.MoveFocus(step);
   }
+  return(res);
 }
 
 

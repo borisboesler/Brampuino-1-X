@@ -30,8 +30,13 @@ XML_FILES = $(filter %.xml,$(SOURCES))
 FO_FILES = $(XML_FILES:.xml=.fo)
 PDF_FILES = $(XML_FILES:.xml=.pdf)
 HTML_FILES = $(XML_FILES:.xml=.html)
+B1X_VERSION = $(B1X_MAJOR).$(B1X_MINOR).$(B1X_PATCHLEVEL)
+VERSIONED_PDF_FILES = $(PDF_FILES:.db.pdf=.$(B1X_VERSION).pdf)
+MENU_ENTITIES_FILE = menu-entities.xml
+
 # ebook
 EPUB_FILES = $(XML_FILES:.xml=.epub)
+VERSIONED_EPUB_FILES = $(EPUB_FILES:.db.epub=.$(B1X_VERSION).epub)
 DB2EPUB_DIR = OEBPS
 DB2EPUB_IMAGE_DIR = $(DB2EPUB_DIR)/images
 DB2EPUB_ICONS_DIR = $(DB2EPUB_DIR)/images/icons
@@ -59,19 +64,20 @@ PUBDATE_FILE_CREATOR=./git-date.xml.sh
 # used menufile
 MENU_FILE = $(MENU_DOCBOOK_FILE)
 
-CLEANFILES = $(PDF_FILES) $(HTML_FILES)
+CLEANFILES = $(PDF_FILES) $(HTML_FILES) $(MENU_ENTITIES_FILE)
 
 
 #
 # targets
 #
 
-all:	$(CATALOG_FILE) $(PDF_FILES) $(HTML_FILES) $(EPUB_FILES) $(MENU_FILE)
+all:	$(CATALOG_FILE) $(PDF_FILES) $(HTML_FILES) $(EPUB_FILES) $(MENU_FILE) \
+	$(VERSIONED_PDF_FILES) $(VERSIONED_EPUB_FILES)
 
 clean:
 	$(RM) $(CATALOG_FILE) $(PDF_FILES) $(HTML_FILES) $(FO_FILES)
 	$(RM) $(EPUB_FILES) mimetype $(DOCBOOK_FO_TITLEPAGE_TEMPLATE)
-	$(RM)  $(MENU_FILE) $(PUBDATE_FILE) $(DATE_FILE)
+	$(RM)  $(MENU_FILE) $(MENU_ENTITIES_FILE) $(PUBDATE_FILE) $(DATE_FILE)
 	$(RM) -r $(DB2EPUB_DIR) META-INF
 
 
@@ -132,6 +138,10 @@ $(DOCBOOK_FO_TITLEPAGE_TEMPLATE):	$(DOCBOOK_FO_TITLEPAGE_TEMPLATE_SPEC)
 	$(DOCBOOK_XSL_DIR)/template/titlepage.xsl \
 	$(DOCBOOK_FO_TITLEPAGE_TEMPLATE_SPEC)
 
+
+$(MENU_ENTITIES_FILE):	../Brampuino/menu.xml menu-entities.xsl
+	$(XSLTPROC) $(XSLTPROC_FLAGS) --output $@ menu-entities.xsl $<
+
 # %.in -> %
 %:	%.in
 	$(CP) $< sed_tmp.txt
@@ -153,7 +163,7 @@ $(DOCBOOK_FO_TITLEPAGE_TEMPLATE):	$(DOCBOOK_FO_TITLEPAGE_TEMPLATE_SPEC)
 
 # xml -> fo
 %.fo:	%.xml $(CATALOG_FILE) $(DOCBOOK_FO_TITLEPAGE_TEMPLATE) $(MENU_FILE) \
-	$(PUBDATE_FILE) $(DATE_FILE)
+	$(PUBDATE_FILE) $(DATE_FILE) $(MENU_ENTITIES_FILE)
 	env XML_CATALOG_FILES=$(CATALOG_FILE) XML_DEBUG_CATALOG=0 \
 	$(XSLTPROC) $(XSLTPROC_FLAGS) \
 	$(DOCBOOK_DEFAULT_PARAMS) $(DOCBOOK_FOP_PARAMS) \
@@ -174,6 +184,10 @@ $(PUBDATE_FILE):	usersmanual.db.xml global.xml $(MENU_DOCBOOK_FILE) \
 $(DATE_FILE):	usersmanual.db.xml global.xml $(MENU_DOCBOOK_FILE) \
 		$(DATE_FILE_CREATOR)
 	$(DATE_FILE_CREATOR) >$@
+
+# .db.pdf -> $(B1X_VERSION).pdf
+%.$(B1X_VERSION).pdf:	%.db.pdf
+	$(CP) $< $@
 
 
 #
@@ -213,5 +227,9 @@ mimetype:
         # zip directoryies
 	zip -0Xq $@ mimetype
 	zip -Xr9D $@ OEBPS META-INF
+
+# .db.epub -> $(B1X_VERSION).epub
+%.$(B1X_VERSION).epub:	%.db.epub
+	$(CP) $< $@
 
 # end of file

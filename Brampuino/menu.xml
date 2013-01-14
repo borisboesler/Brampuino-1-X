@@ -39,8 +39,7 @@
     <menu id="startdelay" label="Start Delay" select="menu_select_delay_time">
       <doc>
 	<para>
-	  The Start Delay sets the time before the first shot in
-	  milliseconds.
+	  The start delay time before the first shot in milliseconds.
 	</para>
       </doc>
     </menu>
@@ -57,7 +56,7 @@
       <menu id="exptime" label="Exp.Time" select="menu_select_exp_time">
 	<doc>
 	  <para>
-	    The Exposure Time to start with. If Exposure Time is 0
+	    The exposure time to start with. If the exposure time is 0
 	    then &BRAMPUINO1X; does not change any setting or does do
 	    any bulb ramping but uses the camera's current setting to
 	    take a shot.
@@ -69,6 +68,10 @@
 	  <para>
 	    The minimum exposure time. &BRAMPUINO1X; does not use any
 	    exposure time less than this time.
+
+	    If the exposure time is less than this value and ISO
+	    ramping is activated &BRAMPUINO1X; decreases ISO and
+	    re-computes the exposure time.
 	  </para>
 	</doc>
       </menu>
@@ -76,9 +79,11 @@
 	<doc>
 	  <para>
 	    The maximum exposure time. &BRAMPUINO1X; does not use any
-	    exposure time greater than this time. If ISO ramping is
-	    activated &BRAMPUINO1X; increases ISO by a full step and
-	    computes the exposure time accordingly.
+	    exposure time greater than this time.
+
+	    If the exposure time is greater than this value and ISO
+	    ramping is activated &BRAMPUINO1X; increases ISO and
+	    re-computes the exposure time.
 	  </para>
 	</doc>
       </menu>
@@ -86,7 +91,7 @@
       <menu id="expoffset" label="Exp.Offset" select="menu_select_exp_offset">
 	<doc>
 	  <para>
-	    The Exposure Offset that is always added to the exposure
+	    The exposure offset that is always added to the exposure
 	    time. It represents the time the camera needs to perform
 	    tasks like mirror up and down that are not part of the
 	    real exposure.
@@ -95,18 +100,7 @@
 	  </para>
 	</doc>
       </menu>
-      <!-- linear increment -->
-      <!-- disabled, for testing purposes only
-      <menu id="expinc" label="Exp.Increment"
-	    select="menu_select_exp_increment">
-	<doc>
-	  <para>
-	  </para>
-	</doc>
-      </menu>
-      -->
       <!--
-	  exponential
 	  FPS
 	  EV Change after FPS change
       -->
@@ -114,14 +108,15 @@
 	<doc>
 	  <para>
 	    The number of shots after which the exposure time is such
-	    increased that an exposure value has changed.
+	    increased that an exposure value has changed by the value
+	    given in option <literal>Exp.EV.Change</literal>.
 	  </para>
 	</doc>
       </menu>
       <menu id="expev" label="Exp.EV.Change" select="menu_select_exp_ev_change">
 	<doc>
 	  <para>
-	    The Exposure Value Change after a specified number of
+	    The exposure value change after a specified number of
 	    shots.
 
 	    See <xref linkend="example:exposure-value-fps"/>
@@ -153,9 +148,9 @@
 	<menu id="leadin" label="Lead In" select="menu_select_exp_lead_in">
 	  <doc>
 	    <para>
-	      The Exposure Lead In is a number of shots at the beginning
-	      of a sequence for which the exposure time will not be
-	      adjusted.
+	      The exposure lead in is a number of shots at the
+	      beginning of a sequence for which the exposure time will
+	      not be adjusted.
 	    </para>
 	  </doc>
 	</menu>
@@ -174,25 +169,25 @@
       <menu id="intervaltime" label="Interval Time"
 	    select="menu_select_interval_time">      <doc>
 	<para>
-	  The Start Interval Time in milliseconds.
+	  The start interval time in milliseconds.
 
-	  This is the initial interval time and will be recomputed as
-	  the exposure times increases.
+	  This is the initial interval time and it will be re-computed
+	  as the exposure times changes.
 	</para>
       </doc>
       </menu>
       <menu id="intervalmin" label="Intv.Min" select="menu_select_interval_min">
 	<doc>
 	  <para>
-	    The minimum interval between two shots.
+	    The minimum interval time between two shots.
 	  </para>
 	</doc>
       </menu>
       <menu id="intervalmax" label="Intv.Max" select="menu_select_interval_max">
 	<doc>
-	<para>
-	  The maximum interval between two shots.
-	</para>
+	  <para>
+	    The maximum interval time between two shots.
+	  </para>
 	</doc>
       </menu>
     </menu>
@@ -223,7 +218,7 @@
       <menu id="isoauto" label="ISO Ramp" select="menu_select_iso_ramp">
 	<doc>
 	  <para>
-	    Turn ISO Ramp on/off
+	    Turn ISO ramping on/off
 	  </para>
 	</doc>
       </menu>      
@@ -316,7 +311,7 @@
   <menu id="start" label="Start" select="menu_select_start">
     <doc>
       <para>
-	Start interval shooting with the configured settings.
+	Start interval shooting with the configured setting.
       </para>
     </doc>
   </menu>

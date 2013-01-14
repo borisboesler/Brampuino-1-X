@@ -20,5 +20,12 @@ along with this program; if not sse <http://www.gnu.org/licenses/>.
 <!-- the one and only -->
 <!ENTITY BRAMPUINO1X           "Brampuino 1-X">
 
+<!-- buttons only -->
+<!ENTITY BUTTON_UP             "[Up]">
+<!ENTITY BUTTON_DOWN           "[Down]">
+<!ENTITY BUTTON_LEFT           "[Left]">
+<!ENTITY BUTTON_RIGHT          "[Right]">
+<!ENTITY BUTTON_SELECT         "[Select]">
+
 <!-- cameras -->
 <!ENTITY CANON5DMKII           "Canon 5D MkII">

@@ -18,6 +18,13 @@
 #
 #
 
+# current version
+B1X_MAJOR = 0
+B1X_MINOR = 2
+B1X_PATCHLEVEL = 4
+
+MAKE_VERSION_STR=B1X_MAJOR=$(B1X_MAJOR) B1X_MINOR=$(B1X_MINOR) B1X_PATCHLEVEL=$(B1X_PATCHLEVEL)
+
 # tools
 
 # files
@@ -28,7 +35,7 @@
 all:	make_in_source make_in_manual
 
 make_in_source:
-	$(MAKE) $(MAKE_FLAGS) -C Brampuino
+	$(MAKE) $(MAKE_FLAGS) $(MAKE_VERSION_STR) -C Brampuino
 
 make_in_manual:
-	$(MAKE) $(MAKE_FLAGS) -C manual
+	$(MAKE) $(MAKE_FLAGS) $(MAKE_VERSION_STR) -C manual

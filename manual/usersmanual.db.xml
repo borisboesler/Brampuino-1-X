@@ -23,6 +23,8 @@ along with this program; if not sse <http://www.gnu.org/licenses/>.
 <!--ENTITY % local.common.attrib "xml:base CDATA #IMPLIED" -->
 <!ENTITY % entities PUBLIC "global entities" "global.xml" >
 %entities;
+<!ENTITY % menuentities PUBLIC "global entities" "menu-entities.xml" >
+%menuentities;
 ]>
 
 <book id="book:brampuino-usersmanual"
@@ -205,9 +207,9 @@ along with this program; if not sse <http://www.gnu.org/licenses/>.
     <para>
       The &BRAMPUINO1X; is a small device based on the <ulink
       url="http://www.arduino.cc">open Arduino hardware
-      platform</ulink> to make series of shots automatically. In its
-      simpliest setting it acts as a normal intervalometer (this is
-      the default setting).
+      platform</ulink> to make series of camera shots
+      automatically. In its simpliest setting it acts as a normal
+      intervalometer (this is the default setting).
 
       It can be configured to be used as an HDRI intervalometer as well.
 
@@ -220,15 +222,16 @@ along with this program; if not sse <http://www.gnu.org/licenses/>.
     </para>
 
     <para>
-      We give a short introduction in the required pieces of hardware
+      We give a short introduction to the required pieces of hardware
       to build &BRAMPUINO1X; in <xref
       linkend="section:hardware"/>. These are all off-the-shelf
       components.
     </para>
 
     <para>
-      In <xref linkend="section:software"/> we list the software that
-      is needed if the source code will be altered and re-compiled.
+      In <xref linkend="section:software"/> we list the open-source
+      software that is needed if the source code will be altered and
+      re-compiled.
     </para>
 
 
@@ -257,11 +260,11 @@ along with this program; if not sse <http://www.gnu.org/licenses/>.
 	      <para>
 		The <ulink
 		url="http://www.circuitsathome.com/usb-host-shield-hardware-manual">USB
-		Host Shield</ulink> talks from the hardware side to
-		the Canon Camera via USB.
+		Host Shield</ulink> is used to talk to the Canon
+		Camera via USB.
 
-		The makers of this shield provide libraries to talk to
-		the camera from a software side.
+		The makers of this shield provide the software
+		libraries too.
 	      </para>
 	    </listitem>
 	  </varlistentry>
@@ -271,12 +274,13 @@ along with this program; if not sse <http://www.gnu.org/licenses/>.
 	    <listitem>
 	      <para>
 		The <ulink
-		url="http://ladyada.net/make/rgblcdshield/">RGB LCD
-		Shield</ulink> by Adafruit with its 5 buttons is
-		interface between &BRAMPUINO1X; and the user.
+		url="http://learn.adafruit.com/rgb-lcd-shield">RGB LCD
+		Shield</ulink> by Adafruit with its 5 buttons is the
+		interface between &BRAMPUINO1X; and the photographer.
 
 		This shield was used because it uses the I2C-bus and
-		uses less pins than other shields.
+		uses less pins than other shields. There pins can be
+		used to interact with other devices.
 	      </para>
 	    </listitem>
 	  </varlistentry>
@@ -287,6 +291,7 @@ along with this program; if not sse <http://www.gnu.org/licenses/>.
 
 
     <!-- ************************************************** -->
+    <!--
     <section id="section:precompiled-software">
       <title>Precompiled Software</title>
       
@@ -294,7 +299,7 @@ along with this program; if not sse <http://www.gnu.org/licenses/>.
 	Should be available with this manual.
       </para>
     </section>
-
+    -->
 
     <!-- ************************************************** -->
     <section id="section:software">
@@ -311,9 +316,17 @@ along with this program; if not sse <http://www.gnu.org/licenses/>.
 	      <para>
 		The software to run the USB Host Shield by
 		Circuits@Home can be downloaded from <ulink
-		url="https://github.com/felis/USB_Host_Shield_2.0"></ulink>
+		url="http://github.com/felis/USB_Host_Shield_2.0"></ulink>
 
-		Follow the instructions to install the libraries.
+		Follow the instructions to install the libraries. The
+		directory of the library must be named
+		<filename>USBHost</filename>.
+
+		<!--
+		The <literal>SHA</literal>-key of the used version is
+		<literal>c639a3ee4f3634b93804cbabfd759ab26c8cd567</literal>.
+		-->
+
 	      </para>
 	    </listitem>
 	  </varlistentry>
@@ -324,9 +337,15 @@ along with this program; if not sse <http://www.gnu.org/licenses/>.
 	      <para>
 		The software to run a Canon camera via USB Host Shield
 		can be downloaded from <ulink
-		url="https://github.com/felis/PTP_2.0/"></ulink>
+		url="http://github.com/felis/PTP_2.0/"></ulink>
 
 		Follow the instructions to install the libraries.
+
+		<!--
+		The <literal>SHA</literal>-key of the used version is
+		<literal>9a2813011ad6e1e237552effa238b472065949a0</literal>.
+		-->
+
 	      </para>
 	    </listitem>
 	  </varlistentry>
@@ -337,9 +356,14 @@ along with this program; if not sse <http://www.gnu.org/licenses/>.
 	      <para>
 		The software to run the RGB LCD Shield can be
 		downloaded from <ulink
-		url="https://github.com/adafruit/Adafruit-RGB-LCD-Shield-Library/"></ulink>
-
+		url="http://github.com/adafruit/Adafruit-RGB-LCD-Shield-Library/"></ulink>
 		Follow the instructions to install the libraries.
+
+		<!--
+		The <literal>SHA</literal>-key of the used version is
+		<literal>13328dc8c517c20bf5696321464179e04bb636b4</literal>.
+		-->
+
 	      </para>
 	    </listitem>
 	  </varlistentry>
@@ -348,8 +372,8 @@ along with this program; if not sse <http://www.gnu.org/licenses/>.
 	    <term>MsTimer2</term>
 	    <listitem>
 	      <para>
-		The software to run timed interrupts can be down
-		loaded from <ulink
+		The software to run timed interrupts can be downloaded
+		from <ulink
 		url="http://arduino.cc/playground/Main/MsTimer2/"></ulink>
 	      </para>
 	    </listitem>
@@ -359,8 +383,9 @@ along with this program; if not sse <http://www.gnu.org/licenses/>.
 	    <term>&BRAMPUINO1X; Source-Code</term>
 	    <listitem>
 	      <para>
-		The &BRAMPUINO1X; Source-Code is not available yet,
-		but should be soon.
+		The &BRAMPUINO1X; Source-Code can be downloaded
+		from <ulink
+		url="http://github.com/borisboesler/Brampuino-1-X/"></ulink>
 	      </para>
 	    </listitem>
 	  </varlistentry>
@@ -386,12 +411,13 @@ along with this program; if not sse <http://www.gnu.org/licenses/>.
     </para>
 
     <para>
-      In <xref linkend="section:menu"/> we give the structure to the
-      menu hierarchy with a short explanation and in <xref
-      linkend="section:buttons"/> we show how to navigate with the
-      buttons through the menu.
+      In <xref linkend="section:menu"/> we give the structure of the
+      menu hierarchy with a short explanation of each menu item and in
+      <xref linkend="section:buttons"/> we show how to navigate with
+      the buttons through the menu.
     </para>
     
+    <!-- ************************************************** -->
     <section id="section:menu">
       <title>Menu</title>
       <!-- menu2svg has to be fixed first -->
@@ -433,19 +459,27 @@ along with this program; if not sse <http://www.gnu.org/licenses/>.
       </tip>
 
       <tip>
+	<title>ISO Change</title>
+	<para>
+	  ISO values are changed on the camera only, if ISO ramping is
+	  activated.
+	</para>
+      </tip>
+
+      <tip>
 	<title>Move Focus</title>
 	<para>
 	  The move focus option does not work reliably with a
 	  &CANON5DMKII;. If it works with your camera then report the
-	  camera model, the lens and all setting to us, please.
+	  camera model, the lens and the setting to us, please.
 	</para>
       </tip>
 
       <!--
       <menuchoice>
-	<guimenu>Settings</guimenu>
-	<guisubmenu>Exposure</guisubmenu>
-	<guimenuitem>Exp.Min</guimenuitem>
+	<guimenu>&MENU_settings;</guimenu>
+	<guisubmenu>&MENU_exposure;</guisubmenu>
+	<guimenuitem>&MENU_expmin;</guimenuitem>
       </menuchoice>
       -->
 
@@ -453,37 +487,37 @@ along with this program; if not sse <http://www.gnu.org/licenses/>.
 
 
     <!-- ************************************************** -->
-
     <section id="section:buttons">
       <title>Buttons</title>
       
       <para>
-	The RGB LCD Shield provides 5 buttons: left, right, up, down
-	and select. To navigate through the menu the buttons have the
-	following meaning:
+	The RGB LCD Shield provides 5 buttons: &BUTTON_LEFT;,
+	&BUTTON_RIGHT;, &BUTTON_UP;, &BUTTON_DOWN; and
+	&BUTTON_SELECT;. To navigate through the menu the buttons have
+	the following meaning:
       </para>
 
       <variablelist>
 	<varlistentry>
-	  <term>up</term>
+	  <term>&BUTTON_UP;</term>
 	  <listitem>
 	    <para>
-	      Scroll in current menu up
+	      Scroll up in current menu
 	    </para>
 	  </listitem>
 	</varlistentry>
 	
 	<varlistentry>
-	  <term>down</term>
+	  <term>&BUTTON_DOWN;</term>
 	  <listitem>
 	    <para>
-	      Scroll in current menu down
+	      Scroll down in current menu
 	    </para>
 	  </listitem>
 	</varlistentry>
 	
 	<varlistentry>
-	  <term>left</term>
+	  <term>&BUTTON_LEFT;</term>
 	  <listitem>
 	    <para>
 	      Return from current menu hierarchy to previous menu hierarchy
@@ -492,7 +526,7 @@ along with this program; if not sse <http://www.gnu.org/licenses/>.
 	</varlistentry>
 	
 	<varlistentry>
-	  <term>right</term>
+	  <term>&BUTTON_RIGHT;</term>
 	  <listitem>
 	    <para>
 	      Enter next menu hierarchy
@@ -518,7 +552,7 @@ along with this program; if not sse <http://www.gnu.org/licenses/>.
 
 	<variablelist>
 	  <varlistentry>
-	    <term>up</term>
+	    <term>&BUTTON_UP;</term>
 	    <listitem>
 	      <para>
 		Cancel input. The value is not changed.
@@ -527,7 +561,7 @@ along with this program; if not sse <http://www.gnu.org/licenses/>.
 	  </varlistentry>
 
 	  <varlistentry>
-	    <term>left</term>
+	    <term>&BUTTON_LEFT;</term>
 	    <listitem>
 	      <para>
 		Decrement the value.
@@ -536,7 +570,7 @@ along with this program; if not sse <http://www.gnu.org/licenses/>.
 	  </varlistentry>
 
 	  <varlistentry>
-	    <term>right</term>
+	    <term>&BUTTON_RIGHT;</term>
 	    <listitem>
 	      <para>
 		Increment the value.
@@ -545,7 +579,7 @@ along with this program; if not sse <http://www.gnu.org/licenses/>.
 	  </varlistentry>
 
 	  <varlistentry>
-	    <term>select</term>
+	    <term>&BUTTON_SELECT;</term>
 	    <listitem>
 	      <para>
 		Store this value and return to previous menu.
@@ -563,25 +597,26 @@ along with this program; if not sse <http://www.gnu.org/licenses/>.
       <warning>
 	<title>The MX2 controller</title>
 	<para>
-	  This navigation is not consistent with the Dynamic Deception
-	  MX2 Motion Controller. It will be changed in the future.
+	  This navigation is not consistent with the <ulink
+	  url="http://dynamicperception.com/products/mx2-motion-controller">
+	  Dynamic Perception</ulink> MX2 Motion Controller. It will be
+	  changed in the future.
 	</para>
       </warning>
       
     </section>
     
     <!-- ************************************************** -->
-
     <section id="section:running">
       <title>Running &BRAMPUINO1X;</title>
       
       <para>
-	When Start in the menu is selected then &BRAMPUINO1X; stores
-	he current setting to the <literal>EEPROM</literal>, if the
-	values have changed from the previous setting, first.
+	When &MENU_start; in the menu is selected then &BRAMPUINO1X;
+	stores he current setting in the <literal>EEPROM</literal>, if
+	the values have changed from the previous setting, first.
 
-	The it switches the RGB LCD Screen color to
-	<emphasis>red</emphasis> and looks like this:
+	Then it switches the RGB LCD Screen color to
+	<emphasis>red</emphasis> which looks like this:
 	<screen>
 #3<co id="running.screen.current_shot" linkends="co.running.screen.current_shot"/>/5<co id="running.screen.max_shot" linkends="co.running.screen.max_shot"/> ISO50<co id="running.screen.iso" linkends="co.running.screen.iso"/>
 B:1057<co id="running.screen.bulb" linkends="co.running.screen.bulb"/>/EV:1.00<co id="running.screen.ev" linkends="co.running.screen.iso"/>
@@ -624,18 +659,12 @@ B:1057<co id="running.screen.bulb" linkends="co.running.screen.bulb"/>/EV:1.00<c
 
 	The video can be viewed on <ulink
 	url="http://vimeo.com/46414677/">vimeo</ulink>.
+      </para>
 
-	<figure id="figure:in-action">
-	  <title>&BRAMPUINO1X; In Action</title>
-	  <mediaobject>
-	    <imageobject>
-	      <imagedata fileref="local-images/brampuino-in-action.jpg"
-			 format="JPG"
-			 align="center" valign="top"
-			 width="15cm" scalefit="1"/>
-	    </imageobject>
-	  </mediaobject>
-	</figure>
+      <para>
+	If ISO ramping is <emphasis>not activated</emphasis> then the
+	entries <literal>ISO</literal> and <literal>EV</literal> are
+	<emphasis>not shown</emphasis> on the display.
       </para>
 
       <para>
@@ -645,7 +674,7 @@ B:1057<co id="running.screen.bulb" linkends="co.running.screen.bulb"/>/EV:1.00<c
 
       <variablelist>
 	<varlistentry>
-	  <term>up</term>
+	  <term>&BUTTON_UP;</term>
 	  <listitem>
 	    <para>
 	      Stop shooting. This takes a while till the menu appears.
@@ -654,16 +683,16 @@ B:1057<co id="running.screen.bulb" linkends="co.running.screen.bulb"/>/EV:1.00<c
 	</varlistentry>
 	
 	<varlistentry>
-	  <term>down</term>
+	  <term>&BUTTON_DOWN;</term>
 	  <listitem>
 	    <para>
-	      ISO Ramp by +1EV.
+	      ISO Ramp by one step.
 	    </para>
 	  </listitem>
 	</varlistentry>
 	
 	<varlistentry>
-	  <term>left</term>
+	  <term>&BUTTON_LEFT;</term>
 	  <listitem>
 	    <para>
 	      Decrement the Exposure Value Change by 0.1.
@@ -672,7 +701,7 @@ B:1057<co id="running.screen.bulb" linkends="co.running.screen.bulb"/>/EV:1.00<c
 	</varlistentry>
 	
 	<varlistentry>
-	  <term>right</term>
+	  <term>&BUTTON_RIGHT;</term>
 	  <listitem>
 	    <para>
 	      Increment the Exposure Value Change by 0.1.
@@ -681,12 +710,13 @@ B:1057<co id="running.screen.bulb" linkends="co.running.screen.bulb"/>/EV:1.00<c
 	</varlistentry>
 	
 	<varlistentry>
-	  <term>select</term>
+	  <term>&BUTTON_SELECT;</term>
 	  <listitem>
 	    <para>
 	      Enter the menu while &BRAMPUINO1X; is still
 	      shooting. All parameters can be changed but not all show
-	      an effect. Select Start to return to the running screen.
+	      an effect. Select &MENU_start; to return to the running
+	      screen.
 	    </para>
 	  </listitem>
 	</varlistentry>
@@ -698,8 +728,21 @@ B:1057<co id="running.screen.bulb" linkends="co.running.screen.bulb"/>/EV:1.00<c
 	color to <emphasis>green</emphasis>.
       </para>
 
+      <figure id="figure:in-action">
+	<title>&BRAMPUINO1X; In Action with ISO Ramping</title>
+	<mediaobject>
+	  <imageobject>
+	    <imagedata fileref="local-images/brampuino-in-action.jpg"
+		       format="JPG"
+		       align="center" valign="top"
+		       width="13cm" scalefit="1"/>
+	  </imageobject>
+	</mediaobject>
+      </figure>
+
     </section>
     
+    <!-- ************************************************** -->
     <section>
       <title>The Exposure-Interval Cycle</title>
 
@@ -707,7 +750,7 @@ B:1057<co id="running.screen.bulb" linkends="co.running.screen.bulb"/>/EV:1.00<c
 	In <xref linkend="figure:exposure-interval-cycle"/> the normal
 	exposure-interval cycle is shown: the overall bulb-time is the
 	sum of the exposure offset time and the exposure time. Each
-	exposure starts when then the interval time is over.
+	exposure starts when the interval time is over.
 
 	<figure id="figure:exposure-interval-cycle">
 	  <title>Normal Exposure-Interval Cycle</title>
@@ -741,6 +784,17 @@ B:1057<co id="running.screen.bulb" linkends="co.running.screen.bulb"/>/EV:1.00<c
 	</figure>
       </para>
 
+    </section>
+
+    <!-- ************************************************** -->
+    <section>
+      <title>ISO Ranges</title>
+
+      <para>
+	&BRAMPUINO1X; supports the following ISO values: 50, 100, 125,
+	160, 200, 250, 320, 400, 500, 640, 800, 1000, 1250,
+	1600, 2000, 2500, 3200, 4000, 5000 and 6400.
+      </para>
 
     </section>
 
@@ -773,34 +827,44 @@ B:1057<co id="running.screen.bulb" linkends="co.running.screen.bulb"/>/EV:1.00<c
       </para>
 
       <para>
-	Set the Exposure time to the correct value X:
+	Set the exposure time to the correct value X:
 	<menuchoice>
-	  <guimenu>Settings</guimenu>
-	  <guisubmenu>Exposure</guisubmenu>
-	  <guimenuitem>Exp.Time</guimenuitem>
+	  <guimenu>&MENU_settings;</guimenu>
+	  <guisubmenu>&MENU_exposure;</guisubmenu>
+	  <guimenuitem>&MENU_exptime;</guimenuitem>
 	  <guimenuitem>X</guimenuitem>
 	</menuchoice>.
 	Make sure that the minimum and maximum exposure time do not
 	cut the exposure time X.
 
+	Alternatively you can set the exposure time to zero. Then the
+	cameras current settings will be used.
+
+	<!--
 	Set the ISO Min to the correct value I:
 	<menuchoice>
-	  <guimenu>Settings</guimenu>
-	  <guisubmenu>ISO</guisubmenu>
-	  <guimenuitem>ISO Min</guimenuitem>
+	  <guimenu>&MENU_settings;</guimenu>
+	  <guisubmenu>&MENU_iso;</guisubmenu>
+	  <guimenuitem>&MENU_isomin;</guimenuitem>
 	  <guimenuitem>I</guimenuitem>
 	</menuchoice>.
+	-->
+	Set &MENU_isoauto; to Off:
+	<menuchoice>
+	  <guimenu>&MENU_settings;</guimenu>
+	  <guisubmenu>&MENU_iso;</guisubmenu>
+	  <guimenuitem>&MENU_isoauto;</guimenuitem>
+	  <guimenuitem>Off</guimenuitem>
+	</menuchoice>.
 
-	Alternatively you ca set the Exposure Time to zero. Then the
-	cameras current settings will be used.
       </para>
 
       <para>
 	Set the Exposure Value Change to 0:
 	<menuchoice>
-	  <guimenu>Settings</guimenu>
-	  <guisubmenu>Exposure</guisubmenu>
-	  <guimenuitem>Exp.EV.Change</guimenuitem>
+	  <guimenu>&MENU_settings;</guimenu>
+	  <guisubmenu>&MENU_exposure;</guisubmenu>
+	  <guimenuitem>&MENU_expev;</guimenuitem>
 	  <guimenuitem>0</guimenuitem>
 	</menuchoice>.
       </para>
@@ -819,8 +883,8 @@ B:1057<co id="running.screen.bulb" linkends="co.running.screen.bulb"/>/EV:1.00<c
       <para>
 	Set the Move Focus to X as needed:
 	<menuchoice>
-	  <guimenu>Settings</guimenu>
-	  <guisubmenu>Move Focus Steps</guisubmenu>
+	  <guimenu>&MENU_settings;</guimenu>
+	  <guisubmenu>&MENU_movefocus;</guisubmenu>
 	  <guimenuitem>X</guimenuitem>
 	</menuchoice>.
 
@@ -841,31 +905,30 @@ B:1057<co id="running.screen.bulb" linkends="co.running.screen.bulb"/>/EV:1.00<c
       <para>
 	Set the number of shots X as the maximum number of shots:
 	<menuchoice>
-	  <guimenu>Settings</guimenu>
-	  <guisubmenu>Exposure</guisubmenu>
-	  <guisubmenu>Num. of Exp.</guisubmenu>
-	  <guisubmenu>Max. Exp.</guisubmenu>
+	  <guimenu>&MENU_settings;</guimenu>
+	  <guisubmenu>&MENU_exposure;</guisubmenu>
+	  <guisubmenu>&MENU_exposure_num;</guisubmenu>
 	  <guimenuitem>X</guimenuitem>
 	</menuchoice>
       </para>
 
       <para>
-	Set the Exp.FPS to 1:
+	Set the &MENU_expfps; to 1:
 	<menuchoice>
-	  <guimenu>Settings</guimenu>
-	  <guisubmenu>Exposure</guisubmenu>
-	  <guisubmenu>Exp.FPS</guisubmenu>
+	  <guimenu>&MENU_settings;</guimenu>
+	  <guisubmenu>&MENU_exposure;</guisubmenu>
+	  <guisubmenu>&MENU_expfps;</guisubmenu>
 	  <guimenuitem>1</guimenuitem>
 	</menuchoice>.
       </para>
 
       <para>
-	Set the exposure value increment X per shot in Exposure Value
-	Change:
+	Set the exposure value increment X per shot in exposure value
+	change:
 	<menuchoice>
-	  <guimenu>Settings</guimenu>
-	  <guisubmenu>Exposure</guisubmenu>
-	  <guimenuitem>Exp.EV.Change</guimenuitem>
+	  <guimenu>&MENU_settings;</guimenu>
+	  <guisubmenu>&MENU_exposure;</guisubmenu>
+	  <guimenuitem>&MENU_expev;</guimenuitem>
 	  <guimenuitem>X</guimenuitem>
 	</menuchoice>.
       </para>
@@ -888,45 +951,64 @@ B:1057<co id="running.screen.bulb" linkends="co.running.screen.bulb"/>/EV:1.00<c
       </para>
 
       <para>
-	Set the Exposure Lead In to the number of shots for which the
+	Set the exposure lead in to the number of shots for which the
 	initial exposure value should not be ramped.
 	<menuchoice>
-	  <guimenu>Settings</guimenu>
-	  <guisubmenu>Exposure</guisubmenu>
-	  <guisubmenu>Num. of Exp.</guisubmenu>
-	  <guimenuitem>Lead In</guimenuitem>
+	  <guimenu>&MENU_settings;</guimenu>
+	  <guisubmenu>&MENU_exposure;</guisubmenu>
+	  <guisubmenu>&MENU_exposure_num;</guisubmenu>
+	  <guimenuitem>&MENU_leadin;</guimenuitem>
 	  <guimenuitem>X</guimenuitem>
 	</menuchoice>.
       </para>
 
       <para>
-	Set the Exposure Value Change X to the exposure value that
+	Set the exposure value change X to the exposure value that
 	should be reached after some shots.
 	<menuchoice>
-	  <guimenu>Settings</guimenu>
-	  <guisubmenu>Exposure</guisubmenu>
-	  <guimenuitem>Exp.EV.Change</guimenuitem>
+	  <guimenu>&MENU_settings;</guimenu>
+	  <guisubmenu>&MENU_exposure;</guisubmenu>
+	  <guimenuitem>&MENU_expev;</guimenuitem>
+	  <guimenuitem>X</guimenuitem>
+	</menuchoice>.
+      </para>
+
+      <para>
+	Set ISO ramping to <literal>On</literal> or
+	<literal>Off</literal>:
+	<menuchoice>
+	  <guimenu>&MENU_settings;</guimenu>
+	  <guisubmenu>&MENU_iso;</guisubmenu>
+	  <guimenuitem>&MENU_isoauto;</guimenuitem>
+	  <guimenuitem>X</guimenuitem>
+	</menuchoice>.
+      </para>
+
+      <para>
+	Set the exposure fps to the number of shots after which the
+	exposure will be changed by exposure value change exposure values.
+	<menuchoice>
+	  <guimenu>&MENU_settings;</guimenu>
+	  <guisubmenu>&MENU_exposure;</guisubmenu>
+	  <guimenuitem>&MENU_expfps;</guimenuitem>
 	  <guimenuitem>X</guimenuitem>
 	</menuchoice>.
       </para>
     
       <para>
-	Set the Exposure FPS to the number of shots after which the
-	exposure will be changed by Exposure Value Change exposure values.
-	<menuchoice>
-	  <guimenu>Settings</guimenu>
-	  <guisubmenu>Exposure</guisubmenu>
-	  <guimenuitem>Exp.FPS</guimenuitem>
-	  <guimenuitem>X</guimenuitem>
-	</menuchoice>.
+	If ISO ramping is turned on and the exposure change value is
+	negative then &BRAMPUINO1X; starts with the configured maximum
+	ISO value, else it starts with the configured minimum ISO
+	value.
       </para>
-    
+
+
       <example id="example:exposure-value-fps">
 	<title>Exposure Change Value and FPS</title>
 	<para>
-	  If you set the Exposure Time to 1000, the Exposure FPS to
-	  150 and the Exposure Change Value to 4.0 then the exposure
-	  will change by 4 Exposure Values and the 151-th shot
+	  If you set the exposure time to 1000, the exposure fps to
+	  150 and the exposure change value to 4.0 then the exposure
+	  will change by 4 exposure values and the 151-th shot
 	  <!--
 	      -2 250
 	      -1 500
@@ -940,16 +1022,10 @@ B:1057<co id="running.screen.bulb" linkends="co.running.screen.bulb"/>/EV:1.00<c
 	  -->
 	  will have a 16000 milliseconds exposure time.
 
-	  The Exposure time for the first then shots are: 1000, 1019,
+	  The exposure time for the first then shots are: 1000, 1019,
 	  1038, 1057, 1077, 1097, 1117, 1138, 1159 and 1181.
 	</para>
       </example>
-
-      <para>
-	If the Exposure Change Value is negative then &BRAMPUINO1X;
-	starts with the configured maximum ISO value, else it starts
-	with the configured minimum ISO value.
-      </para>
 
     </section>
 
@@ -1001,16 +1077,18 @@ B:1057<co id="running.screen.bulb" linkends="co.running.screen.bulb"/>/EV:1.00<c
       ** appendices
       **********
   -->
-  <!--
-  <appendix id="appendix:examples">
-    <title>Examples</title>
+  <appendix id="appendix:knownbugs">
+    <title>Known Bugs</title>
 
     <para>
-      More bla bla
+      There is no error detection, eg if the camera is not connected.
+    </para>
+
+    <para>
+      Focus ramping does not work.
     </para>
 
   </appendix>
-  -->
 
 </book>
 

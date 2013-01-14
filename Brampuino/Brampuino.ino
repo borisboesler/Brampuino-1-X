@@ -25,7 +25,7 @@
 
 #ifdef HAVE_CAMERA
 # define BRAMPUINO_VERSION_MINOR "2"
-# define BRAMPUINO_VERSION_PATCHLEVEL "3"
+# define BRAMPUINO_VERSION_PATCHLEVEL "4"
 #else
 # define BRAMPUINO_VERSION_MINOR "No"
 # define BRAMPUINO_VERSION_PATCHLEVEL "Camera"
@@ -151,17 +151,30 @@ unsigned long exposure_start_ms = 0;
  */
 CanonCamera camera;
 
-#if 0
-64 ISO:50  
-72 ISO:100 
-75 ISO:125 
-77 ISO:160 
-80 ISO:200 
-83 ISO:250 
-85 ISO:320
-#endif
-unsigned long iso_values[7] = { 50, 100, 200, 400, 800, 1600, 3200 };
-unsigned long iso_codes[7] =  { 64,  72,  80,  88,  96,  104,  112 };
+const unsigned long iso_values[ISO_RANGE_MAX_COUNT] = {
+  /* on the 5DMkII:
+   * - camera cant display ISO values 64 and 80 on top display
+   * - transitions from ISO 50 -> 64 -> 80 -> 100 are horrible
+   */
+  50,    /*64,  80,*/
+  100,  125, 160,
+  200,  250, 320,
+  400,  500, 640,
+  800, 1000,1250,
+  1600,2000,2500,
+  3200,4000,5000,
+  6400 };
+const unsigned long iso_codes[ISO_RANGE_MAX_COUNT] =  {
+  ISO_50,    /*64,  80,*/
+  ISO_100,  ISO_125, ISO_160,
+  ISO_200,  ISO_250, ISO_320,
+  ISO_400,  ISO_500, ISO_640,
+  ISO_800, ISO_1000,ISO_1250,
+  ISO_1600,ISO_2000,ISO_2500,
+  ISO_3200,ISO_4000,ISO_5000,
+  ISO_6400
+ };
+
 
 /**
  * primitive interface to interact with LCD while shooting
@@ -188,7 +201,8 @@ void print_version()
   lcd.setCursor(0, 1);
   PRINT("v" BRAMPUINO_VERSION_MAJOR
 	"." BRAMPUINO_VERSION_MINOR
-	"." BRAMPUINO_VERSION_PATCHLEVEL);
+	"." BRAMPUINO_VERSION_PATCHLEVEL
+	);
 }
 
 
@@ -218,12 +232,8 @@ static void logging()
   DEBUG_PRINTLN(adjusted_exposure_count);
   // current exposure time and interval
   DEBUG_PRINTLN(current_settings.exposure.exp_time + settings.exposure.offset);
-  if(BRAMPUINO_LINEAR_INCREMENT) {
-    DEBUG_PRINTLN(settings.exposure.u.linear.increment);
-  }
-  else {
-    DEBUG_PRINTLN(settings.exposure.u.exponential.ev_change);
-  }
+  DEBUG_PRINTLN(settings.exposure.u.exponential.ev_change);
+
   // exposure times set by user
   DEBUG_PRINTLN(settings.exposure.start_time);
   DEBUG_PRINTLN(settings.exposure.min);
@@ -262,38 +272,56 @@ unsigned long new_bulb_time(unsigned long shot,
   }
 
   while(!have_new_bulb_time) {
-    if(BRAMPUINO_LINEAR_INCREMENT) {
-      bulb_time = last_time + current_settings.exposure.u.linear.increment;
-    }
-    else {
-      double dshot = shot - 1;
-      double dfps = settings.fps;;
-      double exponent
-	= (settings.exposure.u.exponential.ev_change * dshot) / dfps;
-      double bulb_time_d = start_time * pow(2.0, exponent);
-      // round
-      bulb_time = bulb_time_d + 0.5;
-    }
+    double dshot = shot - 1;
+    double dfps = settings.fps;
+    double exponent = (settings.exposure.u.exponential.ev_change * dshot) / dfps;
+    double bulb_time_d = start_time * pow(2.0, exponent);
+    // round
+    bulb_time = bulb_time_d + 0.5;
+
     DEBUG_PRINT_PSTR("new bulb time:");
     DEBUG_PRINTLN(bulb_time);
 
     if(BRAMPUINO_AUTO_ISO_CHANGE) {
       if(bulb_time > settings.exposure.max) {
-	DEBUG_PRINTLN_PSTR("Auto check max");
+	DEBUG_PRINTLN_PSTR("RAMP ISO check max");
 	// inc ISO
 	if(current_settings.iso.iso_index + 1 <= settings.iso.max_index) {
-	  unsigned long new_time = bulb_time / 2;
+	  unsigned long new_time;
+	  new_time = (bulb_time * iso_values[current_settings.iso.iso_index])
+	    / iso_values[current_settings.iso.iso_index + 1];
+	  //Serial.println(new_time);
 	  if(new_time >= settings.exposure.min) {
 	    // increment ISO
 	    ++current_settings.iso.iso_index;
-	    if(BRAMPUINO_LINEAR_INCREMENT) {
-	      bulb_time = new_time;
-	      last_time = new_time;
-	      current_settings.exposure.u.linear.increment /= 2;
-	    }
-	    else {
+	    // set new start time
+	    DEBUG_PRINTLN_PSTR("RAMP ISO check exp inc");
+	    current_settings.exposure.start_time = new_time;
+	    bulb_time = new_time;
+	    start_time = new_time;
+	    adjusted_exposure_count = 1;
+	    shot = 1;
+	  }
+	}
+	else {
+	  DEBUG_PRINTLN_PSTR("RAMP ISO check out of ISO");
+	  have_new_bulb_time = true;
+	}
+      }
+      else {
+	if(bulb_time < settings.exposure.min) {
+	  DEBUG_PRINTLN_PSTR("RAMP ISO check min");
+	  // dec ISO
+	  if((1 <= current_settings.iso.iso_index) // can decrement
+	     && (current_settings.iso.iso_index - 1 >= settings.iso.min_index)) {
+	    unsigned long new_time;
+	    new_time = (bulb_time * iso_values[current_settings.iso.iso_index])
+	      / iso_values[current_settings.iso.iso_index - 1];
+	    if(new_time <= settings.exposure.max) {
+	      // decrement ISO
+	      --current_settings.iso.iso_index;
 	      // set new start time
-	      DEBUG_PRINTLN_PSTR("Auto check exp inc");
+	      DEBUG_PRINTLN_PSTR("RAMP ISO check exp dec");
 	      current_settings.exposure.start_time = new_time;
 	      bulb_time = new_time;
 	      start_time = new_time;
@@ -301,51 +329,19 @@ unsigned long new_bulb_time(unsigned long shot,
 	      shot = 1;
 	    }
 	  }
-	}
-	else {
-	  DEBUG_PRINTLN_PSTR("Auto check out of ISO");
-	  have_new_bulb_time = true;
-	}
-      }
-      else {
-	if(bulb_time < settings.exposure.min) {
-	  DEBUG_PRINTLN_PSTR("Auto check min");
-	  // dec ISO
-	  if((1 <= current_settings.iso.iso_index) // can decrement
-	     && (current_settings.iso.iso_index - 1 >= settings.iso.min_index)) {
-	    unsigned long new_time = bulb_time * 2;
-	    if(new_time <= settings.exposure.max) {
-	      // decrement ISO
-	      --current_settings.iso.iso_index;
-	      if(BRAMPUINO_LINEAR_INCREMENT) {
-		bulb_time = new_time;
-		last_time = new_time;
-		current_settings.exposure.u.linear.increment *= 2;
-	      }
-	      else {
-		// set new start time
-		DEBUG_PRINTLN_PSTR("Auto check exp dec");
-		current_settings.exposure.start_time = new_time;
-		bulb_time = new_time;
-		start_time = new_time;
-		adjusted_exposure_count = 1;
-		shot = 1;
-	      }
-	    }
-	  }
 	  else {
-	    DEBUG_PRINTLN_PSTR("Auto check out of ISO");
+	    DEBUG_PRINTLN_PSTR("RAMP ISO check out of ISO");
 	    have_new_bulb_time = true;
 	  }
 	}
 	else {
-	  DEBUG_PRINTLN_PSTR("Auto check ok");
+	  DEBUG_PRINTLN_PSTR("RAMP ISO check ok");
 	  have_new_bulb_time = true;
 	}
       }
     }
     else {
-      DEBUG_PRINTLN_PSTR("No auto check");
+      DEBUG_PRINTLN_PSTR("No RAMP ISO");
       have_new_bulb_time = true;
     }
   }
@@ -466,7 +462,10 @@ void ATTRIBUT_INTERRUPT start_exposure()
     camera.capture();
   }
   else {
-    camera.set_iso(iso_codes[current_settings.iso.iso_index]);
+    // if we are ISO ramping then set current ISO
+    if(BRAMPUINO_AUTO_ISO_CHANGE) {
+      camera.set_iso(iso_codes[current_settings.iso.iso_index]);
+    }
     camera.start_bulb();
   }
 #endif
@@ -525,17 +524,20 @@ void start_interval_delay()
   current_settings = settings;
 
   // init exposure
-  if(BRAMPUINO_LINEAR_INCREMENT) {
-    current_settings.exposure.exp_time
-      = settings.exposure.start_time - settings.exposure.u.linear.increment;
-  }
 
   // init count
   adjusted_exposure_count = exposure_count = 0;
 
-  // init ISO with ISO max if we ramp with a negative ev.fps value
-  if(0.0 > current_settings.exposure.u.exponential.ev_change) {
-    current_settings.iso.iso_index = current_settings.iso.max_index;
+  // if we are ISO ramping then init current ISO
+  if(BRAMPUINO_AUTO_ISO_CHANGE) {
+    // init ISO with ISO max if we ramp with a negative ev.fps value
+    if(0.0 > current_settings.exposure.u.exponential.ev_change) {
+      current_settings.iso.iso_index = current_settings.iso.max_index;
+    }
+    else {
+      // init with minimum
+      current_settings.iso.iso_index = current_settings.iso.min_index;
+    }
   }
 
   // open file for logging
@@ -587,8 +589,10 @@ void setup(void)
 #endif
 
   // Brampuino hardware
+#if 0
   pinMode(MX2FocusPin, INPUT);
   pinMode(MX2ShutterPin, INPUT);
+#endif
 
   // set up start state
   current_state = BRAMPUINO_STATE_MENU;
@@ -603,6 +607,10 @@ void setup(void)
       eeprom_read_block((void*)&settings,
 			(const void*)eeprom_settings,
 			sizeof(settings_t));
+
+      // print settings
+      DEBUG_PRINTLN_PSTR("some current settings:");
+      logging();
     }
     else {
       DEBUG_PRINTLN_PSTR("no settings in EEPROM");
@@ -649,7 +657,7 @@ void loop()
       uint16_t movement = (0 < settings.move_focus)
 	? (settings.move_focus) : (0x8000 | (-settings.move_focus)) ;
       camera.move_focus(movement);
-      Serial.println(movement, HEX);
+      //Serial.println(movement, HEX);
       //delay(10);
 #else
       DEBUG_PRINT_PSTR("move focus:");
@@ -673,6 +681,7 @@ void loop()
   default:
     break;
   }
+
   // check state
   if((BRAMPUINO_STATE_MENU == current_state)
      || (BRAMPUINO_STATE_EXPOSING_MENU == current_state)) {
@@ -692,29 +701,24 @@ void loop()
     }
 
     // ISO
-    lcd.setCursor(8, 0);
-    PRINT(" ISO");
-    PRINT(iso_values[current_settings.iso.iso_index]);
-    PRINT(" ");
+    if(BRAMPUINO_AUTO_ISO_CHANGE) {
+      lcd.setCursor(8, 0);
+      PRINT(" ISO");
+      PRINT(iso_values[current_settings.iso.iso_index]);
+      PRINT(" ");
+    }
 
     // exposure
     lcd.setCursor(0, 1);
     PRINT("B:");
     PRINT(current_settings.exposure.exp_time + current_settings.exposure.offset);
-    if(BRAMPUINO_LINEAR_INCREMENT) {
-#ifdef BRAMPUINO_PRINT_INTERVAL_IN_MENU
-      // interval
-      PRINT("/I:");
-      PRINT(current_settings.exposure.u.linear.increment);
-      PRINT("  ");
-#endif
-    }
-    else {
-      // EV change
+
+    // EV change
+    if(BRAMPUINO_AUTO_ISO_CHANGE) {
       PRINT("/EV:");
       PRINT(settings.exposure.u.exponential.ev_change);
-      PRINT("  ");
     }
+    PRINT("  ");
 
     // cancel?
     uint8_t c1 = READ_BUTTONS();
@@ -738,19 +742,7 @@ void loop()
 	break;
 
       case MENU_BUTTON_DECREMENT:
-	if(BRAMPUINO_LINEAR_INCREMENT) {
-	  // decrement expsore increment
-	  unsigned val = current_settings.exposure.u.linear.increment;
-	  unsigned adding = 1;
-	  // check wrap around
-	  if(val - adding < val) {
-	    val -= adding;
-	  }
-	  val = max(val, settings.exposure.min);
-	  current_settings.exposure.u.linear.increment = val;
-	}
-	else {
-#if 01
+	{
 	  // set current exposure time as new start time
 	  DEBUG_PRINTLN_PSTR("Manual dec exp ev change");
 	  unsigned long bulb_time = current_settings.exposure.exp_time;
@@ -758,26 +750,13 @@ void loop()
 	  bulb_time = MAX(bulb_time, settings.exposure.min);
 	  current_settings.exposure.start_time = bulb_time;
 	  adjusted_exposure_count = 1;
-#endif
 	  // decrement EV change
 	  settings.exposure.u.exponential.ev_change -= 0.1;
 	}
 	break;
 
       case MENU_BUTTON_INCREMENT:
-	if(BRAMPUINO_LINEAR_INCREMENT) {
-	  // increment expsore increment
-	  unsigned val = current_settings.exposure.u.linear.increment;
-	  unsigned adding = 1;
-	  // check wrap around
-	  if(val + adding > val) {
-	    val += adding;
-	  }
-	  val = min(val, settings.exposure.max);
-	  current_settings.exposure.u.linear.increment = val;
-	}
-	else {
-#if 01
+	{
 	  // set current exposure time as new start time
 	  DEBUG_PRINTLN_PSTR("Manual inc exp ev change");
 	  unsigned long bulb_time = current_settings.exposure.exp_time;
@@ -785,25 +764,23 @@ void loop()
 	  bulb_time = MAX(bulb_time, settings.exposure.min);
 	  current_settings.exposure.start_time = bulb_time;
 	  adjusted_exposure_count = 1;
-#endif
 	  // increment EV change
 	  settings.exposure.u.exponential.ev_change += 0.1;
 	}
 	break;
 	
       case MENU_BUTTON_CHANGE_ISO:
-	// if ISO change is possible
-	if(current_settings.iso.iso_index + 1 <= settings.iso.max_index) {
-	  DEBUG_PRINTLN_PSTR("Inc ISO by User");
-	  unsigned long new_time = current_settings.exposure.exp_time / 2;
-	  if(new_time > settings.exposure.min) {
-	    // increment ISO
-	    ++current_settings.iso.iso_index;
-	    if(BRAMPUINO_LINEAR_INCREMENT) {
-	      current_settings.exposure.exp_time = new_time;
-	      current_settings.exposure.u.linear.increment /= 2;
-	    }
-	    else {
+	if(BRAMPUINO_AUTO_ISO_CHANGE) {
+	  // if ISO change is possible
+	  if(current_settings.iso.iso_index + 1 <= settings.iso.max_index) {
+	    DEBUG_PRINTLN_PSTR("Inc ISO by User");
+	    unsigned long bulb_time = current_settings.exposure.exp_time;
+	    unsigned long new_time
+	      = (bulb_time * iso_values[current_settings.iso.iso_index])
+	      / iso_values[current_settings.iso.iso_index + 1];
+	    if(new_time > settings.exposure.min) {
+	      // increment ISO
+	      ++current_settings.iso.iso_index;
 	      // set new start time
 	      current_settings.exposure.start_time = new_time;
 	      adjusted_exposure_count = 0;

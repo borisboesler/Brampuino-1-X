@@ -85,7 +85,8 @@
 /**
  * the default max ISO index
  */
-# define BRAMPUINO_DEFAULT_MAX_ISO      (6)
+# define BRAMPUINO_DEFAULT_MAX_ISO      (ISO_RANGE_MAX_COUNT - 1)
+
 
 /**
  * the default ISO auto ramp
@@ -223,7 +224,8 @@ extern settings_t settings;
 /**
  * iso values
  */
-extern unsigned long iso_values[7];
+extern const unsigned long iso_values[ISO_RANGE_MAX_COUNT];
+
 
 /**
  * time when the start delay is over
