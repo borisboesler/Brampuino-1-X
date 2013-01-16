@@ -33,3 +33,5 @@ manual/pubdate.db.xml
 *.epub
 
 *.pdf
+
+*.hex

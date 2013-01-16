@@ -25,7 +25,7 @@
 
 #ifdef HAVE_CAMERA
 # define BRAMPUINO_VERSION_MINOR "2"
-# define BRAMPUINO_VERSION_PATCHLEVEL "4"
+# define BRAMPUINO_VERSION_PATCHLEVEL "5"
 #else
 # define BRAMPUINO_VERSION_MINOR "No"
 # define BRAMPUINO_VERSION_PATCHLEVEL "Camera"
@@ -714,10 +714,8 @@ void loop()
     PRINT(current_settings.exposure.exp_time + current_settings.exposure.offset);
 
     // EV change
-    if(BRAMPUINO_AUTO_ISO_CHANGE) {
-      PRINT("/EV:");
-      PRINT(settings.exposure.u.exponential.ev_change);
-    }
+    PRINT("/EV:");
+    PRINT(settings.exposure.u.exponential.ev_change);
     PRINT("  ");
 
     // cancel?
