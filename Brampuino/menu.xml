@@ -167,14 +167,15 @@
 	</para>
       </doc>
       <menu id="intervaltime" label="Interval Time"
-	    select="menu_select_interval_time">      <doc>
-	<para>
-	  The start interval time in milliseconds.
-
-	  This is the initial interval time and it will be re-computed
-	  as the exposure times changes.
-	</para>
-      </doc>
+	    select="menu_select_interval_time">
+	<doc>
+	  <para>
+	    The start interval time in milliseconds.
+	    
+	    This is the initial interval time and it will be
+	    re-computed as the exposure times changes.
+	  </para>
+	</doc>
       </menu>
       <menu id="intervalmin" label="Intv.Min" select="menu_select_interval_min">
 	<doc>

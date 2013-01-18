@@ -475,6 +475,14 @@ along with this program; if not sse <http://www.gnu.org/licenses/>.
 	</para>
       </tip>
 
+      <tip>
+	<title>Lead In</title>
+	<para>
+	  The first shot after the lead in will have a ramped exposure
+	  time and not the start exposure time.
+	</para>
+      </tip>
+
       <!--
       <menuchoice>
 	<guimenu>&MENU_settings;</guimenu>
@@ -517,7 +525,7 @@ along with this program; if not sse <http://www.gnu.org/licenses/>.
 	</varlistentry>
 	
 	<varlistentry>
-	  <term>&BUTTON_LEFT;</term>
+	  <term>&BUTTON_RIGHT;</term>
 	  <listitem>
 	    <para>
 	      Return from current menu hierarchy to previous menu hierarchy
@@ -526,7 +534,7 @@ along with this program; if not sse <http://www.gnu.org/licenses/>.
 	</varlistentry>
 	
 	<varlistentry>
-	  <term>&BUTTON_RIGHT;</term>
+	  <term>&BUTTON_SELECT;</term>
 	  <listitem>
 	    <para>
 	      Enter next menu hierarchy
@@ -555,13 +563,13 @@ along with this program; if not sse <http://www.gnu.org/licenses/>.
 	    <term>&BUTTON_UP;</term>
 	    <listitem>
 	      <para>
-		Cancel input. The value is not changed.
+		Increment the value.
 	      </para>
 	    </listitem>
 	  </varlistentry>
 
 	  <varlistentry>
-	    <term>&BUTTON_LEFT;</term>
+	    <term>&BUTTON_DOWN;</term>
 	    <listitem>
 	      <para>
 		Decrement the value.
@@ -573,7 +581,7 @@ along with this program; if not sse <http://www.gnu.org/licenses/>.
 	    <term>&BUTTON_RIGHT;</term>
 	    <listitem>
 	      <para>
-		Increment the value.
+		Cancel input. The value is not changed.
 	      </para>
 	    </listitem>
 	  </varlistentry>
@@ -594,15 +602,14 @@ along with this program; if not sse <http://www.gnu.org/licenses/>.
 	button pressed, it increments or decrements more rapidly.
       </para>
 
-      <warning>
+      <tip>
 	<title>The MX2 controller</title>
 	<para>
-	  This navigation is not consistent with the <ulink
+	  This navigation is consistent with the <ulink
 	  url="http://dynamicperception.com/products/mx2-motion-controller">
-	  Dynamic Perception</ulink> MX2 Motion Controller. It will be
-	  changed in the future.
+	  Dynamic Perception</ulink> MX2 Motion Controller.
 	</para>
-      </warning>
+      </tip>
       
     </section>
     
@@ -618,7 +625,7 @@ along with this program; if not sse <http://www.gnu.org/licenses/>.
 	Then it switches the RGB LCD Screen color to
 	<emphasis>red</emphasis> which looks like this:
 	<screen>
-#3<co id="running.screen.current_shot" linkends="co.running.screen.current_shot"/>/5<co id="running.screen.max_shot" linkends="co.running.screen.max_shot"/> ISO50<co id="running.screen.iso" linkends="co.running.screen.iso"/>
+3<co id="running.screen.current_shot" linkends="co.running.screen.current_shot"/>/5<co id="running.screen.max_shot" linkends="co.running.screen.max_shot"/> ISO50<co id="running.screen.iso" linkends="co.running.screen.iso"/>
 B:1057<co id="running.screen.bulb" linkends="co.running.screen.bulb"/>/EV:1.00<co id="running.screen.ev" linkends="co.running.screen.iso"/>
 	</screen>
       </para>
@@ -662,9 +669,9 @@ B:1057<co id="running.screen.bulb" linkends="co.running.screen.bulb"/>/EV:1.00<c
       </para>
 
       <para>
-	If ISO ramping is <emphasis>not activated</emphasis> then the
-	entries <literal>ISO</literal> and <literal>EV</literal> are
-	<emphasis>not shown</emphasis> on the display.
+	If ISO ramping is <emphasis>not</emphasis> activated then the
+	<literal>ISO</literal> is <emphasis>not</emphasis> shown on
+	the display.
       </para>
 
       <para>
@@ -674,7 +681,7 @@ B:1057<co id="running.screen.bulb" linkends="co.running.screen.bulb"/>/EV:1.00<c
 
       <variablelist>
 	<varlistentry>
-	  <term>&BUTTON_UP;</term>
+	  <term>&BUTTON_RIGHT;</term>
 	  <listitem>
 	    <para>
 	      Stop shooting. This takes a while till the menu appears.
@@ -683,16 +690,16 @@ B:1057<co id="running.screen.bulb" linkends="co.running.screen.bulb"/>/EV:1.00<c
 	</varlistentry>
 	
 	<varlistentry>
-	  <term>&BUTTON_DOWN;</term>
+	  <term>&BUTTON_LEFT;</term>
 	  <listitem>
 	    <para>
-	      ISO Ramp by one step.
+	      ISO Ramp up by one step.
 	    </para>
 	  </listitem>
 	</varlistentry>
 	
 	<varlistentry>
-	  <term>&BUTTON_LEFT;</term>
+	  <term>&BUTTON_DOWN;</term>
 	  <listitem>
 	    <para>
 	      Decrement the Exposure Value Change by 0.1.
@@ -701,7 +708,7 @@ B:1057<co id="running.screen.bulb" linkends="co.running.screen.bulb"/>/EV:1.00<c
 	</varlistentry>
 	
 	<varlistentry>
-	  <term>&BUTTON_RIGHT;</term>
+	  <term>&BUTTON_UP;</term>
 	  <listitem>
 	    <para>
 	      Increment the Exposure Value Change by 0.1.

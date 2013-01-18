@@ -25,7 +25,7 @@
 
 #ifdef HAVE_CAMERA
 # define BRAMPUINO_VERSION_MINOR "2"
-# define BRAMPUINO_VERSION_PATCHLEVEL "5"
+# define BRAMPUINO_VERSION_PATCHLEVEL "6"
 #else
 # define BRAMPUINO_VERSION_MINOR "No"
 # define BRAMPUINO_VERSION_PATCHLEVEL "Camera"
@@ -264,6 +264,9 @@ unsigned long new_bulb_time(unsigned long shot,
   unsigned long bulb_time = 0;
   bool have_new_bulb_time = false;
 
+  DEBUG_PRINT_PSTR("Shot: #");
+  DEBUG_PRINTLN(shot);
+
   if(exposure_count <= settings.exposure.lead_in) {
     DEBUG_PRINT("Lead In with time: ");
     DEBUG_PRINTLN(last_time);
@@ -469,6 +472,7 @@ void ATTRIBUT_INTERRUPT start_exposure()
     camera.start_bulb();
   }
 #endif
+
 #ifdef VERIFY_EXPOSURE_TIME
   exposure_start_ms = millis();
 #endif
@@ -524,6 +528,7 @@ void start_interval_delay()
   current_settings = settings;
 
   // init exposure
+  current_settings.exposure.exp_time = current_settings.exposure.start_time;
 
   // init count
   adjusted_exposure_count = exposure_count = 0;
@@ -691,7 +696,7 @@ void loop()
     // print on screen info
     // shot number
     lcd.setCursor(0, 0);
-    PRINT("#"); PRINT(exposure_count);
+    PRINT(exposure_count);
     PRINT("/");
     if(0 == settings.max_exposures) {
       PRINT("Inf");
@@ -725,21 +730,21 @@ void loop()
     if(c1 && (c1 == c2)) {
       switch(c1) {
 
-      case MENU_BUTTON_CANCEL:
+      case MENU_BUTTON_MAIN_CANCEL:
 	// stop shutter
 	// exposure_count = settings.max_exposures;
 	exposure_stop = 1;
 	current_state = BRAMPUINO_STATE_MENU;
 	break;
 
-      case MENU_BUTTON_SELECT:
+      case MENU_BUTTON_MAIN_MENU:
 	// menu
 	current_state = BRAMPUINO_STATE_EXPOSING_MENU;
 	// Start will continue
 	menu_loop();
 	break;
 
-      case MENU_BUTTON_DECREMENT:
+      case MENU_BUTTON_MAIN_DECREMENT:
 	{
 	  // set current exposure time as new start time
 	  DEBUG_PRINTLN_PSTR("Manual dec exp ev change");
@@ -753,7 +758,7 @@ void loop()
 	}
 	break;
 
-      case MENU_BUTTON_INCREMENT:
+      case MENU_BUTTON_MAIN_INCREMENT:
 	{
 	  // set current exposure time as new start time
 	  DEBUG_PRINTLN_PSTR("Manual inc exp ev change");
@@ -767,7 +772,7 @@ void loop()
 	}
 	break;
 	
-      case MENU_BUTTON_CHANGE_ISO:
+      case MENU_BUTTON_MAIN_CHANGE_ISO:
 	if(BRAMPUINO_AUTO_ISO_CHANGE) {
 	  // if ISO change is possible
 	  if(current_settings.iso.iso_index + 1 <= settings.iso.max_index) {
@@ -781,7 +786,7 @@ void loop()
 	      ++current_settings.iso.iso_index;
 	      // set new start time
 	      current_settings.exposure.start_time = new_time;
-	      adjusted_exposure_count = 0;
+	      adjusted_exposure_count = 1;
 	    }
 	  }
 	}

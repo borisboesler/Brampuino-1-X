@@ -28,11 +28,6 @@
 # define HAVE_CAMERA
 # define HAVE_ADAFRUIT_RGB_SHIELD
 
-/*
- * we use ISO values 50,, 100, 200, .. etc
- */
-//
-#define FULL_ISO_RANGE
 
 #define ISO_RANGE_MAX_COUNT 20
 

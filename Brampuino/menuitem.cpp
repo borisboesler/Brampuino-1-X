@@ -141,19 +141,25 @@ long menu_signed_long(const char* menu, long val, long min_val, long max_val)
 	++multiplied;
       }
       switch(c1) {
-      case MENU_BUTTON_DECREMENT:
+      case MENU_BUTTON_VALUE_DECREMENT:
 	// check wrap around
 	if(val - adding < val) {
 	  val -= adding;
 	}
+	else {
+	  val = min_val;
+	}
 	break;
-      case MENU_BUTTON_INCREMENT:
+      case MENU_BUTTON_VALUE_INCREMENT:
 	// check wrap around
 	if(val + adding > val) {
 	  val += adding;
 	}
+	else {
+	  val = max_val;
+	}
 	break;
-      case MENU_BUTTON_CANCEL:
+      case MENU_BUTTON_VALUE_CANCEL:
 	/* cancel */
 	return(old_val);
 	break;
@@ -167,7 +173,7 @@ long menu_signed_long(const char* menu, long val, long min_val, long max_val)
       adding = 1;
       multiplied = 0;
     }
-  } while(MENU_BUTTON_SELECT != c1);
+  } while(MENU_BUTTON_VALUE_SELECT != c1);
 
   menu_changed_settings = true;
   return(val);
@@ -204,21 +210,27 @@ unsigned long menu_unsigned_long(const char* menu, unsigned long val,
 	++multiplied;
       }
       switch(c1) {
-      case MENU_BUTTON_DECREMENT:
+      case MENU_BUTTON_VALUE_DECREMENT:
 	// check wrap around
 	if(val - adding < val) {
 	  val -= adding;
 	}
+	else {
+	  val = min_val;
+	}
 	val = MAX(min_val, val);
 	break;
-      case MENU_BUTTON_INCREMENT:
+      case MENU_BUTTON_VALUE_INCREMENT:
 	// check wrap around
 	if(val + adding > val) {
 	  val += adding;
 	}
+	else {
+	  val = max_val;
+	}
 	val = MIN(max_val, val);
 	break;
-      case MENU_BUTTON_CANCEL:
+      case MENU_BUTTON_VALUE_CANCEL:
 	/* cancel */
 	return(old_val);
 	break;
@@ -232,7 +244,7 @@ unsigned long menu_unsigned_long(const char* menu, unsigned long val,
       adding = 1;
       multiplied = 0;
     }
-  } while(MENU_BUTTON_SELECT != c1);
+  } while(MENU_BUTTON_VALUE_SELECT != c1);
 
   menu_changed_settings = true;
   return(val);
@@ -262,17 +274,17 @@ unsigned menu_index_unsigned_long_array(const char* menu, unsigned long val,
     c2 = READ_BUTTONS();
     if(c1 && (c1 == c2)) {
       switch(c1) {
-      case MENU_BUTTON_DECREMENT:
+      case MENU_BUTTON_VALUE_DECREMENT:
 	if(0 < index) {
 	  --index;
 	}
 	break;
-      case MENU_BUTTON_INCREMENT:
+      case MENU_BUTTON_VALUE_INCREMENT:
 	if(index + 1 < num) {
 	  ++index;
 	}
 	break;
-      case MENU_BUTTON_CANCEL:
+      case MENU_BUTTON_VALUE_CANCEL:
 	/* cancel */
 	return(old_val);
 	break;
@@ -281,7 +293,7 @@ unsigned menu_index_unsigned_long_array(const char* menu, unsigned long val,
 	break;
       }
     }
-  } while(MENU_BUTTON_SELECT != c1);
+  } while(MENU_BUTTON_VALUE_SELECT != c1);
 
   menu_changed_settings = true;
   val = index;
@@ -319,16 +331,16 @@ float menu_float(const char* menu, float val, float step, bool sign)
 	++multiplied;
       }
       switch(c1) {
-      case MENU_BUTTON_DECREMENT:
+      case MENU_BUTTON_VALUE_DECREMENT:
 	val -= adding;
 	if((0.0 > val) && !sign) {
 	  val = 0.0;
 	}
 	break;
-      case MENU_BUTTON_INCREMENT:
+      case MENU_BUTTON_VALUE_INCREMENT:
 	val += adding;
 	break;
-      case MENU_BUTTON_CANCEL:
+      case MENU_BUTTON_VALUE_CANCEL:
 	/* cancel */
 	return(old_val);
 	break;
@@ -346,7 +358,7 @@ float menu_float(const char* menu, float val, float step, bool sign)
     if((-step < val) && (val < step)) {
       val = 0.0;
     }
-  } while(MENU_BUTTON_SELECT != c1);
+  } while(MENU_BUTTON_VALUE_SELECT != c1);
 
   menu_changed_settings = true;
   return(val);
@@ -380,13 +392,13 @@ bool menu_bool(const char* menu, bool val)
     c2 = READ_BUTTONS();
     if(c1 == c2) {
       switch(c1) {
-      case MENU_BUTTON_DECREMENT:
+      case MENU_BUTTON_VALUE_DECREMENT:
 	val = false;
 	break;
-      case MENU_BUTTON_INCREMENT:
+      case MENU_BUTTON_VALUE_INCREMENT:
 	val = true;
 	break;
-      case MENU_BUTTON_CANCEL:
+      case MENU_BUTTON_VALUE_CANCEL:
 	/* cancel */
 	return(old_val);
 	break;
@@ -395,7 +407,7 @@ bool menu_bool(const char* menu, bool val)
 	break;
       }
     }
-  } while(MENU_BUTTON_SELECT != c1);
+  } while(MENU_BUTTON_VALUE_SELECT != c1);
 
   menu_changed_settings = true;
   return(val);
@@ -403,102 +415,6 @@ bool menu_bool(const char* menu, bool val)
 
 
 /* ************************************************************ */
-
-/*
- * print double test for minimum and maximum
- */
-void menu_minmax_int(const char *text, long unsigned* val1, long unsigned* val2,
-		     unsigned long min_val, unsigned long max_val)
-{
-  const int lines = 2;
-  // save old values
-  volatile unsigned long values[lines] = { *val1, *val2 };
-  const char* prefixes[lines] = {
-    "Min.",
-    "Max."
-  };
-
-  int row = strlen(text) + 5 /* strlen("Min.")+strlen(":")*/;
-
-  // print fixed menu
-  lcd.clear();
-  for(int y = 0; y < lines; y++) {
-    lcd.setCursor(0, y);
-    PRINT(prefixes[y]); PRINT(text); PRINT(":");
-  }
-
-  // turn cursor on
-  lcd.cursor();
-  lcd.blink();
-
-  // read buttons
-  uint8_t c1, c2;
-  int line = 0;
-  bool redraw = true;
-  int pressed = 0;
-  unsigned long adding = 1;
-  int multiplied = 0;
-
-  do {
-    // print current values
-    if(redraw) {
-      for(int y = 0; y < lines; y++) {
-	lcd.setCursor(row, y);
-	PRINT(values[y]); PRINT("  ");
-      }
-      redraw = false;
-    }
-    lcd.setCursor(row, line);
-
-    c1 = READ_BUTTONS();
-    delay(DEBOUNCE_TIME);
-    c2 = READ_BUTTONS();
-    if(c1 && (c1 == c2)) {
-      ++pressed;
-      if((DEBOUNCE_MULTIPLIED > multiplied) && (DEBOUNCE_COUNT < pressed)) {
-	pressed = 1;
-	adding *= 10;
-	++multiplied;
-      }
-      switch(c1) {
-	// menu
-      case MENU_BUTTON_NEXT:
-	line = MIN(lines - 1, line + 1);
-	break;
-      case MENU_BUTTON_PREVIOUS:
-	line = MAX(0, line - 1);
-	break;
-	// value
-      case MENU_BUTTON_DECREMENT:
-	values[line] = MAX(min_val, values[line] - adding);
-	redraw = true;
-	break;
-      case MENU_BUTTON_INCREMENT:
-	values[line] = MIN(max_val, values[line] + adding);
-	redraw = true;
-	break;
-      default:
-	// skip
-	break;
-      }
-    }
-    else {
-      pressed = 0;
-      adding = 1;
-      multiplied = 0;
-    }
-  } while(MENU_BUTTON_SELECT != c1);
-
-  // turn cursor off
-  lcd.noCursor();
-  lcd.noBlink();
-
-
-  // store values
-  *val1 = values[0];
-  *val2 = values[1];
-  menu_changed_settings = true;
-}
 
 /* ************************************************************ */
 /*
@@ -924,7 +840,35 @@ void menu_loop()
   if(c1 == c2) {
     // switch to menu
     switch(c1) {
-    case BUTTON_LEFT:
+
+    case MENU_BUTTON_MENU_PREV: // up
+      if(0 < menu_cursor_line) {
+	--menu_cursor_line;
+	redraw_lcd = true;
+	if(menu_cursor_line < menu_start_line) {
+	  menu_start_line = menu_cursor_line;
+	}
+      }
+      else { // 0 == menu_cursor_line !!
+	if(0 < menu_start_line) {
+	  --menu_start_line;
+	  redraw_lcd = true;
+	}
+      }
+      break;
+
+    case MENU_BUTTON_MENU_NEXT: // down
+      if(NULL != menu_current[menu_cursor_line + 1].item) {
+	++menu_cursor_line;
+	if(LCD_ROWS <= menu_cursor_line - menu_start_line) {
+	  ++menu_start_line;
+	}
+	redraw_lcd = true;
+      }
+      break;
+
+#if 0
+    case BUTTON_LEFT: // unused
       {
 	const menu_entry_t *up_menu = NO_MENU;
 #ifdef MENU_USE_LEFT_KEY
@@ -940,13 +884,13 @@ void menu_loop()
 	}
       }
       break;
-    case BUTTON_RIGHT:
+#endif
+
+    case MENU_BUTTON_MENU_ENTER: // select
       {
 	const menu_entry_t *down_menu = menu_current[menu_cursor_line].right;
 	if(NO_MENU != down_menu) {
-#ifndef MENU_USE_LEFT_KEY
 	  menu_push(menu_current);
-#endif
 	  menu_current = down_menu;
 	  menu_start_line = 0;
 	  menu_cursor_line = 0;
@@ -960,37 +904,20 @@ void menu_loop()
 	}
       }
       break;
-    case BUTTON_UP:
-      if(0 < menu_cursor_line) {
-	--menu_cursor_line;
-	redraw_lcd = true;
-	if(menu_cursor_line < menu_start_line) {
-	  menu_start_line = menu_cursor_line;
-	}
-      }
-      else { // 0 == menu_cursor_line !!
-	if(0 < menu_start_line) {
-	  --menu_start_line;
+      
+    case MENU_BUTTON_MENU_UP: // right
+      {
+	const menu_entry_t *up_menu = NO_MENU;
+	up_menu = menu_toppop();
+	if(NO_MENU != up_menu) {
+	  menu_current = up_menu;
+	  menu_start_line = 0;
+	  menu_cursor_line = 0;
 	  redraw_lcd = true;
 	}
       }
       break;
-    case BUTTON_DOWN:
-      if(NULL != menu_current[menu_cursor_line + 1].item) {
-	++menu_cursor_line;
-	if(LCD_ROWS <= menu_cursor_line - menu_start_line) {
-	  ++menu_start_line;
-	}
-	redraw_lcd = true;
-      }
-      break;
-    case BUTTON_SELECT:
-      if(NO_FUNC != menu_current[menu_cursor_line].func_select) {
-	(*menu_current[menu_cursor_line].func_select)(menu_cursor_line);
-	redraw_lcd = true;
-      }
-      break;
-      
+
     default:
       break;
     }

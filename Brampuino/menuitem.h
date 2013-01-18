@@ -35,14 +35,26 @@
 #define NO_FUNC ((const menu_function_t)NULL)
 
 enum menu_buttons {
-  MENU_BUTTON_INCREMENT = BUTTON_RIGHT,
-  MENU_BUTTON_DECREMENT = BUTTON_LEFT,
-  MENU_BUTTON_NEXT = BUTTON_DOWN,
-  MENU_BUTTON_PREVIOUS = BUTTON_UP,
-  MENU_BUTTON_CANCEL = BUTTON_UP,
-  MENU_BUTTON_SELECT = BUTTON_SELECT,
-  MENU_BUTTON_CHANGE_ISO = BUTTON_DOWN
+  /* main menu */
+  MENU_BUTTON_MAIN_INCREMENT = BUTTON_UP,
+  MENU_BUTTON_MAIN_DECREMENT = BUTTON_DOWN,
+  MENU_BUTTON_MAIN_MENU = BUTTON_SELECT,
+  MENU_BUTTON_MAIN_CHANGE_ISO = BUTTON_LEFT,
+  MENU_BUTTON_MAIN_CANCEL = BUTTON_RIGHT,
+
+  /* menu navigation - ala MX2 */
+  MENU_BUTTON_MENU_PREV = BUTTON_UP,
+  MENU_BUTTON_MENU_NEXT = BUTTON_DOWN,
+  MENU_BUTTON_MENU_UP = BUTTON_RIGHT,
+  MENU_BUTTON_MENU_ENTER = BUTTON_SELECT,
+
+  /* buttons for value input - ala MX2 */
+  MENU_BUTTON_VALUE_INCREMENT = BUTTON_UP,
+  MENU_BUTTON_VALUE_DECREMENT = BUTTON_DOWN,
+  MENU_BUTTON_VALUE_CANCEL = BUTTON_RIGHT,
+  MENU_BUTTON_VALUE_SELECT = BUTTON_SELECT
 };
+
 
 /**
  * type of executed function when a button is pressed
@@ -124,12 +136,6 @@ float menu_float(const char* menu, float val, float step, bool sign = false);
 extern
 bool menu_bool(const char* menu, bool val);
 
-/*
- * print double test for minimum and maximum
- */
-extern
-void menu_minmax_int(const char *text, long unsigned* val1, long unsigned* val2,
-		     long unsigned min_val, long unsigned max_val);
 
 /**
  * \}
