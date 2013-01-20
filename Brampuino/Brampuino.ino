@@ -25,7 +25,7 @@
 
 #ifdef HAVE_CAMERA
 # define BRAMPUINO_VERSION_MINOR "2"
-# define BRAMPUINO_VERSION_PATCHLEVEL "6"
+# define BRAMPUINO_VERSION_PATCHLEVEL "7a"
 #else
 # define BRAMPUINO_VERSION_MINOR "No"
 # define BRAMPUINO_VERSION_PATCHLEVEL "Camera"
@@ -270,7 +270,7 @@ unsigned long new_bulb_time(unsigned long shot,
   if(exposure_count <= settings.exposure.lead_in) {
     DEBUG_PRINT("Lead In with time: ");
     DEBUG_PRINTLN(last_time);
-    adjusted_exposure_count = 1;
+    adjusted_exposure_count = 0;
     return(last_time);
   }
 

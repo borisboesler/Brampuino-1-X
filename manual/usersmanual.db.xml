@@ -207,9 +207,9 @@ along with this program; if not sse <http://www.gnu.org/licenses/>.
     <para>
       The &BRAMPUINO1X; is a small device based on the <ulink
       url="http://www.arduino.cc">open Arduino hardware
-      platform</ulink> to make series of camera shots
-      automatically. In its simpliest setting it acts as a normal
-      intervalometer (this is the default setting).
+      platform</ulink> to make series of frames automatically. In its
+      simpliest setting it acts as a normal intervalometer (this is
+      the default setting).
 
       It can be configured to be used as an HDRI intervalometer as well.
 
@@ -415,8 +415,11 @@ along with this program; if not sse <http://www.gnu.org/licenses/>.
       menu hierarchy with a short explanation of each menu item and in
       <xref linkend="section:buttons"/> we show how to navigate with
       the buttons through the menu.
+
+      The display is shown in <xref linkend="section:display"/>.
     </para>
-    
+
+
     <!-- ************************************************** -->
     <section id="section:menu">
       <title>Menu</title>
@@ -478,8 +481,8 @@ along with this program; if not sse <http://www.gnu.org/licenses/>.
       <tip>
 	<title>Lead In</title>
 	<para>
-	  The first shot after the lead in will have a ramped exposure
-	  time and not the start exposure time.
+	  The first frame after the lead in has still the start
+	  exposure time.
 	</para>
       </tip>
 
@@ -610,17 +613,17 @@ along with this program; if not sse <http://www.gnu.org/licenses/>.
 	  Dynamic Perception</ulink> MX2 Motion Controller.
 	</para>
       </tip>
-      
+
     </section>
-    
+
     <!-- ************************************************** -->
-    <section id="section:running">
-      <title>Running &BRAMPUINO1X;</title>
+    <section id="section:display">
+      <title>Display</title>
       
       <para>
 	When &MENU_start; in the menu is selected then &BRAMPUINO1X;
-	stores he current setting in the <literal>EEPROM</literal>, if
-	the values have changed from the previous setting, first.
+	stores the current setting in the <literal>EEPROM</literal>, if
+	the values have changed from the previous setting.
 
 	Then it switches the RGB LCD Screen color to
 	<emphasis>red</emphasis> which looks like this:
@@ -634,13 +637,13 @@ B:1057<co id="running.screen.bulb" linkends="co.running.screen.bulb"/>/EV:1.00<c
 	<callout id="co.running.screen.current_shot"
 		 arearefs="running.screen.current_shot">
 	  <para>
-	    The current shot (shot number 3)
+	    The current frame (frame number 3)
 	  </para>
 	</callout>
 	<callout id="co.running.screen.max_shot"
 		 arearefs="running.screen.max_shot">
 	  <para>
-	    The maximum number of shots (5)
+	    The maximum number of frames (5)
 	  </para>
 	</callout>
 	<callout id="co.running.screen.iso" arearefs="running.screen.iso">
@@ -655,18 +658,10 @@ B:1057<co id="running.screen.bulb" linkends="co.running.screen.bulb"/>/EV:1.00<c
 	</callout>
 	<callout id="co.running.screen.ev" arearefs="running.screen.ev">
 	  <para>
-	    The current exposure value change (+1.0EV after some shots)
+	    The current exposure value change (+1.0EV after some frames)
 	  </para>
 	</callout>
       </calloutlist>
-
-      <para>
-	In <xref linkend="figure:in-action"/> &BRAMPUINO1X; is shown
-	in action.
-
-	The video can be viewed on <ulink
-	url="http://vimeo.com/46414677/">vimeo</ulink>.
-      </para>
 
       <para>
 	If ISO ramping is <emphasis>not</emphasis> activated then the
@@ -675,7 +670,7 @@ B:1057<co id="running.screen.bulb" linkends="co.running.screen.bulb"/>/EV:1.00<c
       </para>
 
       <para>
-	While &BRAMPUINO1X; is running and taking shots some settings
+	While &BRAMPUINO1X; is running and taking frames some settings
 	can be changed. The buttons have the following meaning:
       </para>
 
@@ -735,6 +730,14 @@ B:1057<co id="running.screen.bulb" linkends="co.running.screen.bulb"/>/EV:1.00<c
 	color to <emphasis>green</emphasis>.
       </para>
 
+      <para>
+	In <xref linkend="figure:in-action"/> &BRAMPUINO1X; is shown
+	in action.
+
+	The video can be viewed on <ulink
+	url="http://vimeo.com/46414677/">vimeo</ulink>.
+      </para>
+
       <figure id="figure:in-action">
 	<title>&BRAMPUINO1X; In Action with ISO Ramping</title>
 	<mediaobject>
@@ -748,9 +751,65 @@ B:1057<co id="running.screen.bulb" linkends="co.running.screen.bulb"/>/EV:1.00<c
       </figure>
 
     </section>
-    
+  </chapter>
+
+
+  <!-- ************************************************** -->
+  <!-- ************************************************** -->
+  <chapter id="chapter:running">
+    <title>Running &BRAMPUINO1X;</title>
+
+    <para>
+      In <xref linkend="section:ramping"/> and <xref
+      linkend="section:exposure-interval-cycle"/> we give a deeper
+      insight into the ramping and interval time computation.
+    </para>
+
     <!-- ************************************************** -->
-    <section>
+    <section id="section:ramping">
+      <title>Ramping</title>
+
+      <para>
+	In <xref linkend="figure:ramping"/> we show how &BRAMPUINO1X;
+	ramps the exposure value up (exposure time and ISO) with a
+	lead in of <literal>l</literal> frames.
+
+	First, there are <literal>l</literal> frames with the start
+	exposure time specified in menu entry &MENU_exptime;.
+
+	Then the frame <literal>l+1</literal> has still the start
+	exposure time as if no lead in was set.
+
+	&BRAMPUINO1X; starts ramping now and frame
+	<literal>l+fps+1</literal> gets the full exposure change set
+	in &MENU_expev;.
+
+	Ramping continues till the maximum exposure specified by
+	&MENU_expmax; and &MENU_isomax; is reached.
+
+	When ramping reaches this maximum exposure &BRAMPUINO1X;
+	continues to take frames with this maximum exposure till the
+	maximum number of frames is reached.
+	
+	<figure id="figure:ramping">
+	  <title>Ramping with a Lead In</title>
+	  <mediaobject>
+	    <imageobject>
+	      <imagedata fileref="local-images/ramping.svg"
+			 format="SVG"
+			 align="center" valign="top"
+			 width="15cm"/>
+	    </imageobject>
+	  </mediaobject>
+	</figure>
+
+      </para>
+
+    </section>
+
+
+    <!-- ************************************************** -->
+    <section id="section:exposure-interval-cycle">
       <title>The Exposure-Interval Cycle</title>
 
       <para>
@@ -792,6 +851,7 @@ B:1057<co id="running.screen.bulb" linkends="co.running.screen.bulb"/>/EV:1.00<c
       </para>
 
     </section>
+
 
     <!-- ************************************************** -->
     <section>
@@ -910,7 +970,7 @@ B:1057<co id="running.screen.bulb" linkends="co.running.screen.bulb"/>/EV:1.00<c
       </para>
 
       <para>
-	Set the number of shots X as the maximum number of shots:
+	Set the number of frames X as the maximum number of frames:
 	<menuchoice>
 	  <guimenu>&MENU_settings;</guimenu>
 	  <guisubmenu>&MENU_exposure;</guisubmenu>
@@ -930,7 +990,7 @@ B:1057<co id="running.screen.bulb" linkends="co.running.screen.bulb"/>/EV:1.00<c
       </para>
 
       <para>
-	Set the exposure value increment X per shot in exposure value
+	Set the exposure value increment X per frames in exposure value
 	change:
 	<menuchoice>
 	  <guimenu>&MENU_settings;</guimenu>
@@ -958,7 +1018,7 @@ B:1057<co id="running.screen.bulb" linkends="co.running.screen.bulb"/>/EV:1.00<c
       </para>
 
       <para>
-	Set the exposure lead in to the number of shots for which the
+	Set the exposure lead in to the number of frames for which the
 	initial exposure value should not be ramped.
 	<menuchoice>
 	  <guimenu>&MENU_settings;</guimenu>
@@ -971,7 +1031,7 @@ B:1057<co id="running.screen.bulb" linkends="co.running.screen.bulb"/>/EV:1.00<c
 
       <para>
 	Set the exposure value change X to the exposure value that
-	should be reached after some shots.
+	should be reached after some frames.
 	<menuchoice>
 	  <guimenu>&MENU_settings;</guimenu>
 	  <guisubmenu>&MENU_exposure;</guisubmenu>
@@ -992,7 +1052,7 @@ B:1057<co id="running.screen.bulb" linkends="co.running.screen.bulb"/>/EV:1.00<c
       </para>
 
       <para>
-	Set the exposure fps to the number of shots after which the
+	Set the exposure fps to the number of frames after which the
 	exposure will be changed by exposure value change exposure values.
 	<menuchoice>
 	  <guimenu>&MENU_settings;</guimenu>
@@ -1015,7 +1075,7 @@ B:1057<co id="running.screen.bulb" linkends="co.running.screen.bulb"/>/EV:1.00<c
 	<para>
 	  If you set the exposure time to 1000, the exposure fps to
 	  150 and the exposure change value to 4.0 then the exposure
-	  will change by 4 exposure values and the 151-th shot
+	  will change by 4 exposure values and the 151-th frame
 	  <!--
 	      -2 250
 	      -1 500
@@ -1029,7 +1089,7 @@ B:1057<co id="running.screen.bulb" linkends="co.running.screen.bulb"/>/EV:1.00<c
 	  -->
 	  will have a 16000 milliseconds exposure time.
 
-	  The exposure time for the first then shots are: 1000, 1019,
+	  The exposure time for the first then frames are: 1000, 1019,
 	  1038, 1057, 1077, 1097, 1117, 1138, 1159 and 1181.
 	</para>
       </example>
@@ -1103,5 +1163,7 @@ B:1057<co id="running.screen.bulb" linkends="co.running.screen.bulb"/>/EV:1.00<c
 -->
 <!-- LocalWords:  NonCommercial ShareAlike intervalometer Bramper Adafruit GPL
 -->
-<!-- LocalWords:  LiveView EEPROM Unported Precompiled vimeo
+<!-- LocalWords:  LiveView EEPROM Unported Precompiled vimeo menuentities SHA
+-->
+<!-- LocalWords:  USBHost
 -->
