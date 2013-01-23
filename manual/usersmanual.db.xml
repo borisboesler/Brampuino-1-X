@@ -214,11 +214,11 @@ along with this program; if not sse <http://www.gnu.org/licenses/>.
       It can be configured to be used as an HDRI intervalometer as well.
 
       Additionally it can be used as a Bulb Ramper like the <ulink
-      url="http://www.thewhippersnapper.com/LittleBramper">Little
-      Bramper</ulink>.
+      url="http://www.thewhippersnapper.com/LittleBramper">&LITTLE_BRAMPER;</ulink>.
 
-      The &BRAMPUINO1X; is one of the few devices that can bulb
-      ramping and ISO ramping!
+      The &BRAMPUINO1X; is one of the few devices that can ramp the
+      exosure time via the camer's bulb mode and the ISO
+      automatically!
     </para>
 
     <para>
@@ -606,11 +606,11 @@ along with this program; if not sse <http://www.gnu.org/licenses/>.
       </para>
 
       <tip>
-	<title>The MX2 controller</title>
+	<title>The &MX2; controller</title>
 	<para>
 	  This navigation is consistent with the <ulink
 	  url="http://dynamicperception.com/products/mx2-motion-controller">
-	  Dynamic Perception</ulink> MX2 Motion Controller.
+	  Dynamic Perception</ulink> &MX2; Motion Controller.
 	</para>
       </tip>
 
@@ -848,6 +848,17 @@ B:1057<co id="running.screen.bulb" linkends="co.running.screen.bulb"/>/EV:1.00<c
 	    </imageobject>
 	  </mediaobject>
 	</figure>
+      </para>
+
+      <para>
+	If &BRAMPUINO1X; ramps down, eg during a sunrise, and the
+	interval is less than the start exposure time then the
+	interval from exposure start to the next exposure start gets
+	shorter and shorter, because the exposure time gets shorter
+	and the minimal interval will be used, till the exposure time
+	is less than the interval.
+
+	This is an <emphasis>implicit</emphasis> interval ramping.
       </para>
 
     </section>
@@ -1108,7 +1119,7 @@ B:1057<co id="running.screen.bulb" linkends="co.running.screen.bulb"/>/EV:1.00<c
     <itemizedlist>
       <listitem>
 	<para>
-	  External trigger, eg MX2
+	  External trigger, eg &MX2;
 	</para>
       </listitem>
 
@@ -1118,15 +1129,37 @@ B:1057<co id="running.screen.bulb" linkends="co.running.screen.bulb"/>/EV:1.00<c
 	</para>
       </listitem>
 
+     <!-- needs extra hardware
       <listitem>
 	<para>
 	  data-logging
 	</para>
       </listitem>
-
+      -->
+     
+     <!-- needs extra hardware
       <listitem>
 	<para>
 	  light sensor
+	</para>
+      </listitem>
+      -->
+
+      <listitem>
+	<para>
+	  #frames to ramp
+	</para>
+      </listitem>
+
+      <listitem>
+	<para>
+	  time to ramp
+	</para>
+      </listitem>
+
+      <listitem>
+	<para>
+	  early ISO ramp down
 	</para>
       </listitem>
 

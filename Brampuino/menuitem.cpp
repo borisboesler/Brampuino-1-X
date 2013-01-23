@@ -17,7 +17,9 @@
  */
 
 #include "config.h"
+#undef DEBUG
 #include "debug.h"
+
 
 #include <stdlib.h>
 #include <stdio.h>
@@ -40,6 +42,7 @@ extern const menu_entry_t menu_exposure[];
 extern const menu_entry_t menu_exposure_num[];
 extern const menu_entry_t menu_iso[];
 extern const menu_entry_t menu_interval[];
+extern const menu_entry_t menu_ramping[];
 
 #define DEBOUNCE_TIME 40
 #define DEBOUNCE_COUNT 10
@@ -560,7 +563,7 @@ void menu_select_exp_increment(int menu_num)
  */
 void menu_select_exp_fps(int menu_num)
 {
-  strcpy_P(buffer, menu_exposure[menu_num].item);
+  strcpy_P(buffer, menu_ramping[menu_num].item);
   settings.fps = menu_unsigned_long(buffer, settings.fps, 1, 1000);
   DEBUG_PRINT_PSTR("set FPS to:");
   DEBUG_PRINTLN(settings.fps);
@@ -569,9 +572,22 @@ void menu_select_exp_fps(int menu_num)
 /**
  *
  */
+void menu_select_ramp_time(int menu_num)
+{
+  strcpy_P(buffer, menu_ramping[menu_num].item);
+  settings.ramping_time = menu_unsigned_long(buffer, settings.ramping_time,
+					     0, 24*60);
+  DEBUG_PRINT_PSTR("set ramping time to:");
+  DEBUG_PRINTLN(settings.ramping_time);
+}
+
+
+/**
+ *
+ */
 void menu_select_exp_ev_change(int menu_num)
 {
-  strcpy_P(buffer, menu_exposure[menu_num].item);
+  strcpy_P(buffer, menu_ramping[menu_num].item);
   settings.exposure.u.exponential.ev_change
     = menu_float(buffer, settings.exposure.u.exponential.ev_change, 0.1, true);
   DEBUG_PRINT_PSTR("set exposure EV change to:");

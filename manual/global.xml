@@ -18,14 +18,18 @@ along with this program; if not sse <http://www.gnu.org/licenses/>.
 -->
 
 <!-- the one and only -->
-<!ENTITY BRAMPUINO1X           "Brampuino 1-X">
+<!ENTITY BRAMPUINO1X           "<emphasis>Brampuino 1-X</emphasis>">
+
+<!-- other devices -->
+<!ENTITY LITTLE_BRAMPER         "<emphasis>Little Bramper</emphasis>">
+<!ENTITY MX2                    "<emphasis>MX2</emphasis>">
 
 <!-- buttons only -->
-<!ENTITY BUTTON_UP             "[Up]">
-<!ENTITY BUTTON_DOWN           "[Down]">
-<!ENTITY BUTTON_LEFT           "[Left]">
-<!ENTITY BUTTON_RIGHT          "[Right]">
-<!ENTITY BUTTON_SELECT         "[Select]">
+<!ENTITY BUTTON_UP             "<literal>[Up]</literal>">
+<!ENTITY BUTTON_DOWN           "<literal>[Down]</literal>">
+<!ENTITY BUTTON_LEFT           "<literal>[Left]</literal>">
+<!ENTITY BUTTON_RIGHT          "<literal>[Right]</literal>">
+<!ENTITY BUTTON_SELECT         "<literal>[Select]</literal>">
 
 <!-- cameras -->
 <!ENTITY CANON5DMKII           "Canon 5D MkII">

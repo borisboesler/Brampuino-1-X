@@ -104,9 +104,13 @@
  */
 # define BRAMPUINO_DEFAULT_EV_CHANGE      (0.0)
 /**
- * default frames per second
+ * default frames per second, Little Bramper uses this value
  */
-# define BRAMPUINO_DEFAULT_FPS      (25)
+# define BRAMPUINO_DEFAULT_FPS      (100)
+/**
+ * default ramping time (sum of all ramped exposures and intervals)
+ */
+# define BRAMPUINO_DEFAULT_RAMPING_TIME      (0)
 
 
 
@@ -152,15 +156,6 @@
  */
 #define BRAMPUINO_EEPROM_SETTING_ADDRESS (0)
 
-/**
- * magic to mark setting as saved EEPROM 
- */
-#define BRAMPUINO_EEPROM_MAGIC \
-  (  ((uint32_t)'B' << 24)     \
-   | ((uint32_t)'R' << 16)     \
-   | ((uint32_t)'1' << 8)      \
-   |  (uint32_t)'X')
-
 
 #define MIN(_x, _y) (((_x) < (_y)) ? (_x) : (_y))
 #define MAX(_x, _y) (((_x) >= (_y)) ? (_x) : (_y))
@@ -199,6 +194,7 @@ typedef struct _settings_t {
   } interval;
   unsigned long max_exposures;       /**< number of exposures */
   unsigned fps;
+  unsigned long ramping_time;
   int move_focus;             /**< number of steps to focus */
   uint32_t settings_in_eeprom;/**< if == BRAMPUINO_EEPROM_MAGIC
 				   -> settings in EEPROM */

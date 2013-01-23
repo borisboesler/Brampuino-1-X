@@ -7,15 +7,17 @@
     
 extern const menu_entry_t menu_top[3+1];
     
-extern const menu_entry_t menu_settings[5+1];
+extern const menu_entry_t menu_settings[4+1];
     
-extern const menu_entry_t menu_exposure[7+1];
+extern const menu_entry_t menu_exposure[6+1];
     
 extern const menu_entry_t menu_exposure_num[2+1];
     
-extern const menu_entry_t menu_interval[3+1];
+extern const menu_entry_t menu_ramping[4+1];
     
 extern const menu_entry_t menu_iso[3+1];
+    
+extern const menu_entry_t menu_interval[3+1];
     
 prog_char menu_label_settings[] PROGMEM = "Settings";
     
@@ -31,23 +33,19 @@ prog_char menu_label_expmax[] PROGMEM = "Exp.Max";
     
 prog_char menu_label_expoffset[] PROGMEM = "Exp.Offset";
     
-prog_char menu_label_expfps[] PROGMEM = "Exp.FPS";
-    
-prog_char menu_label_expev[] PROGMEM = "Exp.EV.Change";
-    
 prog_char menu_label_exposure_num[] PROGMEM = "Num. of Exp.";
     
 prog_char menu_label_maxexp[] PROGMEM = "Max. Exp.";
     
 prog_char menu_label_leadin[] PROGMEM = "Lead In";
     
-prog_char menu_label_interval[] PROGMEM = "Interval";
+prog_char menu_label_ramping[] PROGMEM = "Ramping";
     
-prog_char menu_label_intervaltime[] PROGMEM = "Interval Time";
+prog_char menu_label_expev[] PROGMEM = "Exp.EV.Change";
     
-prog_char menu_label_intervalmin[] PROGMEM = "Intv.Min";
+prog_char menu_label_expfps[] PROGMEM = "Exp.FPS";
     
-prog_char menu_label_intervalmax[] PROGMEM = "Intv.Max";
+prog_char menu_label_ramptime[] PROGMEM = "Ramp Minutes";
     
 prog_char menu_label_iso[] PROGMEM = "ISO";
     
@@ -56,6 +54,14 @@ prog_char menu_label_isomin[] PROGMEM = "ISO Min";
 prog_char menu_label_isomax[] PROGMEM = "ISO Max";
     
 prog_char menu_label_isoauto[] PROGMEM = "ISO Ramp";
+    
+prog_char menu_label_interval[] PROGMEM = "Interval";
+    
+prog_char menu_label_intervaltime[] PROGMEM = "Interval Time";
+    
+prog_char menu_label_intervalmin[] PROGMEM = "Intv.Min";
+    
+prog_char menu_label_intervalmax[] PROGMEM = "Intv.Max";
     
 prog_char menu_label_movefocus[] PROGMEM = "Move Focus Steps";
     
@@ -112,7 +118,7 @@ const menu_entry_t menu_top[3+1] = {
 };
 
     
-const menu_entry_t menu_settings[5+1] = {
+const menu_entry_t menu_settings[4+1] = {
     
       { menu_label_startdelay,
 
@@ -159,22 +165,6 @@ const menu_entry_t menu_settings[5+1] = {
 	,
       NO_FUNC },
     
-      { menu_label_iso,
-
-      
-#ifdef MENU_USE_LEFT_KEY
-      
-	  menu_top,
-#endif
-
-      
-	  menu_iso,
-
-      
-	  NO_FUNC
-	,
-      NO_FUNC },
-    
       { menu_label_movefocus,
 
       
@@ -196,7 +186,7 @@ const menu_entry_t menu_settings[5+1] = {
 };
 
     
-const menu_entry_t menu_exposure[7+1] = {
+const menu_entry_t menu_exposure[6+1] = {
     
       { menu_label_exptime,
 
@@ -250,32 +240,6 @@ const menu_entry_t menu_exposure[7+1] = {
       menu_select_exp_offset,
       menu_select_exp_offset },
     
-      { menu_label_expfps,
-
-      
-#ifdef MENU_USE_LEFT_KEY
-      
-	  menu_settings,
-#endif
-
-      NO_MENU,
-
-      menu_select_exp_fps,
-      menu_select_exp_fps },
-    
-      { menu_label_expev,
-
-      
-#ifdef MENU_USE_LEFT_KEY
-      
-	  menu_settings,
-#endif
-
-      NO_MENU,
-
-      menu_select_exp_ev_change,
-      menu_select_exp_ev_change },
-    
       { menu_label_exposure_num,
 
       
@@ -286,6 +250,22 @@ const menu_entry_t menu_exposure[7+1] = {
 
       
 	  menu_exposure_num,
+
+      
+	  NO_FUNC
+	,
+      NO_FUNC },
+    
+      { menu_label_ramping,
+
+      
+#ifdef MENU_USE_LEFT_KEY
+      
+	  menu_settings,
+#endif
+
+      
+	  menu_ramping,
 
       
 	  NO_FUNC
@@ -336,6 +316,120 @@ const menu_entry_t menu_exposure_num[2+1] = {
 };
 
     
+const menu_entry_t menu_ramping[4+1] = {
+    
+      { menu_label_expev,
+
+      
+#ifdef MENU_USE_LEFT_KEY
+      
+	  menu_exposure,
+#endif
+
+      NO_MENU,
+
+      menu_select_exp_ev_change,
+      menu_select_exp_ev_change },
+    
+      { menu_label_expfps,
+
+      
+#ifdef MENU_USE_LEFT_KEY
+      
+	  menu_exposure,
+#endif
+
+      NO_MENU,
+
+      menu_select_exp_fps,
+      menu_select_exp_fps },
+    
+      { menu_label_ramptime,
+
+      
+#ifdef MENU_USE_LEFT_KEY
+      
+	  menu_exposure,
+#endif
+
+      NO_MENU,
+
+      menu_select_ramp_time,
+      menu_select_ramp_time },
+    
+      { menu_label_iso,
+
+      
+#ifdef MENU_USE_LEFT_KEY
+      
+	  menu_exposure,
+#endif
+
+      
+	  menu_iso,
+
+      
+	  NO_FUNC
+	,
+      NO_FUNC },
+    
+    { NULL,
+#ifdef MENU_USE_LEFT_KEY
+    NO_MENU,
+#endif
+    NO_MENU, NO_FUNC,NO_FUNC }
+};
+
+    
+const menu_entry_t menu_iso[3+1] = {
+    
+      { menu_label_isomin,
+
+      
+#ifdef MENU_USE_LEFT_KEY
+      
+	  menu_ramping,
+#endif
+
+      NO_MENU,
+
+      menu_select_iso_min,
+      menu_select_iso_min },
+    
+      { menu_label_isomax,
+
+      
+#ifdef MENU_USE_LEFT_KEY
+      
+	  menu_ramping,
+#endif
+
+      NO_MENU,
+
+      menu_select_iso_max,
+      menu_select_iso_max },
+    
+      { menu_label_isoauto,
+
+      
+#ifdef MENU_USE_LEFT_KEY
+      
+	  menu_ramping,
+#endif
+
+      NO_MENU,
+
+      menu_select_iso_ramp,
+      menu_select_iso_ramp },
+    
+    { NULL,
+#ifdef MENU_USE_LEFT_KEY
+    NO_MENU,
+#endif
+    NO_MENU, NO_FUNC,NO_FUNC }
+};
+
+    
 const menu_entry_t menu_interval[3+1] = {
     
       { menu_label_intervaltime,
@@ -376,55 +470,6 @@ const menu_entry_t menu_interval[3+1] = {
 
       menu_select_interval_max,
       menu_select_interval_max },
-    
-    { NULL,
-#ifdef MENU_USE_LEFT_KEY
-    NO_MENU,
-#endif
-    NO_MENU, NO_FUNC,NO_FUNC }
-};
-
-    
-const menu_entry_t menu_iso[3+1] = {
-    
-      { menu_label_isomin,
-
-      
-#ifdef MENU_USE_LEFT_KEY
-      
-	  menu_settings,
-#endif
-
-      NO_MENU,
-
-      menu_select_iso_min,
-      menu_select_iso_min },
-    
-      { menu_label_isomax,
-
-      
-#ifdef MENU_USE_LEFT_KEY
-      
-	  menu_settings,
-#endif
-
-      NO_MENU,
-
-      menu_select_iso_max,
-      menu_select_iso_max },
-    
-      { menu_label_isoauto,
-
-      
-#ifdef MENU_USE_LEFT_KEY
-      
-	  menu_settings,
-#endif
-
-      NO_MENU,
-
-      menu_select_iso_ramp,
-      menu_select_iso_ramp },
     
     { NULL,
 #ifdef MENU_USE_LEFT_KEY

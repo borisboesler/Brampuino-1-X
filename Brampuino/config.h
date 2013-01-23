@@ -25,7 +25,7 @@
 # define BRAMPUINO_PRINT_INTERVAL_IN_MENU
 
 //# define HAVE_RTC
-# define HAVE_CAMERA
+//# define HAVE_CAMERA
 # define HAVE_ADAFRUIT_RGB_SHIELD
 
 

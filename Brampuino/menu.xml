@@ -36,6 +36,10 @@
 	The settings menu allows to set several parameters.
       </para>
     </doc>
+
+    <!--
+	start delay
+    -->
     <menu id="startdelay" label="Start Delay" select="menu_select_delay_time">
       <doc>
 	<para>
@@ -43,7 +47,7 @@
 	</para>
       </doc>
     </menu>
-
+    
     <!--
 	exposure times
     -->
@@ -53,6 +57,7 @@
 	  Exposure related parameters
 	</para>
       </doc>
+      
       <menu id="exptime" label="Exp.Time" select="menu_select_exp_time">
 	<doc>
 	  <para>
@@ -63,30 +68,33 @@
 	  </para>
 	</doc>
       </menu>
+      
       <menu id="expmin" label="Exp.Min" select="menu_select_exp_min">
 	<doc>
 	  <para>
 	    The minimum exposure time. &BRAMPUINO1X; does not use any
 	    exposure time less than this time.
-
+	    
 	    If the exposure time is less than this value and ISO
 	    ramping is activated &BRAMPUINO1X; decreases ISO and
 	    re-computes the exposure time.
 	  </para>
 	</doc>
       </menu>
+      
       <menu id="expmax" label="Exp.Max" select="menu_select_exp_max">
 	<doc>
 	  <para>
 	    The maximum exposure time. &BRAMPUINO1X; does not use any
 	    exposure time greater than this time.
-
+	    
 	    If the exposure time is greater than this value and ISO
 	    ramping is activated &BRAMPUINO1X; increases ISO and
 	    re-computes the exposure time.
 	  </para>
 	</doc>
       </menu>
+      
       <!-- exp. offset -->
       <menu id="expoffset" label="Exp.Offset" select="menu_select_exp_offset">
 	<doc>
@@ -95,42 +103,22 @@
 	    time. It represents the time the camera needs to perform
 	    tasks like mirror up and down that are not part of the
 	    real exposure.
-
+	    
 	    See <xref linkend="example:exposure-value-fps"/>
 	  </para>
 	</doc>
       </menu>
+      
       <!--
-	  FPS
-	  EV Change after FPS change
+	  number of exposures
       -->
-      <menu id="expfps" label="Exp.FPS" select="menu_select_exp_fps">
-	<doc>
-	  <para>
-	    The number of shots after which the exposure time is such
-	    increased that an exposure value has changed by the value
-	    given in option <literal>Exp.EV.Change</literal>.
-	  </para>
-	</doc>
-      </menu>
-      <menu id="expev" label="Exp.EV.Change" select="menu_select_exp_ev_change">
-	<doc>
-	  <para>
-	    The exposure value change after a specified number of
-	    shots.
-
-	    See <xref linkend="example:exposure-value-fps"/>
-	  </para>
-	</doc>
-      </menu>
-
       <menu id="exposure_num" label="Num. of Exp.">
 	<doc>
 	  <para>
 	    Number of exposures and lead in
 	  </para>
 	</doc>
-
+	
 	<!--
 	    number of exposures
 	-->
@@ -155,8 +143,87 @@
 	  </doc>
 	</menu>
       </menu>
+      
+      <!--
+	  ramping
+      -->
+      <menu id="ramping" label="Ramping">
+	<doc>
+	  <para>
+	    Ramping related parameters
+	  </para>
+	</doc>
+	
+	<!--
+	    FPS
+	    EV Change after FPS change
+	-->
+	<menu id="expev" label="Exp.EV.Change"
+	      select="menu_select_exp_ev_change">
+	  <doc>
+	    <para>
+	      The exposure value change after a specified number of
+	      shots.
+	      
+	      See <xref linkend="example:exposure-value-fps"/>
+	    </para>
+	  </doc>
+	</menu>
+	
+	<menu id="expfps" label="Exp.FPS" select="menu_select_exp_fps">
+	  <doc>
+	    <para>
+	      The number of shots after which the exposure time is
+	      such increased that an exposure value has changed by the
+	      value given in option <literal>Exp.EV.Change</literal>.
+	      
+	      &LITTLE_BRAMPER; uses a fixed value of 100 here.
+	    </para>
+	  </doc>
+	</menu>
+	
+	<menu id="ramptime" label="Ramp Minutes" select="menu_select_ramp_time">
+	  <doc>
+	    <para>
+	      The ramping time in minutes.
+	    </para>
+	  </doc>
+	</menu>
+	
+	<!--
+	    iso
+	-->
+	<menu id="iso" label="ISO">
+	  <doc>
+	    <para>
+	      ISO related parameters
+	    </para>
+	  </doc>
+	  <menu id="isomin" label="ISO Min" select="menu_select_iso_min">
+	    <doc>
+	      <para>
+		The minimum ISO to be used
+	      </para>
+	    </doc>
+	  </menu>
+	  <menu id="isomax" label="ISO Max" select="menu_select_iso_max">
+	    <doc>
+	      <para>
+		The maximum ISO to be used
+	      </para>
+	    </doc>
+	  </menu>
+	  <menu id="isoauto" label="ISO Ramp" select="menu_select_iso_ramp">
+	    <doc>
+	      <para>
+		Turn ISO ramping on/off
+	      </para>
+	    </doc>
+	  </menu>      
+	</menu>
+      </menu>
     </menu>
-
+    
     <!--
 	interval
     -->
@@ -193,37 +260,6 @@
       </menu>
     </menu>
     
-    <!--
-	iso
-    -->
-    <menu id="iso" label="ISO">
-      <doc>
-	<para>
-	  ISO related parameters
-	</para>
-      </doc>
-      <menu id="isomin" label="ISO Min" select="menu_select_iso_min">
-	<doc>
-	  <para>
-	    The minimum ISO to be used
-	  </para>
-	</doc>
-      </menu>
-      <menu id="isomax" label="ISO Max" select="menu_select_iso_max">
-	<doc>
-	  <para>
-	    The maximum ISO to be used
-	  </para>
-	</doc>
-      </menu>
-      <menu id="isoauto" label="ISO Ramp" select="menu_select_iso_ramp">
-	<doc>
-	  <para>
-	    Turn ISO ramping on/off
-	  </para>
-	</doc>
-      </menu>      
-    </menu>
     
     <!--
 	number of move focus steps
@@ -330,7 +366,7 @@
       </para>
     </doc>
   </menu>
-
+  
 </menu>
 
 <!-- LocalWords:  Brampuino Arduino

@@ -21,15 +21,26 @@
 #include "debug.h"
 
 #define BRAMPUINO_NAME "Brampuino 1-X"
-#define BRAMPUINO_VERSION_MAJOR "0"
 
-#ifdef HAVE_CAMERA
-# define BRAMPUINO_VERSION_MINOR "2"
-# define BRAMPUINO_VERSION_PATCHLEVEL "7a"
-#else
-# define BRAMPUINO_VERSION_MINOR "No"
-# define BRAMPUINO_VERSION_PATCHLEVEL "Camera"
-#endif
+// this version
+#define BRAMPUINO_VERSION_MAJOR 0
+#define BRAMPUINO_VERSION_MINOR 2
+#define BRAMPUINO_VERSION_PATCHLEVEL 8
+
+// last compatible setting version
+#define BRAMPUINO_SETTING_VERSION_MAJOR 0
+#define BRAMPUINO_SETTING_VERSION_MINOR 2
+#define BRAMPUINO_SETTING_VERSION_PATCHLEVEL 7
+
+/**
+ * magic to mark setting as saved EEPROM 
+ */
+#define BRAMPUINO_EEPROM_MAGIC				 \
+  (  ((uint32_t)0xb1 << 24)				 \
+   | ((uint32_t)BRAMPUINO_SETTING_VERSION_MAJOR << 16)   \
+   | ((uint32_t)BRAMPUINO_SETTING_VERSION_MINOR << 8)	 \
+   |  (uint32_t)BRAMPUINO_SETTING_VERSION_PATCHLEVEL)
+
 
 #define BRAMPUINO_AUTO_ISO_CHANGE settings.iso.auto_ramp
 
@@ -121,6 +132,7 @@ settings_t settings = { BRAMPUINO_DEFAULT_START_DELAY,
 			},
 			BRAMPUINO_DEFAULT_MAX_EXPOSURES,
 			BRAMPUINO_DEFAULT_FPS,
+			BRAMPUINO_DEFAULT_RAMPING_TIME,
 			BRAMPUINO_DEFAULT_MOVE_FOCUS_STEP,
 			~BRAMPUINO_EEPROM_MAGIC
 };
@@ -134,6 +146,11 @@ volatile uint16_t adjusted_exposure_count = 0;
  * stop shouting?
  */
 volatile uint16_t exposure_stop = 0;
+/**
+ * the ramped time in milli seconds
+ */
+volatile unsigned long ramped_time = 0;
+volatile uint16_t ramp_stop = 0;
 
 /**
  * current expsoure time and interval in ms, entries will be modified
@@ -199,10 +216,12 @@ void print_version()
   lcd.setCursor(0, 0);
   PRINT(BRAMPUINO_NAME);
   lcd.setCursor(0, 1);
-  PRINT("v" BRAMPUINO_VERSION_MAJOR
-	"." BRAMPUINO_VERSION_MINOR
-	"." BRAMPUINO_VERSION_PATCHLEVEL
-	);
+  PRINT("v");
+  PRINT(BRAMPUINO_VERSION_MAJOR);
+  PRINT(".");
+  PRINT(BRAMPUINO_VERSION_MINOR);
+  PRINT(".");
+  PRINT(BRAMPUINO_VERSION_PATCHLEVEL);
 }
 
 
@@ -233,6 +252,9 @@ static void logging()
   // current exposure time and interval
   DEBUG_PRINTLN(current_settings.exposure.exp_time + settings.exposure.offset);
   DEBUG_PRINTLN(settings.exposure.u.exponential.ev_change);
+  // ramping time
+  DEBUG_PRINTLN(settings.ramping_time);
+  DEBUG_PRINTLN(ramped_time);
 
   // exposure times set by user
   DEBUG_PRINTLN(settings.exposure.start_time);
@@ -381,9 +403,7 @@ void ATTRIBUT_INTERRUPT stop_exposure()
 
   // close camera's shutter
   if(0 != current_settings.exposure.start_time) {
-#ifdef HAVE_CAMERA
     camera.stop_bulb();
-#endif
   }
   // move focus
   do_move_focus = true;
@@ -424,6 +444,22 @@ void ATTRIBUT_INTERRUPT stop_exposure()
 #endif
     MsTimer2::set(current_settings.interval.time, start_exposure);
     MsTimer2::start();
+
+    if(exposure_count > settings.exposure.lead_in) {
+      ramped_time += current_settings.interval.time;
+    }
+    // stop ramping after some minutes
+    unsigned long rtime = (ramped_time / (60L * 1000L));
+    DEBUG_PRINTLN(ramped_time);
+    DEBUG_PRINTLN(rtime);
+    if((0 < current_settings.ramping_time)
+       && (rtime >= current_settings.ramping_time)) {
+      ramp_stop = 1;
+      DEBUG_PRINTLN_PSTR("Stopping ramping");
+    }
+    else {
+      DEBUG_PRINTLN_PSTR("Continue ramping");
+    }
   }
   else {
     // if stop was set by user then clear again
@@ -443,48 +479,50 @@ void ATTRIBUT_INTERRUPT stop_exposure()
  */
 void ATTRIBUT_INTERRUPT start_exposure()
 {
+  // stop timer for lngthy computation
   MsTimer2::stop();
-
+  // increment counters
   ++exposure_count;
   ++adjusted_exposure_count;
-  // increment exposure time
-  current_settings.exposure.exp_time
-    = new_bulb_time(adjusted_exposure_count,
-		    current_settings.exposure.start_time,
-		    current_settings.exposure.exp_time);
 
-#ifdef DEBUG_IN_INTERRUPT
-  DEBUG_PRINT_PSTR("Start exposure #"); DEBUG_PRINT(exposure_count);
-  DEBUG_PRINT_PSTR(":"); DEBUG_PRINTLN(current_settings.exposure);
-#endif
-
-  // open shutter
-#ifdef HAVE_CAMERA
-  // if the start time is 0 then use capture to make a shot
+  unsigned long stop_time = 0;
+  // if ramping is not activted then use capture() to make a shot
   if(0 == current_settings.exposure.start_time) {
     camera.capture();
+    stop_time = current_settings.interval.time;
   }
   else {
+    // ramping activated
+    // increment exposure time
+    if(!ramp_stop) {
+      current_settings.exposure.exp_time
+	= new_bulb_time(adjusted_exposure_count,
+			current_settings.exposure.start_time,
+			current_settings.exposure.exp_time);
+    }
+
+#ifdef DEBUG_IN_INTERRUPT
+    DEBUG_PRINT_PSTR("Start exposure #"); DEBUG_PRINT(exposure_count);
+    DEBUG_PRINT_PSTR(":"); DEBUG_PRINTLN(current_settings.exposure);
+#endif
+    
     // if we are ISO ramping then set current ISO
     if(BRAMPUINO_AUTO_ISO_CHANGE) {
       camera.set_iso(iso_codes[current_settings.iso.iso_index]);
     }
     camera.start_bulb();
-  }
-#endif
 
 #ifdef VERIFY_EXPOSURE_TIME
-  exposure_start_ms = millis();
+    exposure_start_ms = millis();
 #endif
-  // set interrupt to close shutter again
-  unsigned long stop_time = 0;
-  if(0 == current_settings.exposure.exp_time) {
-    stop_time = current_settings.interval.time;
-  }
-  else {
+    // set interrupt to close shutter again
     stop_time
       = current_settings.exposure.exp_time + current_settings.exposure.offset;
+    if(exposure_count > settings.exposure.lead_in) {
+      ramped_time += stop_time;
+    }
   }
+
   MsTimer2::set(stop_time, stop_exposure);
   MsTimer2::start();
 
@@ -533,6 +571,9 @@ void start_interval_delay()
   // init count
   adjusted_exposure_count = exposure_count = 0;
 
+  // init time cound
+  ramped_time = 0;
+
   // if we are ISO ramping then init current ISO
   if(BRAMPUINO_AUTO_ISO_CHANGE) {
     // init ISO with ISO max if we ramp with a negative ev.fps value
@@ -546,7 +587,6 @@ void start_interval_delay()
   }
 
   // open file for logging
-  DEBUG_PRINTLN_PSTR("open file");
   //openfile(year/month/day/time.csv);
 
   // start interrupt for first exposure
@@ -588,10 +628,8 @@ void setup(void)
   // set up buttons
   button_setup();
 
-#ifdef HAVE_CAMERA
   // camera
   camera.setup();
-#endif
 
   // Brampuino hardware
 #if 0
@@ -635,9 +673,7 @@ void setup(void)
  */
 void loop()
 {
-#ifdef HAVE_CAMERA
   camera.loop();
-#endif
   unsigned long current_time = millis();
 
   // check interface to lcd
@@ -658,16 +694,11 @@ void loop()
   if(do_move_focus) {
     do_move_focus = false;
     if(0 != settings.move_focus) {
-#ifdef HAVE_CAMERA
       uint16_t movement = (0 < settings.move_focus)
 	? (settings.move_focus) : (0x8000 | (-settings.move_focus)) ;
       camera.move_focus(movement);
       //Serial.println(movement, HEX);
       //delay(10);
-#else
-      DEBUG_PRINT_PSTR("move focus:");
-      DEBUG_PRINTLN(settings.move_focus);
-#endif
     }
   }
 

@@ -17,23 +17,19 @@
     
 <!ENTITY MENU_expoffset "<literal>Exp.Offset</literal>">
     
-<!ENTITY MENU_expfps "<literal>Exp.FPS</literal>">
-    
-<!ENTITY MENU_expev "<literal>Exp.EV.Change</literal>">
-    
 <!ENTITY MENU_exposure_num "<literal>Num. of Exp.</literal>">
     
 <!ENTITY MENU_maxexp "<literal>Max. Exp.</literal>">
     
 <!ENTITY MENU_leadin "<literal>Lead In</literal>">
     
-<!ENTITY MENU_interval "<literal>Interval</literal>">
+<!ENTITY MENU_ramping "<literal>Ramping</literal>">
     
-<!ENTITY MENU_intervaltime "<literal>Interval Time</literal>">
+<!ENTITY MENU_expev "<literal>Exp.EV.Change</literal>">
     
-<!ENTITY MENU_intervalmin "<literal>Intv.Min</literal>">
+<!ENTITY MENU_expfps "<literal>Exp.FPS</literal>">
     
-<!ENTITY MENU_intervalmax "<literal>Intv.Max</literal>">
+<!ENTITY MENU_ramptime "<literal>Ramp Minutes</literal>">
     
 <!ENTITY MENU_iso "<literal>ISO</literal>">
     
@@ -42,6 +38,14 @@
 <!ENTITY MENU_isomax "<literal>ISO Max</literal>">
     
 <!ENTITY MENU_isoauto "<literal>ISO Ramp</literal>">
+    
+<!ENTITY MENU_interval "<literal>Interval</literal>">
+    
+<!ENTITY MENU_intervaltime "<literal>Interval Time</literal>">
+    
+<!ENTITY MENU_intervalmin "<literal>Intv.Min</literal>">
+    
+<!ENTITY MENU_intervalmax "<literal>Intv.Max</literal>">
     
 <!ENTITY MENU_movefocus "<literal>Move Focus Steps</literal>">
     
