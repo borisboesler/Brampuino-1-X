@@ -196,11 +196,6 @@ void menu_select_iso_ramp(int menu_num);
 
 
 /**
- *
- */
-void menu_select_exp_increment(int menu_num);
-
-/**
  * exponentiel change
  * \{
  */

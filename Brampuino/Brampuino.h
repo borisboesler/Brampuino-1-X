@@ -22,6 +22,28 @@
 # include "config.h"
 # include "debug.h"
 
+#define BRAMPUINO_NAME "Brampuino 1-X"
+
+// this version
+#define BRAMPUINO_VERSION_MAJOR 0
+#define BRAMPUINO_VERSION_MINOR 3
+#define BRAMPUINO_VERSION_PATCHLEVEL 0
+
+// last compatible setting version, if you change settings_t below
+#define BRAMPUINO_SETTING_VERSION_MAJOR 0
+#define BRAMPUINO_SETTING_VERSION_MINOR 3
+#define BRAMPUINO_SETTING_VERSION_PATCHLEVEL 0
+
+/**
+ * magic to mark setting as saved EEPROM 
+ */
+#define BRAMPUINO_EEPROM_MAGIC				 \
+  (  ((uint32_t)0xb1 << 24)				 \
+   | ((uint32_t)BRAMPUINO_SETTING_VERSION_MAJOR << 16)   \
+   | ((uint32_t)BRAMPUINO_SETTING_VERSION_MINOR << 8)	 \
+   |  (uint32_t)BRAMPUINO_SETTING_VERSION_PATCHLEVEL)
+
+
 /**
  * \{
  */
@@ -38,20 +60,20 @@
 /**
  * the default exposure minimum time in milli seconds
  */
-# define BRAMPUINO_DEFAULT_MIN_EXPOSURE_TIME      (100L)
+# define BRAMPUINO_DEFAULT_EXPOSURE_MIN_TIME      (100L)
 /**
  * the default exposure maximum time in milli seconds
  */
-# define BRAMPUINO_DEFAULT_MAX_EXPOSURE_TIME      (30L * 1000L)
+# define BRAMPUINO_DEFAULT_EXPOSURE_MAX_TIME      (30L * 1000L)
 
 /**
  * the minimal exposure time in milli seconds that we want to have
  */
-# define BRAMPUINO_MIN_EXPOSURE_TIME      (0L)
+# define BRAMPUINO_EXPOSURE_MIN_TIME      (0L)
 /**
  * the maximal exposure time in milli seconds that we want to have
  */
-# define BRAMPUINO_MAX_EXPOSURE_TIME      (60L * 1000L)
+# define BRAMPUINO_EXPOSURE_MAX_TIME      (60L * 1000L)
 
 /**
  * the default exposure lead in
@@ -61,7 +83,7 @@
 /**
  * the default exposure offset in milli seconds
  */
-# define BRAMPUINO_DEFAULT_OFFSET      (0L)
+# define BRAMPUINO_DEFAULT_EXPOSURE_OFFSET      (0L)
 /**
  * the minimal exposure offset in milli seconds that we want to have
  */
@@ -165,36 +187,37 @@
  */
 typedef struct _settings_t {
   unsigned long start_delay;  /**< time till start */
+  /* exposure related */
   struct _exposure {
     unsigned long start_time; /**< start exposure time */
     unsigned long exp_time;   /**< current exposure time */
     unsigned long min;        /**< min. exposure time */
     unsigned long max;        /**< max. exposure time */
     unsigned long offset;     /**< exposure increment time */
-    struct _u {
-      struct _linear {
-	long increment;       /**< exposure increment time */
-      } linear;
-      struct _exponential {
-	double ev_change;     /**< exposure value change after FPS shots */
-      } exponential;
-    } u;
-    unsigned long lead_in;    /**< lead in */
+    struct _number {
+      unsigned long max_exposures;   /**< number of exposures */
+      unsigned long lead_in;         /**< lead in */
+    } number;
+    /* ramping related */
+    struct _ramping {
+      double ev_change;           /**< exposure value change after FPS shots */
+      unsigned fps;               /**< #frames when EV change is reached */
+      unsigned long ramping_time; /**< maximal rampig time */
+      /* ISO ramping */
+      struct _iso {
+	unsigned long iso_index;  /**< the used ISO setting */
+	unsigned long min_index;  /**< the min ISO setting */
+	unsigned long max_index;  /**< the max ISO setting */
+	bool auto_ramp;           /**< automatic ISO ramping */
+      } iso;
+    } ramping;
   } exposure;
-  struct _iso {
-    unsigned long iso_index;  /**< the used ISO setting */
-    unsigned long min_index;  /**< the min ISO setting */
-    unsigned long max_index;  /**< the max ISO setting */
-    bool auto_ramp;           /**< automatic ISO ramping */
-  } iso;
+  /* interval related */
   struct _interval {
     unsigned long time;       /**< interval time */
     unsigned long min;        /**< interval time */
     unsigned long max;        /**< interval time */
   } interval;
-  unsigned long max_exposures;       /**< number of exposures */
-  unsigned fps;
-  unsigned long ramping_time;
   int move_focus;             /**< number of steps to focus */
   uint32_t settings_in_eeprom;/**< if == BRAMPUINO_EEPROM_MAGIC
 				   -> settings in EEPROM */

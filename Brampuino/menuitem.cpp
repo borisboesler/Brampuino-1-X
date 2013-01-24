@@ -452,8 +452,8 @@ void menu_select_exp_time(int menu_num)
   strcpy_P(buffer, menu_exposure[menu_num].item);
   settings.exposure.start_time = menu_unsigned_long(buffer,
 						    settings.exposure.start_time,
-						    BRAMPUINO_MIN_EXPOSURE_TIME,
-						    BRAMPUINO_MAX_EXPOSURE_TIME);
+						    BRAMPUINO_EXPOSURE_MIN_TIME,
+						    BRAMPUINO_EXPOSURE_MAX_TIME);
   DEBUG_PRINT_PSTR("set exp. time to:");
   DEBUG_PRINTLN(settings.exposure.start_time);
 }
@@ -466,8 +466,8 @@ void menu_select_exp_min(int menu_num)
 {
   strcpy_P(buffer, menu_exposure[menu_num].item);
   settings.exposure.min = menu_unsigned_long(buffer, settings.exposure.min,
-					     BRAMPUINO_MIN_EXPOSURE_TIME,
-					     BRAMPUINO_MAX_EXPOSURE_TIME);
+					     BRAMPUINO_EXPOSURE_MIN_TIME,
+					     BRAMPUINO_EXPOSURE_MAX_TIME);
   DEBUG_PRINT_PSTR("set exp min to:");
   DEBUG_PRINTLN(settings.exposure.min);
 }
@@ -480,8 +480,8 @@ void menu_select_exp_max(int menu_num)
 {
   strcpy_P(buffer, menu_exposure[menu_num].item);
   settings.exposure.max = menu_unsigned_long(buffer, settings.exposure.max,
-					     BRAMPUINO_MIN_EXPOSURE_TIME,
-					     BRAMPUINO_MAX_EXPOSURE_TIME);
+					     BRAMPUINO_EXPOSURE_MIN_TIME,
+					     BRAMPUINO_EXPOSURE_MAX_TIME);
   DEBUG_PRINT_PSTR("set exp max to:");
   DEBUG_PRINTLN(settings.exposure.max);
 }
@@ -507,13 +507,13 @@ void menu_select_exp_offset(int menu_num)
 void menu_select_iso_min(int menu_num)
 {
   strcpy_P(buffer, menu_iso[menu_num].item);
-  settings.iso.min_index
+  settings.exposure.ramping.iso.min_index
     = menu_index_unsigned_long_array(buffer,
-				     settings.iso.min_index,
+				     settings.exposure.ramping.iso.min_index,
 				     (unsigned long*)iso_values,
 				     sizeof(iso_values) / sizeof(unsigned long));
   DEBUG_PRINT_PSTR("set ISO min index to:");
-  DEBUG_PRINTLN(settings.iso.min_index);
+  DEBUG_PRINTLN(settings.exposure.ramping.iso.min_index);
 }
 
 
@@ -523,13 +523,13 @@ void menu_select_iso_min(int menu_num)
 void menu_select_iso_max(int menu_num)
 {
   strcpy_P(buffer, menu_iso[menu_num].item);
-  settings.iso.max_index
+  settings.exposure.ramping.iso.max_index
     = menu_index_unsigned_long_array(buffer,
-				     settings.iso.max_index,
+				     settings.exposure.ramping.iso.max_index,
 				     (unsigned long*)iso_values,
 				     sizeof(iso_values) / sizeof(unsigned long));
   DEBUG_PRINT_PSTR("set ISO max index to:");
-  DEBUG_PRINTLN(settings.iso.max_index);
+  DEBUG_PRINTLN(settings.exposure.ramping.iso.max_index);
 }
 
 
@@ -539,24 +539,11 @@ void menu_select_iso_max(int menu_num)
 void menu_select_iso_ramp(int menu_num)
 {
   strcpy_P(buffer, menu_iso[menu_num].item);
-  settings.iso.auto_ramp = menu_bool(buffer, settings.iso.auto_ramp);
+  settings.exposure.ramping.iso.auto_ramp = menu_bool(buffer, settings.exposure.ramping.iso.auto_ramp);
   DEBUG_PRINT_PSTR("set ISO auto ramp to:");
-  DEBUG_PRINTLN(settings.iso.auto_ramp);
+  DEBUG_PRINTLN(settings.exposure.ramping.iso.auto_ramp);
 }
 
-
-
-/*
- * exposure increment
- */
-void menu_select_exp_increment(int menu_num)
-{
-  strcpy_P(buffer, menu_exposure[menu_num].item);
-  settings.exposure.u.linear.increment
-    = menu_signed_long(buffer, settings.exposure.u.linear.increment);
-  DEBUG_PRINT_PSTR("set increment time to:");
-  DEBUG_PRINTLN(settings.exposure.u.linear.increment);
-}
 
 /**
  *
@@ -564,9 +551,10 @@ void menu_select_exp_increment(int menu_num)
 void menu_select_exp_fps(int menu_num)
 {
   strcpy_P(buffer, menu_ramping[menu_num].item);
-  settings.fps = menu_unsigned_long(buffer, settings.fps, 1, 1000);
+  settings.exposure.ramping.fps
+    = menu_unsigned_long(buffer, settings.exposure.ramping.fps, 1, 1000);
   DEBUG_PRINT_PSTR("set FPS to:");
-  DEBUG_PRINTLN(settings.fps);
+  DEBUG_PRINTLN(settings.exposure.ramping.fps);
 }
 
 /**
@@ -575,10 +563,11 @@ void menu_select_exp_fps(int menu_num)
 void menu_select_ramp_time(int menu_num)
 {
   strcpy_P(buffer, menu_ramping[menu_num].item);
-  settings.ramping_time = menu_unsigned_long(buffer, settings.ramping_time,
-					     0, 24*60);
+  settings.exposure.ramping.ramping_time
+    = menu_unsigned_long(buffer, settings.exposure.ramping.ramping_time,
+			 0, 24*60);
   DEBUG_PRINT_PSTR("set ramping time to:");
-  DEBUG_PRINTLN(settings.ramping_time);
+  DEBUG_PRINTLN(settings.exposure.ramping.ramping_time);
 }
 
 
@@ -588,10 +577,10 @@ void menu_select_ramp_time(int menu_num)
 void menu_select_exp_ev_change(int menu_num)
 {
   strcpy_P(buffer, menu_ramping[menu_num].item);
-  settings.exposure.u.exponential.ev_change
-    = menu_float(buffer, settings.exposure.u.exponential.ev_change, 0.1, true);
+  settings.exposure.ramping.ev_change
+    = menu_float(buffer, settings.exposure.ramping.ev_change, 0.1, true);
   DEBUG_PRINT_PSTR("set exposure EV change to:");
-  DEBUG_PRINTLN(settings.exposure.u.exponential.ev_change);
+  DEBUG_PRINTLN(settings.exposure.ramping.ev_change);
 }
 
 
@@ -650,9 +639,10 @@ void menu_select_interval_max(int menu_num)
 void menu_select_max_exposures(int menu_num)
 {
   strcpy_P(buffer, menu_exposure_num[menu_num].item);
-  settings.max_exposures = menu_unsigned_long(buffer, settings.max_exposures);
+  settings.exposure.number.max_exposures
+    = menu_unsigned_long(buffer, settings.exposure.number.max_exposures);
   DEBUG_PRINT_PSTR("set max # exposures to ");
-  DEBUG_PRINTLN(settings.max_exposures);
+  DEBUG_PRINTLN(settings.exposure.number.max_exposures);
 }
 
 /*
@@ -661,10 +651,10 @@ void menu_select_max_exposures(int menu_num)
 void menu_select_exp_lead_in(int menu_num)
 {
   strcpy_P(buffer, menu_exposure_num[menu_num].item);
-  settings.exposure.lead_in = menu_unsigned_long(buffer,
-						 settings.exposure.lead_in);
+  settings.exposure.number.lead_in
+    = menu_unsigned_long(buffer, settings.exposure.number.lead_in);
   DEBUG_PRINT_PSTR("set exposure lead in to:");
-  DEBUG_PRINTLN(settings.exposure.lead_in);
+  DEBUG_PRINTLN(settings.exposure.number.lead_in);
 }
 
 
