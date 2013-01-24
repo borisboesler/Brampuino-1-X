@@ -47,10 +47,12 @@ along with this program; if not sse <http://www.gnu.org/licenses/>.
     <xsl:param name="menu_entry" select="NO_MENU_ENTRY"/>
 
     <variablelist>
+      <xsl:processing-instruction name="dbfo">list-presentation="blocks"</xsl:processing-instruction>
+
       <xsl:for-each select="menu">
 
 	<varlistentry>
-	  <term><xsl:value-of select="@label"/></term>
+	  <term><literal><xsl:value-of select="@label"/></literal></term>
 
 	  <listitem>
 	    <!-- print doc -->

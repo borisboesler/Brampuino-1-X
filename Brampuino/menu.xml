@@ -43,7 +43,7 @@
     <menu id="startdelay" label="Start Delay" select="menu_select_delay_time">
       <doc>
 	<para>
-	  The start delay time before the first shot in milliseconds.
+	  The start delay time before the first frame in milliseconds.
 	</para>
       </doc>
     </menu>
@@ -64,7 +64,7 @@
 	    The exposure time to start with. If the exposure time is 0
 	    then &BRAMPUINO1X; does not change any setting or does do
 	    any bulb ramping but uses the camera's current setting to
-	    take a shot.
+	    take a frame.
 	  </para>
 	</doc>
       </menu>
@@ -112,31 +112,31 @@
       <!--
 	  number of exposures
       -->
-      <menu id="exposure_num" label="Num. of Exp.">
+      <menu id="exposure_num" label="Num. of Frames">
 	<doc>
 	  <para>
-	    Number of exposures and lead in
+	    Number of frames and lead in
 	  </para>
 	</doc>
 	
 	<!--
 	    number of exposures
 	-->
-	<menu id="maxexp" label="Max. Exp." select="menu_select_max_exposures">
+	<menu id="maxexp" label="Max. Frames" select="menu_select_max_exposures">
 	  <doc>
 	    <para>
-	      The number of shots after which &BRAMPUINO1X; stops shooting.
+	      The number of frames after which &BRAMPUINO1X; stops shooting.
 	    </para>
 	  </doc>
 	</menu>
 	
 	<!--
-	    exposure lead in: shots without a exposure time change
+	    exposure lead in: frames without a exposure time change
 	-->
 	<menu id="leadin" label="Lead In" select="menu_select_exp_lead_in">
 	  <doc>
 	    <para>
-	      The exposure lead in is a number of shots at the
+	      The exposure lead in is a number of frames at the
 	      beginning of a sequence for which the exposure time will
 	      not be adjusted.
 	    </para>
@@ -163,7 +163,7 @@
 	  <doc>
 	    <para>
 	      The exposure value change after a specified number of
-	      shots.
+	      frames.
 	      
 	      See <xref linkend="example:exposure-value-fps"/>
 	    </para>
@@ -173,7 +173,7 @@
 	<menu id="expfps" label="Exp.FPS" select="menu_select_exp_fps">
 	  <doc>
 	    <para>
-	      The number of shots after which the exposure time is
+	      The number of frames after which the exposure time is
 	      such increased that an exposure value has changed by the
 	      value given in option <literal>Exp.EV.Change</literal>.
 	      
@@ -182,10 +182,21 @@
 	  </doc>
 	</menu>
 	
-	<menu id="ramptime" label="Ramp Minutes" select="menu_select_ramp_time">
+	<menu id="rampcalctime" label="Calc FPS"
+	      select="menu_select_ramp_calc_time">
 	  <doc>
 	    <para>
-	      The ramping time in minutes.
+	      The calculated FPS by time in minutes.
+	    </para>
+	  </doc>
+	</menu>
+	
+	<menu id="rampfixedtime" label="Ramp Time"
+	      select="menu_select_ramp_time">
+	  <doc>
+	    <para>
+	      The ramping time in minutes. Ramping will stop after
+	      this time but continue shooting with the last bulb time.
 	    </para>
 	  </doc>
 	</menu>
@@ -199,20 +210,6 @@
 	      ISO related parameters
 	    </para>
 	  </doc>
-	  <menu id="isomin" label="ISO Min" select="menu_select_iso_min">
-	    <doc>
-	      <para>
-		The minimum ISO to be used
-	      </para>
-	    </doc>
-	  </menu>
-	  <menu id="isomax" label="ISO Max" select="menu_select_iso_max">
-	    <doc>
-	      <para>
-		The maximum ISO to be used
-	      </para>
-	    </doc>
-	  </menu>
 	  <menu id="isoauto" label="ISO Ramp" select="menu_select_iso_ramp">
 	    <doc>
 	      <para>
@@ -220,6 +217,24 @@
 	      </para>
 	    </doc>
 	  </menu>      
+	  <menu id="isomin" label="ISO Min" select="menu_select_iso_min">
+	    <doc>
+	      <para>
+		The minimum ISO to be used. If ISO ramping is
+		activated and we ramp <emphasis>up</emphasis> then
+		this is the start ISO value.
+	      </para>
+	    </doc>
+	  </menu>
+	  <menu id="isomax" label="ISO Max" select="menu_select_iso_max">
+	    <doc>
+	      <para>
+		The maximum ISO to be used. If ISO ramping is
+		activated and we ramp <emphasis>down</emphasis> then
+		this is the start ISO value.
+	      </para>
+	    </doc>
+	  </menu>
 	</menu>
       </menu>
     </menu>
@@ -247,14 +262,14 @@
       <menu id="intervalmin" label="Intv.Min" select="menu_select_interval_min">
 	<doc>
 	  <para>
-	    The minimum interval time between two shots.
+	    The minimum interval time between two frames.
 	  </para>
 	</doc>
       </menu>
       <menu id="intervalmax" label="Intv.Max" select="menu_select_interval_max">
 	<doc>
 	  <para>
-	    The maximum interval time between two shots.
+	    The maximum interval time between two frames.
 	  </para>
 	</doc>
       </menu>
@@ -362,7 +377,7 @@
   <menu id="version" label="Version" select="menu_select_version">
     <doc>
       <para>
-	Show the Brampuino 1-X software version on the Arduino.
+	Show the &BRAMPUINO1X; software version on the Arduino.
       </para>
     </doc>
   </menu>

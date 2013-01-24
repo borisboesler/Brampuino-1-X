@@ -62,12 +62,13 @@
 # define ATTRIBUT_INTERRUPT
 #endif
 
-
+#if 0
 /*
  * connection to hardware
  */
 #define MX2ShutterPin  2
 #define MX2FocusPin    3
+#endif
 
 /*
  * end of connection to hardware
@@ -99,7 +100,8 @@ settings_t settings =
       {
 	BRAMPUINO_DEFAULT_EV_CHANGE,
 	BRAMPUINO_DEFAULT_FPS,
-	BRAMPUINO_DEFAULT_RAMPING_TIME,
+	BRAMPUINO_DEFAULT_FIXED_RAMPING_TIME,
+	BRAMPUINO_DEFAULT_CALC_RAMPING_TIME,
 	/* ISO ramping */
 	{
 	  BRAMPUINO_DEFAULT_ISO,
@@ -235,8 +237,9 @@ static void logging()
   DEBUG_PRINTLN(current_settings.exposure.exp_time + settings.exposure.offset);
   DEBUG_PRINTLN(settings.exposure.ramping.ev_change);
   // ramping time
-  DEBUG_PRINTLN(settings.exposure.ramping.ramping_time);
+  DEBUG_PRINTLN(settings.exposure.ramping.ramp_time);
   DEBUG_PRINTLN(ramped_time);
+  DEBUG_PRINTLN(settings.exposure.ramping.calc_time);
 
   // exposure times set by user
   DEBUG_PRINTLN(settings.exposure.start_time);
@@ -435,8 +438,8 @@ void ATTRIBUT_INTERRUPT stop_exposure()
     unsigned long rtime = (ramped_time / (60L * 1000L));
     DEBUG_PRINTLN(ramped_time);
     DEBUG_PRINTLN(rtime);
-    if((0 < current_settings.exposure.ramping.ramping_time)
-       && (rtime >= current_settings.exposure.ramping.ramping_time)) {
+    if((0 < current_settings.exposure.ramping.ramp_time)
+       && (rtime >= current_settings.exposure.ramping.ramp_time)) {
       ramp_stop = 1;
       DEBUG_PRINTLN_PSTR("Stopping ramping");
     }
@@ -550,12 +553,17 @@ void start_interval_delay()
 
   // init exposure
   current_settings.exposure.exp_time = current_settings.exposure.start_time;
-
-  // init count
   adjusted_exposure_count = exposure_count = 0;
 
-  // init time cound
+  // init ramping
   ramped_time = 0;
+  if(settings.exposure.ramping.calc_time) {
+    settings.exposure.ramping.fps
+      = ((settings.exposure.ramping.calc_time * 60L * 1000L)
+	 / settings.interval.time);
+    DEBUG_PRINT_PSTR("set calc FPS:");
+    DEBUG_PRINTLN(settings.exposure.ramping.fps);
+  }
 
   // if we are ISO ramping then init current ISO
   if(BRAMPUINO_AUTO_ISO_CHANGE) {

@@ -563,11 +563,24 @@ void menu_select_exp_fps(int menu_num)
 void menu_select_ramp_time(int menu_num)
 {
   strcpy_P(buffer, menu_ramping[menu_num].item);
-  settings.exposure.ramping.ramping_time
-    = menu_unsigned_long(buffer, settings.exposure.ramping.ramping_time,
+  settings.exposure.ramping.ramp_time
+    = menu_unsigned_long(buffer, settings.exposure.ramping.ramp_time,
 			 0, 24*60);
-  DEBUG_PRINT_PSTR("set ramping time to:");
-  DEBUG_PRINTLN(settings.exposure.ramping.ramping_time);
+  DEBUG_PRINT_PSTR("set fixed ramping time to:");
+  DEBUG_PRINTLN(settings.exposure.ramping.ramp_time);
+}
+
+/**
+ *
+ */
+void menu_select_ramp_calc_time(int menu_num)
+{
+  strcpy_P(buffer, menu_ramping[menu_num].item);
+  settings.exposure.ramping.calc_time
+    = menu_unsigned_long(buffer, settings.exposure.ramping.calc_time,
+			 0, 24*60);
+  DEBUG_PRINT_PSTR("set calc ramping time to:");
+  DEBUG_PRINTLN(settings.exposure.ramping.calc_time);
 }
 
 

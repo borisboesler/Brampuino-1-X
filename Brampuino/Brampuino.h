@@ -27,12 +27,12 @@
 // this version
 #define BRAMPUINO_VERSION_MAJOR 0
 #define BRAMPUINO_VERSION_MINOR 3
-#define BRAMPUINO_VERSION_PATCHLEVEL 0
+#define BRAMPUINO_VERSION_PATCHLEVEL 1
 
 // last compatible setting version, if you change settings_t below
 #define BRAMPUINO_SETTING_VERSION_MAJOR 0
 #define BRAMPUINO_SETTING_VERSION_MINOR 3
-#define BRAMPUINO_SETTING_VERSION_PATCHLEVEL 0
+#define BRAMPUINO_SETTING_VERSION_PATCHLEVEL 1
 
 /**
  * magic to mark setting as saved EEPROM 
@@ -132,7 +132,11 @@
 /**
  * default ramping time (sum of all ramped exposures and intervals)
  */
-# define BRAMPUINO_DEFAULT_RAMPING_TIME      (0)
+# define BRAMPUINO_DEFAULT_FIXED_RAMPING_TIME      (0)
+/**
+ * default calculated ramping time
+ */
+# define BRAMPUINO_DEFAULT_CALC_RAMPING_TIME      (0)
 
 
 
@@ -202,7 +206,8 @@ typedef struct _settings_t {
     struct _ramping {
       double ev_change;           /**< exposure value change after FPS shots */
       unsigned fps;               /**< #frames when EV change is reached */
-      unsigned long ramping_time; /**< maximal rampig time */
+      unsigned long ramp_time;    /**< maximal rampig time */
+      unsigned long calc_time;    /**< calc FPS with this time */
       /* ISO ramping */
       struct _iso {
 	unsigned long iso_index;  /**< the used ISO setting */

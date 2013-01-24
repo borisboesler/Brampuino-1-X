@@ -217,7 +217,7 @@ along with this program; if not sse <http://www.gnu.org/licenses/>.
       url="http://www.thewhippersnapper.com/LittleBramper">&LITTLE_BRAMPER;</ulink>.
 
       The &BRAMPUINO1X; is one of the few devices that can ramp the
-      exosure time via the camer's bulb mode and the ISO
+      exposure time via the camera's bulb mode and the ISO
       automatically!
     </para>
 
@@ -279,8 +279,8 @@ along with this program; if not sse <http://www.gnu.org/licenses/>.
 		interface between &BRAMPUINO1X; and the photographer.
 
 		This shield was used because it uses the I2C-bus and
-		uses less pins than other shields. There pins can be
-		used to interact with other devices.
+		uses less pins than other shields. These remaining
+		pins can be used to interact with other devices.
 	      </para>
 	    </listitem>
 	  </varlistentry>
@@ -760,53 +760,11 @@ B:1057<co id="running.screen.bulb" linkends="co.running.screen.bulb"/>/EV:1.00<c
     <title>Running &BRAMPUINO1X;</title>
 
     <para>
-      In <xref linkend="section:ramping"/> and <xref
-      linkend="section:exposure-interval-cycle"/> we give a deeper
-      insight into the ramping and interval time computation.
+      In <xref linkend="section:exposure-interval-cycle"/>, <xref
+      linkend="section:ramping"/> and <xref
+      linkend="section:computed-ramping"/> we give a deeper insight
+      into the interval and ramping time computation.
     </para>
-
-    <!-- ************************************************** -->
-    <section id="section:ramping">
-      <title>Ramping</title>
-
-      <para>
-	In <xref linkend="figure:ramping"/> we show how &BRAMPUINO1X;
-	ramps the exposure value up (exposure time and ISO) with a
-	lead in of <literal>l</literal> frames.
-
-	First, there are <literal>l</literal> frames with the start
-	exposure time specified in menu entry &MENU_exptime;.
-
-	Then the frame <literal>l+1</literal> has still the start
-	exposure time as if no lead in was set.
-
-	&BRAMPUINO1X; starts ramping now and frame
-	<literal>l+fps+1</literal> gets the full exposure change set
-	in &MENU_expev;.
-
-	Ramping continues till the maximum exposure specified by
-	&MENU_expmax; and &MENU_isomax; is reached.
-
-	When ramping reaches this maximum exposure &BRAMPUINO1X;
-	continues to take frames with this maximum exposure till the
-	maximum number of frames is reached.
-	
-	<figure id="figure:ramping">
-	  <title>Ramping with a Lead In</title>
-	  <mediaobject>
-	    <imageobject>
-	      <imagedata fileref="local-images/ramping.svg"
-			 format="SVG"
-			 align="center" valign="top"
-			 width="15cm"/>
-	    </imageobject>
-	  </mediaobject>
-	</figure>
-
-      </para>
-
-    </section>
-
 
     <!-- ************************************************** -->
     <section id="section:exposure-interval-cycle">
@@ -865,8 +823,109 @@ B:1057<co id="running.screen.bulb" linkends="co.running.screen.bulb"/>/EV:1.00<c
 
 
     <!-- ************************************************** -->
+    <section id="section:ramping">
+      <title>Ramping with &MENU_expfps;</title>
+
+      <para>
+	In <xref linkend="figure:ramping"/> we show how &BRAMPUINO1X;
+	ramps the exposure value up (exposure time and ISO) with a
+	lead in of <literal>l</literal> frames.
+
+	The exposure time change is computed by the parameters set in
+	&MENU_expfps; and &MENU_expev;.
+      </para>
+
+      <para>
+	First, there are <literal>l</literal> frames with the start
+	exposure time specified in menu entry &MENU_exptime;.
+
+	Then the frame <literal>l+1</literal> has still the start
+	exposure time as if no lead in was set.
+
+	&BRAMPUINO1X; starts ramping now and frame
+	<literal>l+fps+1</literal> gets the full exposure change set
+	in &MENU_expev;.
+
+	Ramping continues till the maximum exposure specified by
+	&MENU_expmax; and &MENU_isomax; is reached.
+
+	When ramping reaches this maximum exposure &BRAMPUINO1X;
+	continues to take frames with this maximum exposure till the
+	maximum number of frames is reached.
+	
+	<figure id="figure:ramping">
+	  <title>Ramping with a Lead In</title>
+	  <mediaobject>
+	    <imageobject>
+	      <imagedata fileref="local-images/ramping.svg"
+			 format="SVG"
+			 align="center" valign="top"
+			 width="15cm"/>
+	    </imageobject>
+	  </mediaobject>
+	</figure>
+
+      </para>
+
+    </section>
+
+
+    <!-- ************************************************** -->
+    <section id="section:computed-ramping">
+      <title>Ramping with &MENU_rampcalctime;</title>
+
+      <para>
+	In <xref linkend="section:ramping"/> we have shown how the
+	menu entry &MENU_expfps; can be used to define how fast the
+	exposure will change from frame to frame.
+
+	Sometimes it is more convenient to define the exposure change
+	not in terms of frames but duration. With the menu entry
+	&MENU_rampcalctime; a time in minutes can be defined after
+	which the exposure will have changed by the value defined in
+	&MENU_expev;.
+
+	&BRAMPUINO1X; will compute and store the FPS value.
+      </para>
+
+      <para>
+	<literal>FPS = (X * 60 * 1000) / Interval Time</literal>
+      </para>
+
+      <para>
+	It depends on the interval time and the exposure value change.
+
+	If the interval time is less then the exposure value (see
+	<xref linkend="section:exposure-interval-cycle"/>) then is
+	computed value might not be the expected value.
+      </para>
+    </section>
+
+
+    <!-- ************************************************** -->
+    <section id="section:stop-ramping">
+      <title>How to Stop Ramping</title>
+
+      <para>
+	Ramping can be stopped automatically and manually.
+
+	It is stopped automatically if the maximum exposure (time and
+	ISO) or the ramping time (&MENU_rampfixedtime;) is reached.
+
+	And it is stopped manually if the exposure value change
+	(&MENU_expev;) is set to 0.
+      </para>
+
+      <para>
+	In any case &BRAMPUINO1X; continues to take frames till the
+	maximum number of frames are shot.
+      </para>
+
+    </section>
+
+    <!-- ************************************************** -->
     <section>
-      <title>ISO Ranges</title>
+      <title>Supported ISO Ranges</title>
 
       <para>
 	&BRAMPUINO1X; supports the following ISO values: 50, 100, 125,
@@ -917,7 +976,21 @@ B:1057<co id="running.screen.bulb" linkends="co.running.screen.bulb"/>/EV:1.00<c
 
 	Alternatively you can set the exposure time to zero. Then the
 	cameras current settings will be used.
+      </para>
 
+      <para>
+	Set the interval time to the correct value X:
+	<menuchoice>
+	  <guimenu>&MENU_settings;</guimenu>
+	  <guisubmenu>&MENU_interval;</guisubmenu>
+	  <guimenuitem>&MENU_intervaltime;</guimenuitem>
+	  <guimenuitem>X</guimenuitem>
+	</menuchoice>.
+	Make sure that the minimum and maximum interval time do not
+	cut the interval time X.
+      </para>
+
+      <para>
 	<!--
 	Set the ISO Min to the correct value I:
 	<menuchoice>
@@ -930,18 +1003,18 @@ B:1057<co id="running.screen.bulb" linkends="co.running.screen.bulb"/>/EV:1.00<c
 	Set &MENU_isoauto; to Off:
 	<menuchoice>
 	  <guimenu>&MENU_settings;</guimenu>
+	  <guisubmenu>&MENU_exposure;</guisubmenu>
+	  <guisubmenu>&MENU_ramping;</guisubmenu>
 	  <guisubmenu>&MENU_iso;</guisubmenu>
 	  <guimenuitem>&MENU_isoauto;</guimenuitem>
 	  <guimenuitem>Off</guimenuitem>
 	</menuchoice>.
 
-      </para>
-
-      <para>
 	Set the Exposure Value Change to 0:
 	<menuchoice>
 	  <guimenu>&MENU_settings;</guimenu>
 	  <guisubmenu>&MENU_exposure;</guisubmenu>
+	  <guisubmenu>&MENU_ramping;</guisubmenu>
 	  <guimenuitem>&MENU_expev;</guimenuitem>
 	  <guimenuitem>0</guimenuitem>
 	</menuchoice>.
@@ -986,6 +1059,7 @@ B:1057<co id="running.screen.bulb" linkends="co.running.screen.bulb"/>/EV:1.00<c
 	  <guimenu>&MENU_settings;</guimenu>
 	  <guisubmenu>&MENU_exposure;</guisubmenu>
 	  <guisubmenu>&MENU_exposure_num;</guisubmenu>
+	  <guisubmenu>&MENU_maxexp;</guisubmenu>
 	  <guimenuitem>X</guimenuitem>
 	</menuchoice>
       </para>
@@ -995,6 +1069,7 @@ B:1057<co id="running.screen.bulb" linkends="co.running.screen.bulb"/>/EV:1.00<c
 	<menuchoice>
 	  <guimenu>&MENU_settings;</guimenu>
 	  <guisubmenu>&MENU_exposure;</guisubmenu>
+	  <guisubmenu>&MENU_ramping;</guisubmenu>
 	  <guisubmenu>&MENU_expfps;</guisubmenu>
 	  <guimenuitem>1</guimenuitem>
 	</menuchoice>.
@@ -1006,6 +1081,7 @@ B:1057<co id="running.screen.bulb" linkends="co.running.screen.bulb"/>/EV:1.00<c
 	<menuchoice>
 	  <guimenu>&MENU_settings;</guimenu>
 	  <guisubmenu>&MENU_exposure;</guisubmenu>
+	  <guisubmenu>&MENU_ramping;</guisubmenu>
 	  <guimenuitem>&MENU_expev;</guimenuitem>
 	  <guimenuitem>X</guimenuitem>
 	</menuchoice>.
@@ -1046,6 +1122,7 @@ B:1057<co id="running.screen.bulb" linkends="co.running.screen.bulb"/>/EV:1.00<c
 	<menuchoice>
 	  <guimenu>&MENU_settings;</guimenu>
 	  <guisubmenu>&MENU_exposure;</guisubmenu>
+	  <guisubmenu>&MENU_ramping;</guisubmenu>
 	  <guimenuitem>&MENU_expev;</guimenuitem>
 	  <guimenuitem>X</guimenuitem>
 	</menuchoice>.
@@ -1056,6 +1133,8 @@ B:1057<co id="running.screen.bulb" linkends="co.running.screen.bulb"/>/EV:1.00<c
 	<literal>Off</literal>:
 	<menuchoice>
 	  <guimenu>&MENU_settings;</guimenu>
+	  <guisubmenu>&MENU_exposure;</guisubmenu>
+	  <guisubmenu>&MENU_ramping;</guisubmenu>
 	  <guisubmenu>&MENU_iso;</guisubmenu>
 	  <guimenuitem>&MENU_isoauto;</guimenuitem>
 	  <guimenuitem>X</guimenuitem>
@@ -1068,6 +1147,7 @@ B:1057<co id="running.screen.bulb" linkends="co.running.screen.bulb"/>/EV:1.00<c
 	<menuchoice>
 	  <guimenu>&MENU_settings;</guimenu>
 	  <guisubmenu>&MENU_exposure;</guisubmenu>
+	  <guisubmenu>&MENU_ramping;</guisubmenu>
 	  <guimenuitem>&MENU_expfps;</guimenuitem>
 	  <guimenuitem>X</guimenuitem>
 	</menuchoice>.
@@ -1145,17 +1225,21 @@ B:1057<co id="running.screen.bulb" linkends="co.running.screen.bulb"/>/EV:1.00<c
       </listitem>
       -->
 
+     <!-- done in 0.3.0
       <listitem>
 	<para>
 	  #frames to ramp
 	</para>
       </listitem>
+      -->
 
+     <!-- done in 0.3.1
       <listitem>
 	<para>
 	  time to ramp
 	</para>
       </listitem>
+      -->
 
       <listitem>
 	<para>
@@ -1180,13 +1264,81 @@ B:1057<co id="running.screen.bulb" linkends="co.running.screen.bulb"/>/EV:1.00<c
   <appendix id="appendix:knownbugs">
     <title>Known Bugs</title>
 
-    <para>
-      There is no error detection, eg if the camera is not connected.
-    </para>
+    <itemizedlist>
+      <listitem>
+	<para>
+	  There is no error detection, eg if the camera is not connected.
+	</para>
+      </listitem>
 
-    <para>
-      Focus ramping does not work.
-    </para>
+      <listitem>
+	<para>
+	  Focus ramping does not work.
+	</para>
+      </listitem>
+    </itemizedlist>
+
+  </appendix>
+
+
+  <!-- ************************************************** -->
+
+  <appendix id="appendix:changes">
+    <title>Changes</title>
+
+    <variablelist>
+      <!-- <?dbfo list-presentation="blocks"?> -->
+
+      <varlistentry>
+	<term>0.3.1</term>
+	<listitem>
+	  <itemizedlist>
+	    <listitem>
+	      <para>
+		added computation of FPS by ramping duration
+	      </para>
+	    </listitem>
+	  </itemizedlist>
+
+	  <itemizedlist>
+	    <listitem>
+	      <para>
+		settings memory is not compatible with previous versions
+	      </para>
+	    </listitem>
+	  </itemizedlist>
+	</listitem>
+      </varlistentry>
+
+      <varlistentry>
+	<term>0.3.0</term>
+	<listitem>
+	  <itemizedlist>
+	    <listitem>
+	      <para>
+		added ramping duration after which &BRAMPUINO1X; stops
+		ramping but continues shooting with the last computed
+		bulb time
+	      </para>
+	    </listitem>
+	  </itemizedlist>
+	</listitem>
+      </varlistentry>
+    </variablelist>
+
+    <!--
+      <varlistentry>
+	<term>0.3.0</term>
+	<listitem>
+	  <itemizedlist>
+	    <listitem>
+	      <para>
+	      </para>
+	    </listitem>
+	  </itemizedlist>
+	</listitem>
+      </varlistentry>
+    -->
 
   </appendix>
 

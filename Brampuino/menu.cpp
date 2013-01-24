@@ -13,7 +13,7 @@ extern const menu_entry_t menu_exposure[6+1];
     
 extern const menu_entry_t menu_exposure_num[2+1];
     
-extern const menu_entry_t menu_ramping[4+1];
+extern const menu_entry_t menu_ramping[5+1];
     
 extern const menu_entry_t menu_iso[3+1];
     
@@ -33,9 +33,9 @@ prog_char menu_label_expmax[] PROGMEM = "Exp.Max";
     
 prog_char menu_label_expoffset[] PROGMEM = "Exp.Offset";
     
-prog_char menu_label_exposure_num[] PROGMEM = "Num. of Exp.";
+prog_char menu_label_exposure_num[] PROGMEM = "Num. of Frames";
     
-prog_char menu_label_maxexp[] PROGMEM = "Max. Exp.";
+prog_char menu_label_maxexp[] PROGMEM = "Max. Frames";
     
 prog_char menu_label_leadin[] PROGMEM = "Lead In";
     
@@ -45,15 +45,17 @@ prog_char menu_label_expev[] PROGMEM = "Exp.EV.Change";
     
 prog_char menu_label_expfps[] PROGMEM = "Exp.FPS";
     
-prog_char menu_label_ramptime[] PROGMEM = "Ramp Minutes";
+prog_char menu_label_rampcalctime[] PROGMEM = "Calc FPS";
+    
+prog_char menu_label_rampfixedtime[] PROGMEM = "Ramp Time";
     
 prog_char menu_label_iso[] PROGMEM = "ISO";
+    
+prog_char menu_label_isoauto[] PROGMEM = "ISO Ramp";
     
 prog_char menu_label_isomin[] PROGMEM = "ISO Min";
     
 prog_char menu_label_isomax[] PROGMEM = "ISO Max";
-    
-prog_char menu_label_isoauto[] PROGMEM = "ISO Ramp";
     
 prog_char menu_label_interval[] PROGMEM = "Interval";
     
@@ -316,7 +318,7 @@ const menu_entry_t menu_exposure_num[2+1] = {
 };
 
     
-const menu_entry_t menu_ramping[4+1] = {
+const menu_entry_t menu_ramping[5+1] = {
     
       { menu_label_expev,
 
@@ -344,7 +346,20 @@ const menu_entry_t menu_ramping[4+1] = {
       menu_select_exp_fps,
       menu_select_exp_fps },
     
-      { menu_label_ramptime,
+      { menu_label_rampcalctime,
+
+      
+#ifdef MENU_USE_LEFT_KEY
+      
+	  menu_exposure,
+#endif
+
+      NO_MENU,
+
+      menu_select_ramp_calc_time,
+      menu_select_ramp_calc_time },
+    
+      { menu_label_rampfixedtime,
 
       
 #ifdef MENU_USE_LEFT_KEY
@@ -383,6 +398,19 @@ const menu_entry_t menu_ramping[4+1] = {
     
 const menu_entry_t menu_iso[3+1] = {
     
+      { menu_label_isoauto,
+
+      
+#ifdef MENU_USE_LEFT_KEY
+      
+	  menu_ramping,
+#endif
+
+      NO_MENU,
+
+      menu_select_iso_ramp,
+      menu_select_iso_ramp },
+    
       { menu_label_isomin,
 
       
@@ -408,19 +436,6 @@ const menu_entry_t menu_iso[3+1] = {
 
       menu_select_iso_max,
       menu_select_iso_max },
-    
-      { menu_label_isoauto,
-
-      
-#ifdef MENU_USE_LEFT_KEY
-      
-	  menu_ramping,
-#endif
-
-      NO_MENU,
-
-      menu_select_iso_ramp,
-      menu_select_iso_ramp },
     
     { NULL,
 #ifdef MENU_USE_LEFT_KEY

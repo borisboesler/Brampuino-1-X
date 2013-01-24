@@ -213,6 +213,11 @@ void menu_select_ramp_time(int menu_num);
 /**
  *
  */
+void menu_select_ramp_calc_time(int menu_num);
+
+/**
+ *
+ */
 void menu_select_exp_ev_change(int menu_num);
 
 /**
