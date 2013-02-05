@@ -375,7 +375,6 @@ void stop_interrupt()
 {
   DEBUG_PRINTLN_PSTR("Stop interrupt");
   MsTimer2::stop();
-  current_state = BRAMPUINO_STATE_MENU;
 }
 
 
@@ -385,7 +384,7 @@ void stop_interrupt()
 void ATTRIBUT_INTERRUPT stop_exposure()
 {
   // stop interrupt
-  MsTimer2::stop();
+  stop_interrupt();
 
   // close camera's shutter
   if(0 != current_settings.exposure.start_time) {
@@ -466,7 +465,8 @@ void ATTRIBUT_INTERRUPT stop_exposure()
 void ATTRIBUT_INTERRUPT start_exposure()
 {
   // stop timer for lngthy computation
-  MsTimer2::stop();
+  stop_interrupt();
+
   // increment counters
   ++exposure_count;
   ++adjusted_exposure_count;
@@ -486,10 +486,10 @@ void ATTRIBUT_INTERRUPT start_exposure()
 			current_settings.exposure.start_time,
 			current_settings.exposure.exp_time);
     }
-
+    
 #ifdef DEBUG_IN_INTERRUPT
     DEBUG_PRINT_PSTR("Start exposure #"); DEBUG_PRINT(exposure_count);
-    DEBUG_PRINT_PSTR(":"); DEBUG_PRINTLN(current_settings.exposure);
+    DEBUG_PRINT_PSTR(":"); DEBUG_PRINTLN(current_settings.exposure.exp_time);
 #endif
     
     // if we are ISO ramping then set current ISO
@@ -497,7 +497,7 @@ void ATTRIBUT_INTERRUPT start_exposure()
       camera.set_iso(iso_codes[current_settings.exposure.ramping.iso.iso_index]);
     }
     camera.start_bulb();
-
+    
 #ifdef VERIFY_EXPOSURE_TIME
     exposure_start_ms = millis();
 #endif
@@ -508,10 +508,10 @@ void ATTRIBUT_INTERRUPT start_exposure()
       ramped_time += stop_time;
     }
   }
-
+  
   MsTimer2::set(stop_time, stop_exposure);
   MsTimer2::start();
-
+  
   logging_action = LOG_WRITE;
 }
 
@@ -713,114 +713,123 @@ void loop()
   }
 
   // check state
-  if((BRAMPUINO_STATE_MENU == current_state)
-     || (BRAMPUINO_STATE_EXPOSING_MENU == current_state)) {
+  switch(current_state) {
+
+  case BRAMPUINO_STATE_MENU:
+  case BRAMPUINO_STATE_EXPOSING_MENU:
     menu_loop();
-  }
-  else if(BRAMPUINO_STATE_EXPOSING == current_state) {
-    // print on screen info
-    // shot number
-    lcd.setCursor(0, 0);
-    PRINT(exposure_count);
-    PRINT("/");
-    if(0 == settings.exposure.number.max_exposures) {
-      PRINT("Inf");
-    }
-    else {
-      PRINT(settings.exposure.number.max_exposures);
-    }
+    break;
 
-    // ISO
-    if(BRAMPUINO_AUTO_ISO_CHANGE) {
-      lcd.setCursor(8, 0);
-      PRINT(" ISO");
-      PRINT(iso_values[current_settings.exposure.ramping.iso.iso_index]);
-      PRINT(" ");
-    }
-
-    // exposure
-    lcd.setCursor(0, 1);
-    PRINT("B:");
-    PRINT(current_settings.exposure.exp_time + current_settings.exposure.offset);
-
-    // EV change
-    PRINT("/EV:");
-    PRINT(settings.exposure.ramping.ev_change);
-    PRINT("  ");
-
-    // cancel?
-    uint8_t c1 = READ_BUTTONS();
-    delay(40);
-    uint8_t c2 = READ_BUTTONS();
-    if(c1 && (c1 == c2)) {
-      switch(c1) {
-
-      case MENU_BUTTON_MAIN_CANCEL:
-	// stop shutter
-	// exposure_count = settings.exposure.number.max_exposures;
-	exposure_stop = 1;
-	current_state = BRAMPUINO_STATE_MENU;
-	break;
-
-      case MENU_BUTTON_MAIN_MENU:
-	// menu
-	current_state = BRAMPUINO_STATE_EXPOSING_MENU;
-	// Start will continue
-	menu_loop();
-	break;
-
-      case MENU_BUTTON_MAIN_DECREMENT:
-	{
-	  // set current exposure time as new start time
-	  DEBUG_PRINTLN_PSTR("Manual dec exp ev change");
-	  unsigned long bulb_time = current_settings.exposure.exp_time;
-	  bulb_time = MIN(bulb_time, settings.exposure.max);
-	  bulb_time = MAX(bulb_time, settings.exposure.min);
-	  current_settings.exposure.start_time = bulb_time;
-	  adjusted_exposure_count = 1;
-	  // decrement EV change
-	  settings.exposure.ramping.ev_change -= 0.1;
-	}
-	break;
-
-      case MENU_BUTTON_MAIN_INCREMENT:
-	{
-	  // set current exposure time as new start time
-	  DEBUG_PRINTLN_PSTR("Manual inc exp ev change");
-	  unsigned long bulb_time = current_settings.exposure.exp_time;
-	  bulb_time = MIN(bulb_time, settings.exposure.max);
-	  bulb_time = MAX(bulb_time, settings.exposure.min);
-	  current_settings.exposure.start_time = bulb_time;
-	  adjusted_exposure_count = 1;
-	  // increment EV change
-	  settings.exposure.ramping.ev_change += 0.1;
-	}
-	break;
-	
-      case MENU_BUTTON_MAIN_CHANGE_ISO:
-	if(BRAMPUINO_AUTO_ISO_CHANGE) {
-	  // if ISO change is possible
-	  unsigned index = current_settings.exposure.ramping.iso.iso_index;
-	  if(index + 1 <= settings.exposure.ramping.iso.max_index) {
-	    DEBUG_PRINTLN_PSTR("Inc ISO by User");
+  case BRAMPUINO_STATE_EXPOSING:
+    {
+      // print on screen info
+      // shot number
+      lcd.setCursor(0, 0);
+      PRINT(exposure_count);
+      PRINT("/");
+      if(0 == settings.exposure.number.max_exposures) {
+	PRINT("Inf");
+      }
+      else {
+	PRINT(settings.exposure.number.max_exposures);
+      }
+      
+      // ISO
+      if(BRAMPUINO_AUTO_ISO_CHANGE) {
+	lcd.setCursor(8, 0);
+	PRINT(" ISO");
+	PRINT(iso_values[current_settings.exposure.ramping.iso.iso_index]);
+	PRINT(" ");
+      }
+      
+      // exposure
+      lcd.setCursor(0, 1);
+      PRINT("B:");
+      PRINT(current_settings.exposure.exp_time + current_settings.exposure.offset);
+      
+      // EV change
+      PRINT("/EV:");
+      PRINT(settings.exposure.ramping.ev_change);
+      PRINT("  ");
+      
+      // cancel?
+      uint8_t c1 = READ_BUTTONS();
+      delay(40);
+      uint8_t c2 = READ_BUTTONS();
+      if(c1 && (c1 == c2)) {
+	switch(c1) {
+	  
+	case MENU_BUTTON_MAIN_CANCEL:
+	  // stop shutter
+	  // exposure_count = settings.exposure.number.max_exposures;
+	  exposure_stop = 1;
+	  current_state = BRAMPUINO_STATE_MENU;
+	  break;
+	  
+	case MENU_BUTTON_MAIN_MENU:
+	  // menu
+	  current_state = BRAMPUINO_STATE_EXPOSING_MENU;
+	  // Start will continue
+	  menu_loop();
+	  break;
+	  
+	case MENU_BUTTON_MAIN_DECREMENT:
+	  {
+	    // set current exposure time as new start time
+	    DEBUG_PRINTLN_PSTR("Manual dec exp ev change");
 	    unsigned long bulb_time = current_settings.exposure.exp_time;
-	    unsigned long new_time
-	      = (bulb_time * iso_values[index]) / iso_values[index + 1];
-	    if(new_time > settings.exposure.min) {
-	      // increment ISO
-	      ++current_settings.exposure.ramping.iso.iso_index;
-	      // set new start time
-	      current_settings.exposure.start_time = new_time;
-	      adjusted_exposure_count = 1;
+	    bulb_time = MIN(bulb_time, settings.exposure.max);
+	    bulb_time = MAX(bulb_time, settings.exposure.min);
+	    current_settings.exposure.start_time = bulb_time;
+	    adjusted_exposure_count = 1;
+	    // decrement EV change
+	    settings.exposure.ramping.ev_change -= 0.1;
+	  }
+	  break;
+	  
+	case MENU_BUTTON_MAIN_INCREMENT:
+	  {
+	    // set current exposure time as new start time
+	    DEBUG_PRINTLN_PSTR("Manual inc exp ev change");
+	    unsigned long bulb_time = current_settings.exposure.exp_time;
+	    bulb_time = MIN(bulb_time, settings.exposure.max);
+	    bulb_time = MAX(bulb_time, settings.exposure.min);
+	    current_settings.exposure.start_time = bulb_time;
+	    adjusted_exposure_count = 1;
+	    // increment EV change
+	    settings.exposure.ramping.ev_change += 0.1;
+	  }
+	  break;
+	  
+	case MENU_BUTTON_MAIN_CHANGE_ISO:
+	  if(BRAMPUINO_AUTO_ISO_CHANGE) {
+	    // if ISO change is possible
+	    unsigned index = current_settings.exposure.ramping.iso.iso_index;
+	    if(index + 1 <= settings.exposure.ramping.iso.max_index) {
+	      DEBUG_PRINTLN_PSTR("Inc ISO by User");
+	      unsigned long bulb_time = current_settings.exposure.exp_time;
+	      unsigned long new_time
+		= (bulb_time * iso_values[index]) / iso_values[index + 1];
+	      if(new_time > settings.exposure.min) {
+		// increment ISO
+		++current_settings.exposure.ramping.iso.iso_index;
+		// set new start time
+		current_settings.exposure.start_time = new_time;
+		adjusted_exposure_count = 1;
+	      }
 	    }
 	  }
+	  break;
+	  
+	default:
+	  break;
 	}
-	break;
-
-      default:
-	break;
       }
     }
+    break;
+
+  default:
+    break;
   }
 
 }

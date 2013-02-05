@@ -52,20 +52,24 @@ public:
   virtual bool isConnected();
 } CamStates;
 
+
 void CamStateHandlers::OnDeviceDisconnectedState(PTP *ptp)
 {
-  if (stateConnected)
-    {
-      stateConnected = false;
-      Notify(PSTR("Camera disconnected\r\n"));
-    }
+  if (stateConnected) {
+    stateConnected = false;
+    Notify(PSTR("Camera disconnected\n"));
+  }
 }
+
 
 void CamStateHandlers::OnDeviceInitializedState(PTP *ptp)
 {
-  if (!stateConnected)
+  if (!stateConnected) {
     stateConnected = true;
+    Notify(PSTR("Camera connected\n"));
+  }
 }
+
 
 bool CamStateHandlers::isConnected()
 {
@@ -98,6 +102,7 @@ void CanonCamera::loop()
 {
   Usb.Task();
 }
+
 
 /*
  * is the camera connected
