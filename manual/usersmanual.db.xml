@@ -221,6 +221,14 @@ along with this program; if not sse <http://www.gnu.org/licenses/>.
       automatically!
     </para>
 
+    <warning>
+      <title>Canon Cameras only</title>
+      <para>
+	At the current state of development only <ulink
+	url="http://ww.canon.com">Canon cameras</ulink> are supported.
+      </para>
+    </warning>
+
     <para>
       We give a short introduction to the required pieces of hardware
       to build &BRAMPUINO1X; in <xref
@@ -410,7 +418,7 @@ along with this program; if not sse <http://www.gnu.org/licenses/>.
       
     <para>
       The &BRAMPUINO1X; provides a simple text based interface via the
-      16x2 RGB LCD shield. It allows to set parameters and start
+      16x2 RGB LCD shield and 5 buttons to set parameters and start
       &BRAMPUINO1X;.
     </para>
 
@@ -764,9 +772,14 @@ B:1057<co id="running.screen.bulb" linkends="co.running.screen.bulb"/>/EV:1.00<c
     <title>Running &BRAMPUINO1X;</title>
 
     <para>
-      In <xref linkend="section:exposure-interval-cycle"/>, <xref
+      In 
+      <!-- 
+      <xref linkend="section:exposure-interval-cycle"/>, <xref
       linkend="section:ramping"/> and <xref
-      linkend="section:computed-ramping"/> we give a deeper insight
+      linkend="section:computed-ramping"/>
+      -->
+      the following sections
+      we give a deeper insight
       into the interval and ramping time computation.
     </para>
 
@@ -787,7 +800,7 @@ B:1057<co id="running.screen.bulb" linkends="co.running.screen.bulb"/>/EV:1.00<c
 	      <imagedata fileref="local-images/exposure-interval.svg"
 			 format="SVG"
 			 align="center" valign="top"
-			 width="15cm"/>
+			 scale="85"/>
 	    </imageobject>
 	  </mediaobject>
 	</figure>
@@ -806,7 +819,7 @@ B:1057<co id="running.screen.bulb" linkends="co.running.screen.bulb"/>/EV:1.00<c
 	      <imagedata fileref="local-images/exposure-interval-cut.svg"
 			 format="SVG"
 			 align="center" valign="top"
-			 width="15cm"/>
+			 scale="85"/>
 	    </imageobject>
 	  </mediaobject>
 	</figure>
@@ -814,11 +827,11 @@ B:1057<co id="running.screen.bulb" linkends="co.running.screen.bulb"/>/EV:1.00<c
 
       <para>
 	If &BRAMPUINO1X; ramps down, eg during a sunrise, and the
-	interval is less than the start exposure time then the
-	interval from exposure start to the next exposure start gets
-	shorter and shorter, because the exposure time gets shorter
-	and the minimal interval will be used, till the exposure time
-	is less than the interval.
+	interval time is less than the start exposure time then the
+	interval time from exposure start to the next exposure start
+	gets shorter and shorter, because the exposure time gets
+	shorter and the minimal interval will be used, till the
+	exposure time is less than the interval.
 
 	This is an <emphasis>implicit</emphasis> interval ramping.
       </para>
@@ -855,7 +868,7 @@ B:1057<co id="running.screen.bulb" linkends="co.running.screen.bulb"/>/EV:1.00<c
 
 	When ramping reaches this maximum exposure &BRAMPUINO1X;
 	continues to take frames with this maximum exposure till the
-	maximum number of frames is reached.
+	maximum number of frames or the ramping time is reached.
 	
 	<figure id="figure:ramping">
 	  <title>Ramping with a Lead In</title>
@@ -864,7 +877,7 @@ B:1057<co id="running.screen.bulb" linkends="co.running.screen.bulb"/>/EV:1.00<c
 	      <imagedata fileref="local-images/ramping.svg"
 			 format="SVG"
 			 align="center" valign="top"
-			 width="15cm"/>
+			 scale="85"/>
 	    </imageobject>
 	  </mediaobject>
 	</figure>
@@ -926,6 +939,31 @@ B:1057<co id="running.screen.bulb" linkends="co.running.screen.bulb"/>/EV:1.00<c
       </para>
 
     </section>
+
+    <!-- ************************************************** -->
+    <section id="section:change-ramping">
+      <title>Change Ramping</title>
+      
+      <para>
+	In <xref linkend="figure:ramping-down"/> we show the exposure
+	curve when the exposure value change is changed from positive
+	to negative.
+      </para>
+      
+      <figure id="figure:ramping-down">
+	<title>Change Ramping from Up to Down</title>
+	<mediaobject>
+	  <imageobject>
+	    <imagedata fileref="local-images/ramping-down.svg"
+		       format="SVG"
+		       align="center" valign="top"
+		       scale="85"/>
+	  </imageobject>
+	</mediaobject>
+      </figure>
+      
+    </section>
+
 
     <!-- ************************************************** -->
     <section>
