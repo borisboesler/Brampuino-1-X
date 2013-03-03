@@ -27,7 +27,7 @@
 // this version
 #define BRAMPUINO_VERSION_MAJOR 0
 #define BRAMPUINO_VERSION_MINOR 3
-#define BRAMPUINO_VERSION_PATCHLEVEL 1
+#define BRAMPUINO_VERSION_PATCHLEVEL 2
 
 // last compatible setting version, if you change settings_t below
 #define BRAMPUINO_SETTING_VERSION_MAJOR 0

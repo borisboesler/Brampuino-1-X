@@ -700,7 +700,12 @@ B:1057<co id="running.screen.bulb" linkends="co.running.screen.bulb"/>/EV:1.00<c
 	  <term>&BUTTON_LEFT;</term>
 	  <listitem>
 	    <para>
-	      ISO Ramp up by one step.
+	      ISO Ramp down by one step if the exposure time is ramped
+	      up, else ramp ISO down by one step. The exposure time is
+	      not changed.
+
+	      This is a rudimentary support for manual aperture
+	      ramping or using neutral density filters
 	    </para>
 	  </listitem>
 	</varlistentry>

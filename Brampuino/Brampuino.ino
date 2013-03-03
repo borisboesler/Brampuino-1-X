@@ -568,7 +568,7 @@ void start_interval_delay()
   // if we are ISO ramping then init current ISO
   if(BRAMPUINO_AUTO_ISO_CHANGE) {
     // init ISO with ISO max if we ramp with a negative ev.fps value
-    if(0.0 > current_settings.exposure.ramping.ev_change) {
+    if(0.0 > settings.exposure.ramping.ev_change) {
       current_settings.exposure.ramping.iso.iso_index
 	= current_settings.exposure.ramping.iso.max_index;
     }
@@ -805,17 +805,22 @@ void loop()
 	  if(BRAMPUINO_AUTO_ISO_CHANGE) {
 	    // if ISO change is possible
 	    unsigned index = current_settings.exposure.ramping.iso.iso_index;
-	    if(index + 1 <= settings.exposure.ramping.iso.max_index) {
-	      DEBUG_PRINTLN_PSTR("Inc ISO by User");
-	      unsigned long bulb_time = current_settings.exposure.exp_time;
-	      unsigned long new_time
-		= (bulb_time * iso_values[index]) / iso_values[index + 1];
-	      if(new_time > settings.exposure.min) {
-		// increment ISO
-		++current_settings.exposure.ramping.iso.iso_index;
-		// set new start time
-		current_settings.exposure.start_time = new_time;
-		adjusted_exposure_count = 1;
+	    // if we are ISO ramping
+	    if(BRAMPUINO_AUTO_ISO_CHANGE) {
+	      if(0 < settings.exposure.ramping.ev_change) {
+		// if we ramp up then decrement ISO
+		if((1 <= index)
+		   && (index - 1 >= settings.exposure.ramping.iso.min_index)) {
+		  --current_settings.exposure.ramping.iso.iso_index;
+		}
+	      }
+	      else {
+		if(0 > settings.exposure.ramping.ev_change) {
+		  // if we ramp down then increment ISO
+		  if(index + 1 <= settings.exposure.ramping.iso.max_index) {
+		    ++current_settings.exposure.ramping.iso.iso_index;
+		  }
+		}
 	      }
 	    }
 	  }
